@@ -17,7 +17,7 @@ test('hero shows the approved price-first message and a single plus card', async
   const hero = page.locator('#hero');
 
   await expect(hero.getByRole('heading', { level: 1 })).toContainText('不想再为');
-  await expect(hero.getByText('我想直接用 Claude / Codex / Cursor。')).toBeVisible();
+  await expect(hero.getByText('我想直接用 GPT / Codex。')).toBeVisible();
   await expect(hero.getByText('那就别买贵的。一个订阅，直接上。')).toBeVisible();
   await expect(hero.getByText('是官方客户端镜像接入，不是缩水版，也不是只卖 API 点数。')).toBeVisible();
   await expect(hero.getByRole('heading', { name: 'Plus 月卡' })).toBeVisible();
@@ -33,13 +33,15 @@ test('homepage includes the editorial intro blocks and approved FAQ copy', async
   const footer = page.locator('.site-footer');
 
   await expect(intro.getByRole('heading', { level: 2, name: '官方客户端。别买贵的。' })).toBeVisible();
-  await expect(intro.getByText('Claude / Codex / Cursor 直接用。')).toBeVisible();
+  await expect(intro.getByText('GPT / Codex 直接用。')).toBeVisible();
   await expect(intro.getByText('不是缩水版，也不是纯点数站。')).toBeVisible();
   await expect(intro.getByText('购买放在单独页面，首页只负责说明白和卖清楚。')).toBeVisible();
 
   await expect(faq.getByRole('heading', { level: 2, name: '你会问的，先回答。' })).toBeVisible();
   await expect(faq.getByRole('heading', { level: 3, name: '支持哪些客户端？' })).toBeVisible();
-  await expect(faq.getByText('支持 Claude、Codex、Cursor 等官方客户端使用。')).toBeVisible();
+  await expect(faq.getByText('目前只支持 GPT、Codex，其他暂不支持。')).toBeVisible();
+  await expect(page.locator('body')).not.toContainText('Claude');
+  await expect(page.locator('body')).not.toContainText('Cursor');
   await expect(faq.getByRole('heading', { level: 3, name: '这是官方客户端接入，还是 API 点数？' })).toBeVisible();
   await expect(faq.getByText('这是官方客户端镜像接入与订阅通道，不是只卖 API 点数。')).toBeVisible();
   await expect(faq.getByRole('heading', { level: 3, name: '额度怎么计算？' })).toBeVisible();

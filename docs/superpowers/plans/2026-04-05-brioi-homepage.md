@@ -223,7 +223,7 @@ test('hero shows the approved price-first message and a single plus card', async
   const hero = page.locator('#hero');
 
   await expect(hero.getByRole('heading', { level: 1 })).toContainText('不想再为');
-  await expect(hero.getByText('我想直接用 Claude / Codex / Cursor。')).toBeVisible();
+  await expect(hero.getByText('我想直接用 GPT / Codex。')).toBeVisible();
   await expect(hero.getByText('那就别买贵的。一个订阅，直接上。')).toBeVisible();
   await expect(hero.getByText('是官方客户端镜像接入，不是缩水版，也不是只卖 API 点数。')).toBeVisible();
   await expect(hero.getByText('Plus 月卡')).toBeVisible();
@@ -259,7 +259,7 @@ Replace the `<main>` content in `/Users/Shake/Documents/App/Brioi/index.html` wi
 
       <div class="chat-stack" aria-label="产品介绍对话">
         <div class="chat-row">
-          <div class="chat-bubble chat-bubble--muted">我想直接用 Claude / Codex / Cursor。</div>
+          <div class="chat-bubble chat-bubble--muted">我想直接用 GPT / Codex。</div>
         </div>
         <div class="chat-row chat-row--reply">
           <div class="chat-bubble chat-bubble--accent">那就别买贵的。一个订阅，直接上。</div>
@@ -284,7 +284,7 @@ Replace the `<main>` content in `/Users/Shake/Documents/App/Brioi/index.html` wi
     </aside>
   </section>
 
-  <p class="hero-summary">一个订阅，直接覆盖 Claude / Codex / Cursor</p>
+  <p class="hero-summary">一个订阅，直接覆盖 GPT / Codex</p>
 </main>
 ```
 
@@ -504,7 +504,7 @@ test('homepage includes the editorial intro blocks and approved FAQ copy', async
   await page.goto('/');
 
   await expect(page.getByRole('heading', { level: 2, name: '官方客户端。别买贵的。' })).toBeVisible();
-  await expect(page.getByText('Claude / Codex / Cursor 直接用。')).toBeVisible();
+  await expect(page.getByText('GPT / Codex 直接用。')).toBeVisible();
   await expect(page.getByText('不是缩水版，也不是纯点数站。')).toBeVisible();
   await expect(page.getByText('购买放在单独页面，首页只负责说明白和卖清楚。')).toBeVisible();
 
@@ -529,7 +529,7 @@ Expected: FAIL because the introduction, FAQ, and footer sections have not been 
 
 - [ ] **Step 3: Write the minimal implementation for introduction, FAQ, and footer**
 
-Replace the current closing portion of `/Users/Shake/Documents/App/Brioi/index.html`, starting immediately after `<p class="hero-summary">一个订阅，直接覆盖 Claude / Codex / Cursor</p>`, with:
+Replace the current closing portion of `/Users/Shake/Documents/App/Brioi/index.html`, starting immediately after `<p class="hero-summary">一个订阅，直接覆盖 GPT / Codex</p>`, with:
 
 ```html
 <section class="editorial-blocks" aria-labelledby="intro-title">
@@ -541,7 +541,7 @@ Replace the current closing portion of `/Users/Shake/Documents/App/Brioi/index.h
   <div class="intro-grid">
     <article class="info-card">
       <p class="card-label">Direct</p>
-      <h3>Claude / Codex / Cursor 直接用。</h3>
+      <h3>GPT / Codex 直接用。</h3>
     </article>
     <article class="info-card">
       <p class="card-label">Mirror</p>
@@ -563,7 +563,7 @@ Replace the current closing portion of `/Users/Shake/Documents/App/Brioi/index.h
   <div class="faq-list">
     <article class="faq-item">
       <h3>支持哪些客户端？</h3>
-      <p>支持 Claude、Codex、Cursor 等官方客户端使用。</p>
+      <p>目前只支持 GPT、Codex，其他暂不支持。</p>
     </article>
     <article class="faq-item">
       <h3>这是官方客户端接入，还是 API 点数？</h3>
