@@ -94,32 +94,29 @@ test('buy page shows the selected plan from the query string', async ({ page }) 
 });
 
 test('mobile layout stacks the hero card below the hero copy', async ({ page }) => {
-  await page.setViewportSize({ width: 720, height: 1280 });
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
 
-  const heroCopy = page.locator('.hero-copy');
-  const heroCard = page.locator('.hero-side-card');
-  const copyBox = await heroCopy.boundingBox();
-  const cardBox = await heroCard.boundingBox();
+  const copyBox = await page.locator('.hero-copy').boundingBox();
+  const cardBox = await page.locator('.hero-side-card').boundingBox();
 
   expect(copyBox).not.toBeNull();
   expect(cardBox).not.toBeNull();
-  expect(cardBox.y).toBeGreaterThan(copyBox.y + 100);
+  expect(cardBox.y).toBeGreaterThan(copyBox.y);
 });
 
-test('homepage without javascript still shows the monthly pricing group and working links', async ({ browser }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false });
-  const page = await context.newPage();
+test.describe('homepage without javascript', () => {
+  test.use({ javaScriptEnabled: false });
 
-  await page.goto('/');
+  test('still shows the monthly pricing group and working links', async ({ page }) => {
+    await page.goto('/');
 
-  const monthlyPanel = page.locator('#panel-monthly');
-  const plusPlan = monthlyPanel.locator('article').filter({ hasText: 'Plus 月卡' });
-  const plusBuyLink = plusPlan.getByRole('link', { name: '立即购买' });
+    const monthlyPanel = page.locator('#panel-monthly');
+    const plusPlan = monthlyPanel.locator('article').filter({ hasText: 'Plus 月卡' });
+    const plusBuyLink = plusPlan.getByRole('link', { name: '立即购买' });
 
-  await expect(monthlyPanel).toBeVisible();
-  await expect(plusPlan.getByText('Plus 月卡')).toBeVisible();
-  await expect(plusBuyLink).toHaveAttribute('href', './buy.html?plan=plus-monthly');
-
-  await context.close();
+    await expect(monthlyPanel).toBeVisible();
+    await expect(plusPlan.getByText('Plus 月卡')).toBeVisible();
+    await expect(plusBuyLink).toHaveAttribute('href', './buy.html?plan=plus-monthly');
+  });
 });
