@@ -165,6 +165,8 @@ test('software usage modal moves focus into the modal and makes background secti
 
   const trigger = page.locator('.software-card[data-software="claude-code"]').getByRole('button', { name: '使用方式' });
   const pricingSection = page.locator('#pricing');
+  const header = page.locator('.site-header');
+  const footer = page.locator('.site-footer');
 
   await trigger.focus();
   await expect(trigger).toBeFocused();
@@ -172,12 +174,13 @@ test('software usage modal moves focus into the modal and makes background secti
   await trigger.click();
 
   const dialog = page.getByRole('dialog', { name: 'Claude Code 使用方式' });
-  const closeButton = dialog.getByRole('button', { name: '关闭' });
 
   await expect(dialog).toBeVisible();
-  await expect(closeButton).toBeFocused();
+  await expect(dialog).toBeFocused();
   await expect(trigger).not.toBeFocused();
   await expect(pricingSection).toHaveJSProperty('inert', true);
+  await expect(header).toHaveJSProperty('inert', true);
+  await expect(footer).toHaveJSProperty('inert', true);
 });
 
 test('software usage modal closes with Escape and restores focus to its trigger', async ({ page }) => {

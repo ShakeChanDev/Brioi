@@ -223,7 +223,7 @@ function initSoftwareModal() {
     modal.hidden = false;
     document.body.classList.add('modal-open');
     setBackgroundInert(true);
-    closeButton.focus();
+    dialog.focus();
   }
 
   triggers.forEach((trigger) => {
