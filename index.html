@@ -98,6 +98,37 @@
         </div>
       </section>
 
+      <div class="software-modal-backdrop" data-software-modal hidden>
+        <div class="software-modal" role="dialog" aria-modal="true" aria-labelledby="software-modal-title">
+          <div class="software-modal-head">
+            <div class="software-modal-icon" data-modal-icon aria-hidden="true"></div>
+            <div class="software-modal-title-wrap">
+              <p class="card-label">Usage Guide</p>
+              <h3 id="software-modal-title"></h3>
+            </div>
+          </div>
+
+          <div class="software-modal-body">
+            <section class="software-modal-section" aria-labelledby="software-modal-mode-title">
+              <h4 id="software-modal-mode-title">适用方式</h4>
+              <p data-modal-mode></p>
+            </section>
+
+            <section class="software-modal-section" aria-labelledby="software-modal-steps-title">
+              <h4 id="software-modal-steps-title">使用步骤</h4>
+              <ol data-modal-steps></ol>
+            </section>
+
+            <section class="software-modal-section" aria-labelledby="software-modal-note-title">
+              <h4 id="software-modal-note-title">补充说明</h4>
+              <p data-modal-note></p>
+            </section>
+          </div>
+
+          <button class="button button--primary software-modal-close" type="button" data-close-software-modal>关闭</button>
+        </div>
+      </div>
+
       <!-- ====== Pricing ====== -->
       <section id="pricing" class="pricing" aria-labelledby="pricing-title">
         <div class="section-heading">

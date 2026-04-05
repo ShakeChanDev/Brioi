@@ -464,6 +464,110 @@ main,
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.16);
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
+.software-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background: rgba(15, 18, 16, 0.68);
+  backdrop-filter: blur(8px);
+}
+
+.software-modal-backdrop[hidden] {
+  display: none;
+}
+
+.software-modal {
+  width: min(640px, 100%);
+  max-height: min(92vh, 760px);
+  overflow-y: auto;
+  padding: 32px;
+  border-radius: 32px;
+  background: #ffffff;
+  box-shadow:
+    0 32px 100px rgba(0, 0, 0, 0.28),
+    0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.software-modal-head {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.software-modal-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 24px;
+  background: #111111;
+  color: var(--white);
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.18);
+}
+
+.software-modal-title-wrap {
+  min-width: 0;
+}
+
+.software-modal-title-wrap h3 {
+  margin-top: 8px;
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--text);
+}
+
+.software-modal-body {
+  display: grid;
+  gap: 18px;
+}
+
+.software-modal-section {
+  padding: 20px 22px;
+  border-radius: 22px;
+  background: #f7faf5;
+  border: 1px solid rgba(17, 17, 17, 0.06);
+}
+
+.software-modal-section h4 {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.software-modal-section p,
+.software-modal-section li {
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.software-modal-section ol {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.software-modal-close {
+  width: 100%;
+  margin-top: 28px;
+}
+
 /* ============================================================
    Pricing Section
    ============================================================ */
@@ -852,6 +956,38 @@ main,
 
   .software-card {
     min-height: 320px;
+  }
+
+  .software-modal-backdrop {
+    align-items: flex-end;
+    padding: 16px;
+  }
+
+  .software-modal {
+    max-height: 88vh;
+    padding: 24px 20px 20px;
+    border-radius: 28px 28px 20px 20px;
+  }
+
+  .software-modal-head {
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+
+  .software-modal-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    font-size: 1.2rem;
+  }
+
+  .software-modal-section {
+    padding: 18px 16px;
+  }
+
+  .software-modal-close {
+    margin-top: 22px;
   }
 }
 

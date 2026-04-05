@@ -138,6 +138,28 @@ test('supported software cards stack into one column on mobile', async ({ page }
   expect(roundedLeftOffsets.size).toBe(1);
 });
 
+test('software usage modal opens with the selected software details and closes again', async ({ page }) => {
+  await page.goto('/');
+
+  const softwareCard = page.locator('.software-card[data-software="claude-code"]');
+
+  await softwareCard.getByRole('button', { name: '使用方式' }).click();
+
+  const dialog = page.getByRole('dialog', { name: 'Claude Code 使用方式' });
+
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByText('适用方式')).toBeVisible();
+  await expect(dialog.getByText('适合命令行驱动的代码工作流，登录后即可进入会话。')).toBeVisible();
+  await expect(dialog.getByText('使用步骤')).toBeVisible();
+  await expect(dialog.getByText('补充说明')).toBeVisible();
+  await expect(dialog.getByText('建议优先使用较新版本客户端，减少登录态兼容问题。')).toBeVisible();
+  await expect(dialog.locator('ol li')).toHaveCount(3);
+
+  await dialog.getByRole('button', { name: '关闭' }).click();
+
+  await expect(dialog).toBeHidden();
+});
+
 test('pricing defaults to monthly plans and switches to experience plans', async ({ page }) => {
   await page.goto('/');
 
