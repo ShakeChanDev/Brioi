@@ -223,6 +223,7 @@ function initSoftwareModal() {
     modal.hidden = false;
     document.body.classList.add('modal-open');
     setBackgroundInert(true);
+    dialog.scrollTop = 0;
     dialog.focus();
   }
 
@@ -262,6 +263,18 @@ function initSoftwareModal() {
 
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (document.activeElement === dialog) {
+      event.preventDefault();
+
+      if (event.shiftKey) {
+        lastElement.focus();
+      } else {
+        firstElement.focus();
+      }
+
+      return;
+    }
 
     if (event.shiftKey && document.activeElement === firstElement) {
       event.preventDefault();

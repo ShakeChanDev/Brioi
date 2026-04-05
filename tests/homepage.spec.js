@@ -183,6 +183,24 @@ test('software usage modal moves focus into the modal and makes background secti
   await expect(footer).toHaveJSProperty('inert', true);
 });
 
+test('software usage modal keeps focus inside when Shift+Tab is pressed from the dialog container', async ({ page }) => {
+  await page.goto('/');
+
+  const trigger = page.locator('.software-card[data-software="claude-code"]').getByRole('button', { name: '使用方式' });
+
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'Claude Code 使用方式' });
+  const closeButton = dialog.getByRole('button', { name: '关闭' });
+
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeFocused();
+
+  await page.keyboard.press('Shift+Tab');
+
+  await expect(closeButton).toBeFocused();
+});
+
 test('software usage modal closes with Escape and restores focus to its trigger', async ({ page }) => {
   await page.goto('/');
 
@@ -218,6 +236,33 @@ test('software usage modal closes when the backdrop is clicked and restores focu
 
   await expect(dialog).toBeHidden();
   await expect(trigger).toBeFocused();
+});
+
+test('software usage modal resets its scroll position when reopened', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 420 });
+  await page.goto('/');
+
+  const trigger = page.locator('.software-card[data-software="claude-code"]').getByRole('button', { name: '使用方式' });
+
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'Claude Code 使用方式' });
+
+  await expect(dialog).toBeVisible();
+
+  const firstScrollTop = await dialog.evaluate((element) => {
+    element.scrollTop = 160;
+    return element.scrollTop;
+  });
+
+  expect(firstScrollTop).toBeGreaterThan(0);
+
+  await dialog.getByRole('button', { name: '关闭' }).click();
+  await expect(dialog).toBeHidden();
+
+  await trigger.click();
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toHaveJSProperty('scrollTop', 0);
 });
 
 test('pricing defaults to monthly plans and switches to experience plans', async ({ page }) => {
