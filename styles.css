@@ -187,7 +187,6 @@ main {
 }
 
 .editorial-blocks,
-.pricing,
 .faq {
   padding: 48px 0 72px;
 }
@@ -245,12 +244,12 @@ main {
 }
 
 .pricing-panel {
-  display: grid;
   gap: 18px;
 }
 
-.pricing-panel[hidden] {
-  display: none;
+.pricing-panel--default:not([hidden]),
+.pricing-panel:not(.pricing-panel--default):not([hidden]) {
+  display: grid;
 }
 
 .pricing-panel--default {
