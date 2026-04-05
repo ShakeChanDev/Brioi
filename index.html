@@ -4,22 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brioi API | 官方客户端订阅接入</title>
+    <meta name="description" content="Brioi API — 官方客户端镜像接入，不是缩水版，也不是只卖 API 点数。一个订阅，直接覆盖 GPT / Codex。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./styles.css">
     <script src="./main.js" defer></script>
   </head>
   <body data-page="home">
-    <nav class="site-nav" aria-label="主导航">
-      <a class="brand" href="./index.html">Brioi API</a>
-      <a class="nav-cta" href="./buy.html?plan=plus-monthly">立即购买</a>
-    </nav>
+
+    <!-- ====== Navigation ====== -->
+    <header class="site-header">
+      <nav class="site-nav" aria-label="主导航">
+        <a class="brand" href="./index.html">Brioi API</a>
+        <a class="nav-cta button button--primary" href="./buy.html?plan=plus-monthly">立即购买</a>
+      </nav>
+    </header>
+
     <main>
+      <!-- ====== Hero ====== -->
       <section id="hero" class="hero">
         <div class="hero-copy">
           <p class="eyebrow">Official Client Mirror Access</p>
           <h1 class="hero-title">
             不想再为<br>
             官方客户端<br>
-            <span>付更贵？</span>
+            <span class="text-accent">付更贵？</span>
           </h1>
 
           <div class="chat-stack" aria-label="产品介绍对话">
@@ -35,21 +45,25 @@
           </div>
 
           <div class="hero-actions">
-            <a class="button button--solid" href="./buy.html?plan=plus-monthly">购买 Plus 月卡</a>
-            <a class="button button--ghost" href="#pricing">查看套餐</a>
+            <a class="button button--primary" href="./buy.html?plan=plus-monthly">购买 Plus 月卡</a>
+            <a class="button button--outline" href="#pricing">查看套餐</a>
           </div>
         </div>
 
         <aside class="hero-side-card" aria-label="主推套餐">
-          <p class="card-label">Most Popular</p>
-          <h2>Plus 月卡</h2>
-          <p class="price">¥99</p>
-          <p class="card-meta">100 刀 / 天<br>30 天有效</p>
-          <a class="button button--solid-dark" href="./buy.html?plan=plus-monthly">购买 Plus 月卡</a>
+          <div class="side-card-inner">
+            <p class="card-label">Most Popular</p>
+            <h2>Plus 月卡</h2>
+            <p class="price">¥99</p>
+            <p class="card-meta">100 刀 / 天<br>30 天有效</p>
+            <a class="button button--dark" href="./buy.html?plan=plus-monthly">购买 Plus 月卡</a>
+          </div>
         </aside>
       </section>
-      <p class="hero-summary">一个订阅，直接覆盖 GPT / Codex</p>
 
+      <p class="hero-summary">一个订阅，直接覆盖 <span>GPT / Codex</span></p>
+
+      <!-- ====== Editorial Intro ====== -->
       <section class="editorial-blocks" aria-labelledby="intro-title">
         <div class="section-heading">
           <p class="eyebrow">Why Brioi API</p>
@@ -60,22 +74,26 @@
           <article class="info-card">
             <p class="card-label">Direct</p>
             <h3>GPT / Codex 直接用。</h3>
+            <p class="info-card-desc">官方客户端镜像接入，登录即用，无需额外配置。</p>
           </article>
           <article class="info-card">
             <p class="card-label">Mirror</p>
             <h3>不是缩水版，也不是纯点数站。</h3>
+            <p class="info-card-desc">完整的官方客户端体验，不是阉割功能后的替代品。</p>
           </article>
           <article class="info-card">
             <p class="card-label">Checkout</p>
             <h3>购买放在单独页面，首页只负责说明白和卖清楚。</h3>
+            <p class="info-card-desc">所有购买操作统一在独立页面完成，流程清晰。</p>
           </article>
         </div>
       </section>
 
+      <!-- ====== Pricing ====== -->
       <section id="pricing" class="pricing" aria-labelledby="pricing-title">
         <div class="section-heading">
           <p class="eyebrow">Pricing</p>
-          <h2 id="pricing-title">选一个方案。直接开用。</h2>
+          <h2 id="pricing-title">选一个方案。<span class="text-accent">直接开用。</span></h2>
         </div>
 
         <div class="pricing-tabs" role="tablist" aria-label="订阅方案分类">
@@ -89,46 +107,48 @@
             <h3>日卡</h3>
             <p class="price-inline">免费</p>
             <p class="plan-meta">20 刀 免费使用</p>
-            <a class="button button--ghost" href="./buy.html?plan=day-pass">立即购买</a>
+            <a class="button button--outline" href="./buy.html?plan=day-pass">立即购买</a>
           </article>
           <article class="plan-card plan-card--featured">
             <p class="card-label">Fast Start</p>
             <h3>周卡</h3>
             <p class="price-inline">¥29.9</p>
             <p class="plan-meta">100 刀 / 天</p>
-            <a class="button button--solid" href="./buy.html?plan=week-pass">立即购买</a>
+            <a class="button button--dark" href="./buy.html?plan=week-pass">立即购买</a>
           </article>
         </div>
 
         <div class="pricing-panel pricing-panel--default" id="panel-monthly" role="tabpanel" aria-labelledby="tab-monthly">
           <article class="plan-card plan-card--featured">
+            <span class="plan-badge">推荐</span>
             <p class="card-label">Recommended</p>
             <h3>Plus 月卡</h3>
             <p class="price-inline">¥99</p>
             <p class="plan-meta">100 刀 / 天<br>30 天</p>
-            <a class="button button--solid" href="./buy.html?plan=plus-monthly">立即购买</a>
+            <a class="button button--dark" href="./buy.html?plan=plus-monthly">立即购买</a>
           </article>
           <article class="plan-card">
             <p class="card-label">Monthly</p>
             <h3>Pro 月卡</h3>
             <p class="price-inline">¥199</p>
             <p class="plan-meta">200 刀 / 天<br>30 天</p>
-            <a class="button button--ghost" href="./buy.html?plan=pro-monthly">立即购买</a>
+            <a class="button button--outline" href="./buy.html?plan=pro-monthly">立即购买</a>
           </article>
           <article class="plan-card">
             <p class="card-label">Monthly</p>
             <h3>Max 月卡</h3>
             <p class="price-inline">¥499</p>
             <p class="plan-meta">600 刀 / 天<br>30 天</p>
-            <a class="button button--ghost" href="./buy.html?plan=max-monthly">立即购买</a>
+            <a class="button button--outline" href="./buy.html?plan=max-monthly">立即购买</a>
           </article>
         </div>
       </section>
 
+      <!-- ====== FAQ ====== -->
       <section class="faq" aria-labelledby="faq-title">
         <div class="section-heading">
           <p class="eyebrow">FAQ</p>
-          <h2 id="faq-title">你会问的，先回答。</h2>
+          <h2 id="faq-title">你会问的，<span class="text-accent">先回答。</span></h2>
         </div>
 
         <div class="faq-list">
@@ -155,12 +175,17 @@
         </div>
       </section>
     </main>
+
+    <!-- ====== Footer ====== -->
     <footer class="site-footer">
       <div class="footer-inner">
-        <p class="brand">Brioi API</p>
-        <p class="footer-copy">给官方客户端一个更划算的入口。</p>
-        <a class="button button--solid" href="./buy.html?plan=plus-monthly">立即购买</a>
+        <div class="footer-brand">
+          <p class="brand">Brioi API</p>
+          <p class="footer-copy">给官方客户端一个更划算的入口。</p>
+        </div>
+        <a class="button button--primary" href="./buy.html?plan=plus-monthly">立即购买</a>
       </div>
     </footer>
+
   </body>
 </html>
