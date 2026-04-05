@@ -39,15 +39,15 @@ function initPricingTabs() {
 }
 
 function initBuyPage() {
-  const selectedPlan = document.querySelector('.buy-plan');
+  const selectedPlan = document.querySelector('[data-selected-plan]');
 
   if (!selectedPlan) {
     return;
   }
 
   const params = new URLSearchParams(window.location.search);
-  const plan = params.get('plan');
-  const label = PLAN_LABELS[plan] || PLAN_LABELS['plus-monthly'];
+  const planKey = params.get('plan');
+  const label = PLAN_LABELS[planKey] ?? 'Plus 月卡';
 
   selectedPlan.textContent = `已选择：${label}`;
 }

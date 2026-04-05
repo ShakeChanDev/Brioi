@@ -324,36 +324,32 @@ main {
 
 .buy-page {
   width: min(720px, calc(100% - 48px));
-  padding: 72px 0 96px;
+  margin: 0 auto;
+  padding: 80px 0;
 }
 
 .buy-page h1 {
-  margin: 0;
-  font-size: clamp(3rem, 8vw, 4.5rem);
-  line-height: 0.95;
+  margin: 0 0 12px;
+  font-size: clamp(3rem, 7vw, 5rem);
+  line-height: 0.94;
   letter-spacing: -0.05em;
 }
 
 .buy-copy {
-  margin: 18px 0 0;
-  max-width: 40ch;
+  margin: 0 0 24px;
   color: var(--muted);
-  font-size: 1.05rem;
   line-height: 1.7;
 }
 
 .buy-card {
-  margin: 32px 0 24px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
+  margin-bottom: 24px;
+  border-radius: 28px;
   padding: 24px;
-  background: linear-gradient(180deg, #ffffff 0%, #f7ffef 100%);
-  box-shadow: var(--shadow-strong);
+  background: var(--panel);
 }
 
 .buy-plan {
   margin: 0;
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  line-height: 1.2;
-  font-weight: 800;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
