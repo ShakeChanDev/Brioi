@@ -42,8 +42,9 @@ test('homepage lists supported software cards and updated client FAQ copy', asyn
   ]) {
     const softwareCard = intro.locator(`.software-card[data-software="${softwareSlug}"]`);
 
+    await expect(softwareCard.locator('.software-icon')).toHaveClass(`software-icon software-icon--${softwareSlug}`);
     await expect(softwareCard.getByRole('heading', { level: 3, name: softwareName })).toBeVisible();
-    await expect(softwareCard.getByRole('button', { name: '使用方式' })).toBeVisible();
+    await expect(softwareCard.getByRole('button', { name: '使用方式' })).toHaveAttribute('data-software', softwareSlug);
   }
 
   await expect(faq.getByRole('heading', { level: 2, name: '你会问的，先回答。' })).toBeVisible();
