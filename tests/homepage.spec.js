@@ -16,13 +16,18 @@ test('hero shows the approved price-first message and a single plus card', async
 
   const hero = page.locator('#hero');
 
+  await expect(page.locator('head meta[name="description"]')).toHaveAttribute(
+    'content',
+    'Brioi API — 官方客户端镜像接入，不是缩水版，也不是只卖 API 点数。一个订阅，直接覆盖 Codex、Claude Code、OpenCode、OpenClaw。'
+  );
   await expect(hero.getByRole('heading', { level: 1 })).toContainText('不想再为');
-  await expect(hero.getByText('我想直接用 GPT / Codex。')).toBeVisible();
+  await expect(hero.getByText('我想直接用 Codex、Claude Code、OpenCode、OpenClaw。')).toBeVisible();
   await expect(hero.getByText('那就别买贵的。一个订阅，直接上。')).toBeVisible();
   await expect(hero.getByText('是官方客户端镜像接入，不是缩水版，也不是只卖 API 点数。')).toBeVisible();
   await expect(hero.getByRole('heading', { name: 'Plus 月卡' })).toBeVisible();
   await expect(hero.getByText('¥99')).toBeVisible();
   await expect(hero.locator('.hero-side-card')).toHaveCount(1);
+  await expect(page.locator('.hero-summary')).toHaveText('一个订阅，直接覆盖 Codex / Claude Code / OpenCode / OpenClaw');
 });
 
 test('homepage lists supported software cards and updated client FAQ copy', async ({ page }) => {
@@ -34,15 +39,16 @@ test('homepage lists supported software cards and updated client FAQ copy', asyn
 
   await expect(intro.getByRole('heading', { level: 2, name: '支持的软件。直接开用。' })).toBeVisible();
   await expect(intro.locator('.software-card')).toHaveCount(4);
-  for (const [softwareSlug, softwareName] of [
-    ['codex', 'Codex'],
-    ['claude-code', 'Claude Code'],
-    ['opencode', 'OpenCode'],
-    ['openclaw', 'OpenClaw'],
+  for (const [softwareSlug, softwareName, iconText] of [
+    ['codex', 'Codex', 'CX'],
+    ['claude-code', 'Claude Code', 'CC'],
+    ['opencode', 'OpenCode', 'OC'],
+    ['openclaw', 'OpenClaw', 'OW'],
   ]) {
     const softwareCard = intro.locator(`.software-card[data-software="${softwareSlug}"]`);
 
     await expect(softwareCard.locator('.software-icon')).toHaveClass(`software-icon software-icon--${softwareSlug}`);
+    await expect(softwareCard.locator('.software-icon')).toHaveText(iconText);
     await expect(softwareCard.getByRole('heading', { level: 3, name: softwareName })).toBeVisible();
     await expect(softwareCard.getByRole('button', { name: '使用方式' })).toHaveAttribute('data-software', softwareSlug);
   }
