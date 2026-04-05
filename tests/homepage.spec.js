@@ -3,8 +3,11 @@ import { test, expect } from '@playwright/test';
 test('homepage shell loads with title and navigation', async ({ page }) => {
   await page.goto('/');
 
+  const nav = page.getByRole('navigation', { name: '主导航' });
+
   await expect(page).toHaveTitle(/Brioi API/);
-  await expect(page.getByRole('navigation', { name: '主导航' })).toBeVisible();
+  await expect(nav).toBeVisible();
+  await expect(nav.getByRole('link', { name: '立即购买' })).toHaveAttribute('href', './buy.html?plan=plus-monthly');
   await expect(page.getByRole('main')).toBeVisible();
 });
 
@@ -48,7 +51,7 @@ test('homepage includes the editorial intro blocks and approved FAQ copy', async
 
   await expect(footer.getByText('给官方客户端一个更划算的入口。')).toBeVisible();
   await expect(footer.getByRole('link', { name: '立即购买' })).toBeVisible();
-  await expect(footer.getByRole('link', { name: '立即购买' })).toHaveAttribute('href', './buy.html');
+  await expect(footer.getByRole('link', { name: '立即购买' })).toHaveAttribute('href', './buy.html?plan=plus-monthly');
 });
 
 test('pricing defaults to monthly plans and switches to experience plans', async ({ page }) => {
