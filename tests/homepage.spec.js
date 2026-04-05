@@ -62,14 +62,26 @@ test('pricing defaults to monthly plans and switches to experience plans', async
   await expect(monthlyTab).toHaveAttribute('aria-selected', 'true');
   await expect(monthlyPanel).toBeVisible();
   await expect(monthlyPanel.getByText('Plus 月卡')).toBeVisible();
+  await expect(monthlyPanel.getByText('¥99')).toBeVisible();
   await expect(monthlyPanel.getByText('Pro 月卡')).toBeVisible();
+  await expect(monthlyPanel.getByText('¥199')).toBeVisible();
   await expect(monthlyPanel.getByText('Max 月卡')).toBeVisible();
+  await expect(monthlyPanel.getByText('¥499')).toBeVisible();
+  await expect(monthlyPanel.getByRole('link', { name: '立即购买' })).toHaveCount(3);
+  await expect(monthlyPanel.getByRole('link', { name: '立即购买' }).nth(0)).toHaveAttribute('href', './buy.html?plan=plus-monthly');
+  await expect(monthlyPanel.getByRole('link', { name: '立即购买' }).nth(1)).toHaveAttribute('href', './buy.html?plan=pro-monthly');
+  await expect(monthlyPanel.getByRole('link', { name: '立即购买' }).nth(2)).toHaveAttribute('href', './buy.html?plan=max-monthly');
 
   await experienceTab.click();
 
   await expect(experienceTab).toHaveAttribute('aria-selected', 'true');
   await expect(monthlyPanel).toBeHidden();
   await expect(experiencePanel).toBeVisible();
+  await expect(experiencePanel.getByText('免费', { exact: true })).toBeVisible();
+  await expect(experiencePanel.getByText('¥29.9')).toBeVisible();
   await expect(experiencePanel.getByText('日卡').first()).toBeVisible();
   await expect(experiencePanel.getByText('周卡').first()).toBeVisible();
+  await expect(experiencePanel.getByRole('link', { name: '立即购买' })).toHaveCount(2);
+  await expect(experiencePanel.getByRole('link', { name: '立即购买' }).nth(0)).toHaveAttribute('href', './buy.html?plan=day-pass');
+  await expect(experiencePanel.getByRole('link', { name: '立即购买' }).nth(1)).toHaveAttribute('href', './buy.html?plan=week-pass');
 });
