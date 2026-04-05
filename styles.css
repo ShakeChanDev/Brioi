@@ -187,6 +187,7 @@ main {
 }
 
 .editorial-blocks,
+.pricing,
 .faq {
   padding: 48px 0 72px;
 }
@@ -214,6 +215,90 @@ main {
 .faq-list {
   display: grid;
   gap: 16px;
+}
+
+.pricing {
+  padding: 32px 0 72px;
+}
+
+.pricing-tabs {
+  display: inline-flex;
+  gap: 6px;
+  margin-bottom: 28px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--panel);
+}
+
+.pricing-tab {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+}
+
+.pricing-tab.is-active {
+  background: #000;
+  color: #fff;
+}
+
+.pricing-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.pricing-panel[hidden] {
+  display: none;
+}
+
+.pricing-panel--default {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.pricing-panel:not(.pricing-panel--default) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.plan-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+  border-radius: 28px;
+  padding: 24px;
+  background: var(--panel);
+}
+
+.plan-card--featured {
+  background: #000;
+  color: #fff;
+}
+
+.plan-card--featured .price-inline {
+  color: var(--accent);
+}
+
+.price-inline {
+  margin: 0 0 12px;
+  font-size: 3rem;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  font-weight: 800;
+}
+
+.plan-meta {
+  margin: 0 0 20px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.plan-card--featured .plan-meta {
+  color: #d1d5db;
+}
+
+.plan-card .button {
+  margin-top: auto;
 }
 
 .faq-item p,

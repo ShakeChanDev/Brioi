@@ -72,6 +72,59 @@
         </div>
       </section>
 
+      <section id="pricing" class="pricing" aria-labelledby="pricing-title">
+        <div class="section-heading">
+          <p class="eyebrow">Pricing</p>
+          <h2 id="pricing-title">选一个方案。直接开用。</h2>
+        </div>
+
+        <div class="pricing-tabs" role="tablist" aria-label="订阅方案分类">
+          <button class="pricing-tab" id="tab-experience" role="tab" aria-controls="panel-experience" aria-selected="false" data-target="experience">体验套餐</button>
+          <button class="pricing-tab is-active" id="tab-monthly" role="tab" aria-controls="panel-monthly" aria-selected="true" data-target="monthly">月卡套餐</button>
+        </div>
+
+        <div class="pricing-panel" id="panel-experience" role="tabpanel" aria-labelledby="tab-experience" hidden>
+          <article class="plan-card">
+            <p class="card-label">Entry</p>
+            <h3>日卡</h3>
+            <p class="price-inline">免费</p>
+            <p class="plan-meta">20 刀 免费使用</p>
+            <a class="button button--ghost" href="./buy.html?plan=day-pass">购买日卡</a>
+          </article>
+          <article class="plan-card plan-card--featured">
+            <p class="card-label">Fast Start</p>
+            <h3>周卡</h3>
+            <p class="price-inline">¥29.9</p>
+            <p class="plan-meta">100 刀 / 天</p>
+            <a class="button button--solid" href="./buy.html?plan=week-pass">购买周卡</a>
+          </article>
+        </div>
+
+        <div class="pricing-panel pricing-panel--default" id="panel-monthly" role="tabpanel" aria-labelledby="tab-monthly">
+          <article class="plan-card plan-card--featured">
+            <p class="card-label">Recommended</p>
+            <h3>Plus 月卡</h3>
+            <p class="price-inline">¥99</p>
+            <p class="plan-meta">100 刀 / 天<br>30 天</p>
+            <a class="button button--solid" href="./buy.html?plan=plus-monthly">购买 Plus</a>
+          </article>
+          <article class="plan-card">
+            <p class="card-label">Monthly</p>
+            <h3>Pro 月卡</h3>
+            <p class="price-inline">¥199</p>
+            <p class="plan-meta">200 刀 / 天<br>30 天</p>
+            <a class="button button--ghost" href="./buy.html?plan=pro-monthly">购买 Pro</a>
+          </article>
+          <article class="plan-card">
+            <p class="card-label">Monthly</p>
+            <h3>Max 月卡</h3>
+            <p class="price-inline">¥499</p>
+            <p class="plan-meta">600 刀 / 天<br>30 天</p>
+            <a class="button button--ghost" href="./buy.html?plan=max-monthly">购买 Max</a>
+          </article>
+        </div>
+      </section>
+
       <section class="faq" aria-labelledby="faq-title">
         <div class="section-heading">
           <p class="eyebrow">FAQ</p>

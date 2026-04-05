@@ -50,3 +50,26 @@ test('homepage includes the editorial intro blocks and approved FAQ copy', async
   await expect(footer.getByRole('link', { name: '立即购买' })).toBeVisible();
   await expect(footer.getByRole('link', { name: '立即购买' })).toHaveAttribute('href', './buy.html');
 });
+
+test('pricing defaults to monthly plans and switches to experience plans', async ({ page }) => {
+  await page.goto('/');
+
+  const monthlyTab = page.getByRole('tab', { name: '月卡套餐' });
+  const experienceTab = page.getByRole('tab', { name: '体验套餐' });
+  const monthlyPanel = page.locator('#panel-monthly');
+  const experiencePanel = page.locator('#panel-experience');
+
+  await expect(monthlyTab).toHaveAttribute('aria-selected', 'true');
+  await expect(monthlyPanel).toBeVisible();
+  await expect(monthlyPanel).toContainText('Plus 月卡');
+  await expect(monthlyPanel).toContainText('Pro 月卡');
+  await expect(monthlyPanel).toContainText('Max 月卡');
+
+  await experienceTab.click();
+
+  await expect(experienceTab).toHaveAttribute('aria-selected', 'true');
+  await expect(monthlyPanel).toBeHidden();
+  await expect(experiencePanel).toBeVisible();
+  await expect(experiencePanel).toContainText('日卡');
+  await expect(experiencePanel).toContainText('周卡');
+});
