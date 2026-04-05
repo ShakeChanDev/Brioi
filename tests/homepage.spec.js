@@ -25,23 +25,32 @@ test('hero shows the approved price-first message and a single plus card', async
   await expect(hero.locator('.hero-side-card')).toHaveCount(1);
 });
 
-test('homepage includes the editorial intro blocks and approved FAQ copy', async ({ page }) => {
+test('homepage lists supported software cards and updated client FAQ copy', async ({ page }) => {
   await page.goto('/');
 
   const intro = page.locator('.editorial-blocks');
   const faq = page.locator('.faq');
   const footer = page.locator('.site-footer');
 
-  await expect(intro.getByRole('heading', { level: 2, name: '官方客户端。别买贵的。' })).toBeVisible();
-  await expect(intro.getByText('GPT / Codex 直接用。')).toBeVisible();
-  await expect(intro.getByText('不是缩水版，也不是纯点数站。')).toBeVisible();
-  await expect(intro.getByText('购买放在单独页面，首页只负责说明白和卖清楚。')).toBeVisible();
+  await expect(intro.getByRole('heading', { level: 2, name: '支持的软件。直接开用。' })).toBeVisible();
+  await expect(intro.locator('.software-card')).toHaveCount(4);
+  for (const [softwareSlug, softwareName] of [
+    ['codex', 'Codex'],
+    ['claude-code', 'Claude Code'],
+    ['opencode', 'OpenCode'],
+    ['openclaw', 'OpenClaw'],
+  ]) {
+    const softwareCard = intro.locator(`.software-card[data-software="${softwareSlug}"]`);
+
+    await expect(softwareCard.getByRole('heading', { level: 3, name: softwareName })).toBeVisible();
+    await expect(softwareCard.getByRole('button', { name: '使用方式' })).toBeVisible();
+  }
 
   await expect(faq.getByRole('heading', { level: 2, name: '你会问的，先回答。' })).toBeVisible();
-  await expect(faq.getByRole('heading', { level: 3, name: '支持哪些客户端？' })).toBeVisible();
-  await expect(faq.getByText('目前只支持 GPT、Codex，其他暂不支持。')).toBeVisible();
-  await expect(page.locator('body')).not.toContainText('Claude');
-  await expect(page.locator('body')).not.toContainText('Cursor');
+  await expect(faq.getByRole('heading', { level: 3, name: '支持哪些软件？' })).toBeVisible();
+  await expect(faq.getByText('目前支持 Codex、Claude Code、OpenCode、OpenClaw。')).toBeVisible();
+  await expect(page.locator('body')).not.toContainText('GPT / Codex 直接用。');
+  await expect(page.locator('body')).not.toContainText('不是缩水版，也不是纯点数站。');
   await expect(faq.getByRole('heading', { level: 3, name: '这是官方客户端接入，还是 API 点数？' })).toBeVisible();
   await expect(faq.getByText('这是官方客户端镜像接入与订阅通道，不是只卖 API 点数。')).toBeVisible();
   await expect(faq.getByRole('heading', { level: 3, name: '额度怎么计算？' })).toBeVisible();

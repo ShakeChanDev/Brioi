@@ -63,28 +63,37 @@
 
       <p class="hero-summary">一个订阅，直接覆盖 <span>GPT / Codex</span></p>
 
-      <!-- ====== Editorial Intro ====== -->
-      <section class="editorial-blocks" aria-labelledby="intro-title">
+      <!-- ====== Supported Software ====== -->
+      <section class="editorial-blocks" aria-labelledby="software-title">
         <div class="section-heading">
-          <p class="eyebrow">Why Brioi API</p>
-          <h2 id="intro-title">官方客户端。别买贵的。</h2>
+          <p class="eyebrow">Supported Software</p>
+          <h2 id="software-title">支持的软件。<span class="text-accent">直接开用。</span></h2>
         </div>
 
-        <div class="intro-grid">
-          <article class="info-card">
-            <p class="card-label">Direct</p>
-            <h3>GPT / Codex 直接用。</h3>
-            <p class="info-card-desc">官方客户端镜像接入，登录即用，无需额外配置。</p>
+        <div class="software-grid">
+          <article class="software-card" data-software="codex">
+            <div class="software-icon" aria-hidden="true">C</div>
+            <h3>Codex</h3>
+            <p class="software-card-meta">官方客户端镜像接入</p>
+            <button class="button button--outline software-trigger" type="button">使用方式</button>
           </article>
-          <article class="info-card">
-            <p class="card-label">Mirror</p>
-            <h3>不是缩水版，也不是纯点数站。</h3>
-            <p class="info-card-desc">完整的官方客户端体验，不是阉割功能后的替代品。</p>
+          <article class="software-card" data-software="claude-code">
+            <div class="software-icon" aria-hidden="true">CC</div>
+            <h3>Claude Code</h3>
+            <p class="software-card-meta">官方客户端镜像接入</p>
+            <button class="button button--outline software-trigger" type="button">使用方式</button>
           </article>
-          <article class="info-card">
-            <p class="card-label">Checkout</p>
-            <h3>购买放在单独页面，首页只负责说明白和卖清楚。</h3>
-            <p class="info-card-desc">所有购买操作统一在独立页面完成，流程清晰。</p>
+          <article class="software-card" data-software="opencode">
+            <div class="software-icon" aria-hidden="true">O</div>
+            <h3>OpenCode</h3>
+            <p class="software-card-meta">官方客户端镜像接入</p>
+            <button class="button button--outline software-trigger" type="button">使用方式</button>
+          </article>
+          <article class="software-card" data-software="openclaw">
+            <div class="software-icon" aria-hidden="true">OC</div>
+            <h3>OpenClaw</h3>
+            <p class="software-card-meta">官方客户端镜像接入</p>
+            <button class="button button--outline software-trigger" type="button">使用方式</button>
           </article>
         </div>
       </section>
@@ -153,8 +162,8 @@
 
         <div class="faq-list">
           <article class="faq-item">
-            <h3>支持哪些客户端？</h3>
-            <p>目前只支持 GPT、Codex，其他暂不支持。</p>
+            <h3>支持哪些软件？</h3>
+            <p>目前支持 Codex、Claude Code、OpenCode、OpenClaw。</p>
           </article>
           <article class="faq-item">
             <h3>这是官方客户端接入，还是 API 点数？</h3>
