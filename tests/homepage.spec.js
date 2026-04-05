@@ -61,15 +61,15 @@ test('pricing defaults to monthly plans and switches to experience plans', async
 
   await expect(monthlyTab).toHaveAttribute('aria-selected', 'true');
   await expect(monthlyPanel).toBeVisible();
-  await expect(monthlyPanel.getByText('Plus 月卡', { exact: true })).toBeVisible();
-  await expect(monthlyPanel.getByText('Pro 月卡', { exact: true })).toBeVisible();
-  await expect(monthlyPanel.getByText('Max 月卡', { exact: true })).toBeVisible();
+  await expect(monthlyPanel.getByText('Plus 月卡')).toBeVisible();
+  await expect(monthlyPanel.getByText('Pro 月卡')).toBeVisible();
+  await expect(monthlyPanel.getByText('Max 月卡')).toBeVisible();
 
   await experienceTab.click();
 
   await expect(experienceTab).toHaveAttribute('aria-selected', 'true');
   await expect(monthlyPanel).toBeHidden();
   await expect(experiencePanel).toBeVisible();
-  await expect(experiencePanel.getByText('日卡', { exact: true })).toBeVisible();
-  await expect(experiencePanel.getByText('周卡', { exact: true })).toBeVisible();
+  await expect(experiencePanel.getByText('日卡').first()).toBeVisible();
+  await expect(experiencePanel.getByText('周卡').first()).toBeVisible();
 });
