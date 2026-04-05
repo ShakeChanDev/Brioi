@@ -174,3 +174,66 @@ main {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   line-height: 1.5;
 }
+
+.section-heading {
+  margin-bottom: 24px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+}
+
+.editorial-blocks,
+.faq {
+  padding: 48px 0 72px;
+}
+
+.intro-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.info-card,
+.faq-item {
+  border-radius: 26px;
+  padding: 24px;
+  background: var(--panel);
+}
+
+.info-card h3,
+.faq-item h3 {
+  margin: 0;
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.faq-list {
+  display: grid;
+  gap: 16px;
+}
+
+.faq-item p,
+.footer-copy {
+  margin: 12px 0 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding: 32px 24px 48px;
+}
+
+.footer-inner {
+  width: min(1200px, calc(100% - 48px));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
