@@ -85,3 +85,10 @@ test('pricing defaults to monthly plans and switches to experience plans', async
   await expect(experiencePanel.getByRole('link', { name: '立即购买' }).nth(0)).toHaveAttribute('href', './buy.html?plan=day-pass');
   await expect(experiencePanel.getByRole('link', { name: '立即购买' }).nth(1)).toHaveAttribute('href', './buy.html?plan=week-pass');
 });
+
+test('buy page shows the selected plan from the query string', async ({ page }) => {
+  await page.goto('/buy.html?plan=plus-monthly');
+
+  await expect(page.getByRole('heading', { level: 1, name: '购买 Brioi API' })).toBeVisible();
+  await expect(page.getByText('已选择：Plus 月卡')).toBeVisible();
+});
