@@ -1,0 +1,13 @@
+{
+  "name": "brioi-homepage",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "http-server . -p 4173 -c-1",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.53.0",
+    "http-server": "^14.1.1"
+  }
+}
