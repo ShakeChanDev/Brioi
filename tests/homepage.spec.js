@@ -333,4 +333,15 @@ test.describe('homepage without javascript', () => {
     await expect(plusPlan.getByText('Plus 月卡')).toBeVisible();
     await expect(plusBuyLink).toHaveAttribute('href', './buy.html?plan=plus-monthly');
   });
+
+  test('shows the fallback usage guide and hides dead software triggers', async ({ page }) => {
+    await page.goto('/');
+
+    const fallbackGuide = page.locator('.software-noscript-guide');
+    const softwareTrigger = page.locator('.software-trigger').first();
+
+    await expect(fallbackGuide).toBeVisible();
+    await expect(softwareTrigger).toBeHidden();
+    await expect(fallbackGuide.getByText('适合直接在 Codex 工作流中登录后开始使用。')).toBeVisible();
+  });
 });
