@@ -154,18 +154,60 @@ function initSoftwareModal() {
   const mode = modal.querySelector('[data-modal-mode]');
   const steps = modal.querySelector('[data-modal-steps]');
   const note = modal.querySelector('[data-modal-note]');
+  const dialog = modal.querySelector('.software-modal');
   const closeButton = modal.querySelector('[data-close-software-modal]');
+  const mainContent = modal.parentElement;
+  const inertTargets = [...document.body.children].flatMap((element) => {
+    if (element === mainContent) {
+      return [...element.children].filter((child) => child !== modal);
+    }
 
-  if (!title || !icon || !mode || !steps || !note || !closeButton) {
+    return [element];
+  });
+  const previousInertState = new Map();
+  let activeTrigger = null;
+
+  if (!title || !icon || !mode || !steps || !note || !dialog || !closeButton) {
     return;
   }
 
-  function closeModal() {
-    modal.hidden = true;
-    document.body.classList.remove('modal-open');
+  function setBackgroundInert(isInert) {
+    inertTargets.forEach((element) => {
+      if (isInert) {
+        previousInertState.set(element, element.inert);
+        element.inert = true;
+      } else {
+        element.inert = previousInertState.get(element) ?? false;
+      }
+    });
+
+    if (!isInert) {
+      previousInertState.clear();
+    }
   }
 
-  function openModal(key) {
+  function getFocusableElements() {
+    return [...dialog.querySelectorAll(
+      'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )];
+  }
+
+  function closeModal() {
+    if (modal.hidden) {
+      return;
+    }
+
+    modal.hidden = true;
+    document.body.classList.remove('modal-open');
+    setBackgroundInert(false);
+
+    if (activeTrigger) {
+      activeTrigger.focus();
+      activeTrigger = null;
+    }
+  }
+
+  function openModal(key, trigger) {
     const details = SOFTWARE_DETAILS[key];
 
     if (!details) {
@@ -177,12 +219,15 @@ function initSoftwareModal() {
     mode.textContent = details.mode;
     note.textContent = details.note;
     steps.innerHTML = details.steps.map((step) => `<li>${step}</li>`).join('');
+    activeTrigger = trigger;
     modal.hidden = false;
     document.body.classList.add('modal-open');
+    setBackgroundInert(true);
+    closeButton.focus();
   }
 
   triggers.forEach((trigger) => {
-    trigger.addEventListener('click', () => openModal(trigger.dataset.software));
+    trigger.addEventListener('click', () => openModal(trigger.dataset.software, trigger));
   });
 
   closeButton.addEventListener('click', closeModal);
@@ -194,8 +239,36 @@ function initSoftwareModal() {
   });
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !modal.hidden) {
+    if (modal.hidden) {
+      return;
+    }
+
+    if (event.key === 'Escape') {
       closeModal();
+      return;
+    }
+
+    if (event.key !== 'Tab') {
+      return;
+    }
+
+    const focusableElements = getFocusableElements();
+
+    if (!focusableElements.length) {
+      event.preventDefault();
+      dialog.focus();
+      return;
+    }
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (event.shiftKey && document.activeElement === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+    } else if (!event.shiftKey && document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
     }
   });
 }

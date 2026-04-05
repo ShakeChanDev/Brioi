@@ -141,9 +141,9 @@ test('supported software cards stack into one column on mobile', async ({ page }
 test('software usage modal opens with the selected software details and closes again', async ({ page }) => {
   await page.goto('/');
 
-  const softwareCard = page.locator('.software-card[data-software="claude-code"]');
+  const trigger = page.locator('.software-card[data-software="claude-code"]').getByRole('button', { name: '使用方式' });
 
-  await softwareCard.getByRole('button', { name: '使用方式' }).click();
+  await trigger.click();
 
   const dialog = page.getByRole('dialog', { name: 'Claude Code 使用方式' });
 
@@ -158,6 +158,63 @@ test('software usage modal opens with the selected software details and closes a
   await dialog.getByRole('button', { name: '关闭' }).click();
 
   await expect(dialog).toBeHidden();
+});
+
+test('software usage modal moves focus into the modal and makes background sections inert while open', async ({ page }) => {
+  await page.goto('/');
+
+  const trigger = page.locator('.software-card[data-software="claude-code"]').getByRole('button', { name: '使用方式' });
+  const pricingSection = page.locator('#pricing');
+
+  await trigger.focus();
+  await expect(trigger).toBeFocused();
+
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'Claude Code 使用方式' });
+  const closeButton = dialog.getByRole('button', { name: '关闭' });
+
+  await expect(dialog).toBeVisible();
+  await expect(closeButton).toBeFocused();
+  await expect(trigger).not.toBeFocused();
+  await expect(pricingSection).toHaveJSProperty('inert', true);
+});
+
+test('software usage modal closes with Escape and restores focus to its trigger', async ({ page }) => {
+  await page.goto('/');
+
+  const trigger = page.locator('.software-card[data-software="opencode"]').getByRole('button', { name: '使用方式' });
+
+  await trigger.focus();
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'OpenCode 使用方式' });
+
+  await expect(dialog).toBeVisible();
+
+  await page.keyboard.press('Escape');
+
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
+
+test('software usage modal closes when the backdrop is clicked and restores focus to its trigger', async ({ page }) => {
+  await page.goto('/');
+
+  const trigger = page.locator('.software-card[data-software="codex"]').getByRole('button', { name: '使用方式' });
+
+  await trigger.focus();
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'Codex 使用方式' });
+  const backdrop = page.locator('[data-software-modal]');
+
+  await expect(dialog).toBeVisible();
+
+  await backdrop.click({ position: { x: 8, y: 8 } });
+
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
 });
 
 test('pricing defaults to monthly plans and switches to experience plans', async ({ page }) => {
