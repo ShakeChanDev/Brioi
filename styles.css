@@ -21,3 +21,9 @@ body {
   justify-content: space-between;
   padding: 24px;
 }
+
+.brand,
+.nav-cta {
+  color: inherit;
+  text-decoration: none;
+}
