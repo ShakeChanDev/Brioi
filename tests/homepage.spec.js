@@ -67,9 +67,10 @@ test('homepage lists supported software cards and updated client FAQ copy', asyn
 });
 
 test('supported software cards stay on one row on desktop', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');
 
-  const cards = page.locator('.software-card');
+  const cards = page.locator('.editorial-blocks .software-card');
 
   await expect(cards).toHaveCount(4);
 
@@ -87,6 +88,54 @@ test('supported software cards stay on one row on desktop', async ({ page }) => 
 
   expect(roundedTopOffsets.size).toBe(1);
   expect(roundedLeftOffsets.size).toBe(4);
+});
+
+test('supported software cards use two columns on tablet', async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 900 });
+  await page.goto('/');
+
+  const cards = page.locator('.editorial-blocks .software-card');
+
+  await expect(cards).toHaveCount(4);
+
+  const boxes = [];
+
+  for (let index = 0; index < 4; index += 1) {
+    const box = await cards.nth(index).boundingBox();
+
+    expect(box).not.toBeNull();
+    boxes.push(box);
+  }
+
+  const roundedTopOffsets = new Set(boxes.map((box) => Math.round(box.y)));
+  const roundedLeftOffsets = new Set(boxes.map((box) => Math.round(box.x)));
+
+  expect(roundedTopOffsets.size).toBe(2);
+  expect(roundedLeftOffsets.size).toBe(2);
+});
+
+test('supported software cards stack into one column on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 680, height: 900 });
+  await page.goto('/');
+
+  const cards = page.locator('.editorial-blocks .software-card');
+
+  await expect(cards).toHaveCount(4);
+
+  const boxes = [];
+
+  for (let index = 0; index < 4; index += 1) {
+    const box = await cards.nth(index).boundingBox();
+
+    expect(box).not.toBeNull();
+    boxes.push(box);
+  }
+
+  const roundedTopOffsets = new Set(boxes.map((box) => Math.round(box.y)));
+  const roundedLeftOffsets = new Set(boxes.map((box) => Math.round(box.x)));
+
+  expect(roundedTopOffsets.size).toBe(4);
+  expect(roundedLeftOffsets.size).toBe(1);
 });
 
 test('pricing defaults to monthly plans and switches to experience plans', async ({ page }) => {
