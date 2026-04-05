@@ -25,15 +25,28 @@ test('hero shows the approved price-first message and a single plus card', async
 test('homepage includes the editorial intro blocks and approved FAQ copy', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page.getByRole('heading', { level: 2, name: '官方客户端。别买贵的。' })).toBeVisible();
-  await expect(page.getByText('Claude / Codex / Cursor 直接用。')).toBeVisible();
-  await expect(page.getByText('不是缩水版，也不是纯点数站。')).toBeVisible();
-  await expect(page.getByText('购买放在单独页面，首页只负责说明白和卖清楚。')).toBeVisible();
+  const intro = page.locator('.editorial-blocks');
+  const faq = page.locator('.faq');
+  const footer = page.locator('.site-footer');
 
-  await expect(page.getByRole('heading', { level: 2, name: '你会问的，先回答。' })).toBeVisible();
-  await expect(page.getByText('支持哪些客户端？')).toBeVisible();
-  await expect(page.getByText('这是官方客户端接入，还是 API 点数？')).toBeVisible();
-  await expect(page.getByText('额度怎么计算？')).toBeVisible();
-  await expect(page.getByText('购买后去哪里？')).toBeVisible();
-  await expect(page.getByText('哪个套餐最适合大多数人？')).toBeVisible();
+  await expect(intro.getByRole('heading', { level: 2, name: '官方客户端。别买贵的。' })).toBeVisible();
+  await expect(intro.getByText('Claude / Codex / Cursor 直接用。')).toBeVisible();
+  await expect(intro.getByText('不是缩水版，也不是纯点数站。')).toBeVisible();
+  await expect(intro.getByText('购买放在单独页面，首页只负责说明白和卖清楚。')).toBeVisible();
+
+  await expect(faq.getByRole('heading', { level: 2, name: '你会问的，先回答。' })).toBeVisible();
+  await expect(faq.getByRole('heading', { level: 3, name: '支持哪些客户端？' })).toBeVisible();
+  await expect(faq.getByText('支持 Claude、Codex、Cursor 等官方客户端使用。')).toBeVisible();
+  await expect(faq.getByRole('heading', { level: 3, name: '这是官方客户端接入，还是 API 点数？' })).toBeVisible();
+  await expect(faq.getByText('这是官方客户端镜像接入与订阅通道，不是只卖 API 点数。')).toBeVisible();
+  await expect(faq.getByRole('heading', { level: 3, name: '额度怎么计算？' })).toBeVisible();
+  await expect(faq.getByText('周卡和月卡均按每日额度展示，月卡有效期为 30 天。')).toBeVisible();
+  await expect(faq.getByRole('heading', { level: 3, name: '购买后去哪里？' })).toBeVisible();
+  await expect(faq.getByText('所有首页 CTA 统一进入购买页。')).toBeVisible();
+  await expect(faq.getByRole('heading', { level: 3, name: '哪个套餐最适合大多数人？' })).toBeVisible();
+  await expect(faq.getByText('默认推荐 Plus 月卡 ¥99，适合大多数长期使用场景。')).toBeVisible();
+
+  await expect(footer.getByText('给官方客户端一个更划算的入口。')).toBeVisible();
+  await expect(footer.getByRole('link', { name: '立即购买' })).toBeVisible();
+  await expect(footer.getByRole('link', { name: '立即购买' })).toHaveAttribute('href', './buy.html');
 });
