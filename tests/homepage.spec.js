@@ -92,3 +92,34 @@ test('buy page shows the selected plan from the query string', async ({ page }) 
   await expect(page.getByRole('heading', { level: 1, name: '购买 Brioi API' })).toBeVisible();
   await expect(page.getByText('已选择：Plus 月卡')).toBeVisible();
 });
+
+test('mobile layout stacks the hero card below the hero copy', async ({ page }) => {
+  await page.setViewportSize({ width: 720, height: 1280 });
+  await page.goto('/');
+
+  const heroCopy = page.locator('.hero-copy');
+  const heroCard = page.locator('.hero-side-card');
+  const copyBox = await heroCopy.boundingBox();
+  const cardBox = await heroCard.boundingBox();
+
+  expect(copyBox).not.toBeNull();
+  expect(cardBox).not.toBeNull();
+  expect(cardBox.y).toBeGreaterThan(copyBox.y + 100);
+});
+
+test('homepage without javascript still shows the monthly pricing group and working links', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+
+  await page.goto('/');
+
+  const monthlyPanel = page.locator('#panel-monthly');
+  const plusPlan = monthlyPanel.locator('article').filter({ hasText: 'Plus 月卡' });
+  const plusBuyLink = plusPlan.getByRole('link', { name: '立即购买' });
+
+  await expect(monthlyPanel).toBeVisible();
+  await expect(plusPlan.getByText('Plus 月卡')).toBeVisible();
+  await expect(plusBuyLink).toHaveAttribute('href', './buy.html?plan=plus-monthly');
+
+  await context.close();
+});
