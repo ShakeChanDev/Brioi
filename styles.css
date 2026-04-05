@@ -1,16 +1,32 @@
+/* ============================================================
+   Brioi API — Dark Tech Glassmorphism Theme
+   ============================================================ */
+
+/* --- Design Tokens --- */
 :root {
-  --bg: #ffffff;
-  --text: #000000;
-  --muted: #4b5563;
-  --panel: #f3f4f6;
-  --accent: #5be139;
-  --accent-bright: #8dfc4f;
-  --line: #e5e7eb;
+  --bg: #0a0a0f;
+  --bg-deep: #06060b;
+  --text: #f0f0f5;
+  --text-secondary: #c8c8d0;
+  --muted: #9ca3af;
+  --panel: rgba(255, 255, 255, 0.05);
+  --panel-hover: rgba(255, 255, 255, 0.08);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --accent-start: #6366f1;
+  --accent-end: #a855f7;
+  --accent-glow: rgba(99, 102, 241, 0.35);
+  --line: rgba(255, 255, 255, 0.08);
   --radius-lg: 24px;
   --radius-xl: 30px;
-  --shadow-strong: 0 24px 50px rgba(91, 225, 57, 0.14), 0 10px 20px rgba(0, 0, 0, 0.08);
+  --blur: 20px;
+  --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.12), 0 0 80px rgba(168, 85, 247, 0.06);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --gradient-accent: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  --gradient-text: linear-gradient(135deg, #818cf8, #c084fc);
+  --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* --- Reset & Base --- */
 * {
   box-sizing: border-box;
 }
@@ -24,6 +40,25 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: "Inter Tight", "Inter", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Subtle radial gradient background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(168, 85, 247, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
 }
 
 a {
@@ -31,62 +66,105 @@ a {
   text-decoration: none;
 }
 
+/* --- Layout --- */
 .site-nav,
 main {
   width: min(1200px, calc(100% - 48px));
   margin: 0 auto;
 }
 
+/* --- Navigation --- */
 .site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 0 8px;
+  padding: 18px 0;
+  background: rgba(10, 10, 15, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
 }
 
 .brand {
   font-size: 1rem;
   font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
+/* --- Buttons --- */
 .nav-cta,
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  padding: 14px 20px;
+  padding: 14px 22px;
   font-weight: 700;
+  font-size: 0.95rem;
+  transition: all var(--transition-base);
+  cursor: pointer;
 }
 
 .nav-cta,
-.button--solid,
-.button--solid-dark {
-  background: #000;
+.button--solid {
+  background: var(--gradient-accent);
   color: #fff;
+  box-shadow: 0 4px 20px var(--accent-glow);
+  border: none;
+}
+
+.nav-cta:hover,
+.button--solid:hover {
+  box-shadow: 0 6px 30px rgba(99, 102, 241, 0.5), 0 0 60px rgba(168, 85, 247, 0.2);
+  transform: translateY(-2px);
+}
+
+.button--solid-dark {
+  background: var(--gradient-accent);
+  color: #fff;
+  box-shadow: 0 4px 20px var(--accent-glow);
+  border: none;
+}
+
+.button--solid-dark:hover {
+  box-shadow: 0 6px 30px rgba(99, 102, 241, 0.5), 0 0 60px rgba(168, 85, 247, 0.2);
+  transform: translateY(-2px);
 }
 
 .button--ghost {
   background: var(--panel);
-  color: #111;
+  color: var(--text);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
 }
 
+.button--ghost:hover {
+  background: var(--panel-hover);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* --- Hero Section --- */
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.9fr);
   gap: 32px;
   align-items: start;
-  padding: 32px 0 24px;
+  padding: 48px 0 24px;
 }
 
 .eyebrow,
 .card-label {
   margin: 0 0 16px;
-  font-family: "SFMono-Regular", Consolas, monospace;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   font-size: 0.75rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #6b7280;
+  color: var(--muted);
 }
 
 .hero-title {
@@ -99,9 +177,13 @@ main {
 .hero-title span,
 .price,
 .hero-summary span {
-  color: var(--accent);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* --- Chat Bubbles --- */
 .chat-stack {
   display: grid;
   gap: 14px;
@@ -123,17 +205,23 @@ main {
   font-size: 1.05rem;
   line-height: 1.6;
   font-weight: 600;
+  transition: all var(--transition-base);
 }
 
 .chat-bubble--muted {
   background: var(--panel);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
 }
 
 .chat-bubble--accent {
-  background: var(--accent);
-  color: #071006;
+  background: var(--gradient-accent);
+  color: #fff;
+  box-shadow: 0 4px 24px var(--accent-glow);
 }
 
+/* --- Hero Actions --- */
 .hero-actions {
   display: flex;
   gap: 12px;
@@ -141,12 +229,31 @@ main {
   flex-wrap: wrap;
 }
 
+/* --- Hero Side Card (Glassmorphism) --- */
 .hero-side-card {
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-xl);
-  padding: 24px;
-  background: linear-gradient(180deg, #ffffff 0%, #f7ffef 100%);
-  box-shadow: var(--shadow-strong);
+  padding: 28px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  box-shadow: var(--shadow-card), var(--shadow-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradient border glow effect */
+.hero-side-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(160deg, rgba(99, 102, 241, 0.4), transparent 40%, transparent 60%, rgba(168, 85, 247, 0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 .hero-side-card h2 {
@@ -175,8 +282,9 @@ main {
   line-height: 1.5;
 }
 
+/* --- Section Headings --- */
 .section-heading {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .section-heading h2 {
@@ -184,8 +292,13 @@ main {
   font-size: clamp(2.5rem, 6vw, 4rem);
   line-height: 0.98;
   letter-spacing: -0.05em;
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* --- Editorial Blocks / Info Cards --- */
 .editorial-blocks,
 .faq {
   padding: 48px 0 72px;
@@ -200,8 +313,20 @@ main {
 .info-card,
 .faq-item {
   border-radius: 26px;
-  padding: 24px;
+  padding: 26px;
   background: var(--panel);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  transition: all var(--transition-base);
+}
+
+.info-card:hover,
+.faq-item:hover {
+  background: var(--panel-hover);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card), 0 0 30px rgba(99, 102, 241, 0.08);
 }
 
 .info-card h3,
@@ -209,13 +334,16 @@ main {
   margin: 0;
   font-size: 1.6rem;
   line-height: 1.2;
+  color: var(--text);
 }
 
+/* --- FAQ --- */
 .faq-list {
   display: grid;
   gap: 16px;
 }
 
+/* --- Pricing Section --- */
 .pricing {
   padding: 32px 0 72px;
 }
@@ -227,6 +355,7 @@ main {
   padding: 4px;
   border-radius: 999px;
   background: var(--panel);
+  border: 1px solid var(--panel-border);
 }
 
 .pricing-tab {
@@ -236,11 +365,19 @@ main {
   background: transparent;
   font: inherit;
   font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.pricing-tab:hover {
+  color: var(--text);
 }
 
 .pricing-tab.is-active {
-  background: #000;
+  background: var(--gradient-accent);
   color: #fff;
+  box-shadow: 0 2px 12px var(--accent-glow);
 }
 
 .pricing-panel {
@@ -260,22 +397,61 @@ main {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+/* --- Plan Cards --- */
 .plan-card {
   display: flex;
   flex-direction: column;
   min-height: 320px;
   border-radius: 28px;
-  padding: 24px;
+  padding: 26px;
   background: var(--panel);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  transition: all var(--transition-base);
 }
 
+.plan-card:hover {
+  transform: translateY(-4px);
+  background: var(--panel-hover);
+  box-shadow: var(--shadow-card);
+}
+
+/* Featured plan card with gradient border */
 .plan-card--featured {
-  background: #000;
-  color: #fff;
+  background: rgba(99, 102, 241, 0.08);
+  border-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.plan-card--featured::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: var(--gradient-accent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.plan-card--featured:hover {
+  background: rgba(99, 102, 241, 0.12);
+  box-shadow: var(--shadow-card), var(--shadow-glow);
+}
+
+.plan-card--featured .card-label {
+  color: #a78bfa;
 }
 
 .plan-card--featured .price-inline {
-  color: var(--accent);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .price-inline {
@@ -293,13 +469,14 @@ main {
 }
 
 .plan-card--featured .plan-meta {
-  color: #d1d5db;
+  color: var(--text-secondary);
 }
 
 .plan-card .button {
   margin-top: auto;
 }
 
+/* --- FAQ Items --- */
 .faq-item p,
 .footer-copy {
   margin: 12px 0 0;
@@ -308,9 +485,11 @@ main {
   color: var(--muted);
 }
 
+/* --- Footer --- */
 .site-footer {
   border-top: 1px solid var(--line);
   padding: 32px 24px 48px;
+  background: var(--bg-deep);
 }
 
 .footer-inner {
@@ -322,6 +501,7 @@ main {
   gap: 16px;
 }
 
+/* --- Buy Page --- */
 .buy-page {
   width: min(720px, calc(100% - 48px));
   margin: 0 auto;
@@ -333,6 +513,10 @@ main {
   font-size: clamp(3rem, 7vw, 5rem);
   line-height: 0.94;
   letter-spacing: -0.05em;
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .buy-copy {
@@ -344,8 +528,11 @@ main {
 .buy-card {
   margin-bottom: 24px;
   border-radius: 28px;
-  padding: 24px;
+  padding: 26px;
   background: var(--panel);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
 }
 
 .buy-plan {
@@ -353,6 +540,54 @@ main {
   font-size: 1.5rem;
   font-weight: 700;
 }
+
+/* ============================================================
+   Animations (respects prefers-reduced-motion)
+   ============================================================ */
+
+/* Fade-in-up on scroll */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.js .hero-copy,
+.js .hero-side-card,
+.js .hero-summary,
+.js .editorial-blocks,
+.js .pricing,
+.js .faq,
+.js .site-footer {
+  animation: fadeInUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.js .hero-copy { animation-delay: 0.05s; }
+.js .hero-side-card { animation-delay: 0.15s; }
+.js .hero-summary { animation-delay: 0.25s; }
+.js .editorial-blocks { animation-delay: 0.1s; }
+.js .pricing { animation-delay: 0.1s; }
+.js .faq { animation-delay: 0.1s; }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
 
 @media (max-width: 960px) {
   .hero {
