@@ -66,6 +66,29 @@ test('homepage lists supported software cards and updated client FAQ copy', asyn
   await expect(footer.getByRole('link', { name: '立即购买' })).toHaveAttribute('href', './buy.html?plan=plus-monthly');
 });
 
+test('supported software cards stay on one row on desktop', async ({ page }) => {
+  await page.goto('/');
+
+  const cards = page.locator('.software-card');
+
+  await expect(cards).toHaveCount(4);
+
+  const boxes = [];
+
+  for (let index = 0; index < 4; index += 1) {
+    const box = await cards.nth(index).boundingBox();
+
+    expect(box).not.toBeNull();
+    boxes.push(box);
+  }
+
+  const roundedTopOffsets = new Set(boxes.map((box) => Math.round(box.y)));
+  const roundedLeftOffsets = new Set(boxes.map((box) => Math.round(box.x)));
+
+  expect(roundedTopOffsets.size).toBe(1);
+  expect(roundedLeftOffsets.size).toBe(4);
+});
+
 test('pricing defaults to monthly plans and switches to experience plans', async ({ page }) => {
   await page.goto('/');
 
