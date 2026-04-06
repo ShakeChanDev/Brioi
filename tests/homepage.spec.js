@@ -178,17 +178,25 @@ test('software usage modal renders the selected local icon asset and never falls
 test('supported software icon images stay contained inside shared neutral wrappers', async ({ page }) => {
   await page.goto('/');
 
-  const cardImage = page.locator('.software-card[data-software="openclaw"] .software-icon-image');
-  const cardWrapper = page.locator('.software-card[data-software="openclaw"] .software-icon');
+  for (const [softwareSlug, expectedDialogName] of [
+    ['codex', 'Codex'],
+    ['openclaw', 'OpenClaw'],
+  ]) {
+    const card = page.locator(`.software-card[data-software="${softwareSlug}"]`);
+    const cardImage = card.locator('.software-icon-image');
+    const cardWrapper = card.locator('.software-icon');
 
-  await expect(cardImage).toHaveCSS('object-fit', 'contain');
-  await expect(cardWrapper).toHaveCSS('border-radius', '26px');
+    await expect(cardImage).toHaveCSS('object-fit', 'contain');
+    await expect(cardWrapper).toHaveCSS('border-radius', '26px');
 
-  await page.locator('.software-card[data-software="openclaw"]').getByRole('button', { name: '使用方式' }).click();
+    if (softwareSlug === 'openclaw') {
+      await card.getByRole('button', { name: '使用方式' }).click();
 
-  const modalImage = page.getByRole('dialog', { name: 'OpenClaw 使用方式' }).locator('.software-modal-icon-image');
+      const modalImage = page.getByRole('dialog', { name: `${expectedDialogName} 使用方式` }).locator('.software-modal-icon-image');
 
-  await expect(modalImage).toHaveCSS('object-fit', 'contain');
+      await expect(modalImage).toHaveCSS('object-fit', 'contain');
+    }
+  }
 });
 
 test('software usage modal opens with the selected software details and closes again', async ({ page }) => {
