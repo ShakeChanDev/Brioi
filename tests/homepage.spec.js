@@ -178,13 +178,17 @@ test('software usage modal renders the selected local icon asset and never falls
 test('software usage modal opens with the selected software details and closes again', async ({ page }) => {
   await page.goto('/');
 
-  const trigger = page.locator('.software-card[data-software="claude-code"]').getByRole('button', { name: '使用方式' });
+  const card = page.locator('.software-card[data-software="claude-code"]');
+  const trigger = card.getByRole('button', { name: '使用方式' });
+  const expectedSrc = await card.getAttribute('data-software-icon-src');
 
   await trigger.click();
 
   const dialog = page.getByRole('dialog', { name: 'Claude Code 使用方式' });
+  const modalImage = dialog.locator('.software-modal-icon-image');
 
   await expect(dialog).toBeVisible();
+  await expect(modalImage).toHaveAttribute('src', expectedSrc);
   await expect(dialog.getByText('适用方式')).toBeVisible();
   await expect(dialog.getByText('适合命令行驱动的代码工作流，登录后即可进入会话。')).toBeVisible();
   await expect(dialog.getByText('使用步骤')).toBeVisible();
