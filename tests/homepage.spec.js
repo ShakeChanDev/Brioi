@@ -11,19 +11,26 @@ test('homepage shell loads with title and navigation', async ({ page }) => {
   await expect(page.getByRole('main')).toBeVisible();
 });
 
-test('hero shows the approved price-first message and a single plus card', async ({ page }) => {
+test('homepage hero uses the final editorial two-line headline and GPT-5.4 subtitle', async ({ page }) => {
   await page.goto('/');
 
   const hero = page.locator('#hero');
 
   await expect(page.locator('head meta[name="description"]')).toHaveAttribute(
     'content',
-    'Brioi API — 官方客户端镜像接入，不是缩水版，也不是只卖 API 点数。一个订阅，直接覆盖 Codex、Claude Code、OpenCode、OpenClaw。'
+    'Brioi API — 让每个人都能轻松用上更强的 AI 大模型。支持最新 GPT-5.4 模型。'
   );
-  await expect(hero.getByRole('heading', { level: 1 })).toContainText('不想再为');
-  await expect(hero.getByText('我想直接用 Codex、Claude Code、OpenCode、OpenClaw。')).toBeVisible();
-  await expect(hero.getByText('那就别买贵的。一个订阅，直接上。')).toBeVisible();
-  await expect(hero.getByText('是官方客户端镜像接入，不是缩水版，也不是只卖 API 点数。')).toBeVisible();
+  await expect(hero.locator('[data-hero-title-line]')).toHaveText([
+    '让每个人都能轻松用上',
+    '更强的 AI 大模型'
+  ]);
+  await expect(hero.locator('[data-hero-title-line]')).toHaveCount(2);
+  await expect(hero.locator('[data-hero-title-line]').first()).toHaveCSS('font-weight', '800');
+  await expect(hero.locator('[data-hero-subtitle]')).toHaveText('支持最新 GPT-5.4 模型');
+  await expect(hero.locator('[data-hero-subtitle]')).toHaveCSS('font-weight', '700');
+  await expect(hero.locator('.chat-stack')).toHaveCount(0);
+  await expect(page.locator('.hero-summary')).toHaveCount(0);
+  await expect(hero).not.toContainText('不想再为');
   await expect(hero.getByRole('heading', { name: 'Plus 月卡' })).toBeVisible();
   await expect(hero.getByText('¥99')).toBeVisible();
   await expect(hero.locator('.hero-side-card')).toHaveCount(1);
@@ -31,7 +38,6 @@ test('hero shows the approved price-first message and a single plus card', async
   await expect(hero.getByRole('link', { name: '查看套餐' })).toHaveCount(0);
   await expect(hero.getByRole('link', { name: '去购买' })).toHaveAttribute('href', '#pricing');
   await expect(hero.getByRole('link', { name: '查看更多套餐' })).toHaveAttribute('href', '#pricing');
-  await expect(page.locator('.hero-summary')).toHaveText('一个订阅，直接覆盖 Codex / Claude Code / OpenCode / OpenClaw');
 });
 
 test('homepage lists supported software cards and updated client FAQ copy', async ({ page }) => {

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brioi API | 官方客户端订阅接入</title>
-    <meta name="description" content="Brioi API — 官方客户端镜像接入，不是缩水版，也不是只卖 API 点数。一个订阅，直接覆盖 Codex、Claude Code、OpenCode、OpenClaw。">
+    <meta name="description" content="Brioi API — 让每个人都能轻松用上更强的 AI 大模型。支持最新 GPT-5.4 模型。">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -30,30 +30,21 @@
 
     <main>
       <!-- ====== Hero ====== -->
-      <section id="hero" class="hero">
+      <section id="hero" class="hero hero--home-editorial" aria-labelledby="home-hero-title">
         <div class="hero-copy">
-          <p class="eyebrow">Official Client Mirror Access</p>
-          <h1 class="hero-title">
-            不想再为<br>
-            官方客户端<br>
-            <span class="text-accent">付更贵？</span>
-          </h1>
-
-          <div class="chat-stack" aria-label="产品介绍对话">
-            <div class="chat-row">
-              <div class="chat-bubble chat-bubble--muted">我想直接用 Codex、Claude Code、OpenCode、OpenClaw。</div>
-            </div>
-            <div class="chat-row chat-row--reply">
-              <div class="chat-bubble chat-bubble--accent">那就别买贵的。一个订阅，直接上。</div>
-            </div>
-            <div class="chat-row">
-              <div class="chat-bubble chat-bubble--muted">是官方客户端镜像接入，不是缩水版，也不是只卖 API 点数。</div>
-            </div>
+          <div class="hero-title-block hero-title-block--editorial">
+            <p class="eyebrow">Model Access For Everyone</p>
+            <h1 class="hero-title hero-title--editorial" id="home-hero-title">
+              <span class="hero-title-line" data-hero-title-line>让每个人都能轻松用上</span>
+              <span class="hero-title-line" data-hero-title-line>更强的 AI 大模型</span>
+            </h1>
           </div>
-
+          <p class="hero-subtitle" data-hero-subtitle>
+            支持最新 <span class="text-accent">GPT-5.4</span> 模型
+          </p>
         </div>
 
-        <aside class="hero-side-card" aria-label="主推套餐">
+        <aside class="hero-side-card hero-side-card--featured" aria-label="主推套餐">
           <div class="side-card-inner">
             <p class="card-label">Most Popular</p>
             <h2>Plus 月卡</h2>
@@ -66,8 +57,6 @@
           </div>
         </aside>
       </section>
-
-      <p class="hero-summary">一个订阅，直接覆盖 <span>Codex / Claude Code / OpenCode / OpenClaw</span></p>
 
       <!-- ====== Supported Software ====== -->
       <section class="editorial-blocks" aria-labelledby="software-title">
