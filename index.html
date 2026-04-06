@@ -4,11 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brioi API | 官方客户端订阅接入</title>
-    <meta name="description" content="Brioi API — 官方客户端镜像接入，不是缩水版，也不是只卖 API 点数。一个订阅，直接覆盖 GPT / Codex。">
+    <meta name="description" content="Brioi API — 官方客户端镜像接入，不是缩水版，也不是只卖 API 点数。一个订阅，直接覆盖 Codex、Claude Code、OpenCode、OpenClaw。">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./styles.css">
+    <noscript>
+      <style>
+        .software-trigger {
+          display: none !important;
+        }
+      </style>
+    </noscript>
     <script src="./main.js" defer></script>
   </head>
   <body data-page="home">
@@ -34,7 +41,7 @@
 
           <div class="chat-stack" aria-label="产品介绍对话">
             <div class="chat-row">
-              <div class="chat-bubble chat-bubble--muted">我想直接用 GPT / Codex。</div>
+              <div class="chat-bubble chat-bubble--muted">我想直接用 Codex、Claude Code、OpenCode、OpenClaw。</div>
             </div>
             <div class="chat-row chat-row--reply">
               <div class="chat-bubble chat-bubble--accent">那就别买贵的。一个订阅，直接上。</div>
@@ -60,33 +67,208 @@
         </aside>
       </section>
 
-      <p class="hero-summary">一个订阅，直接覆盖 <span>GPT / Codex</span></p>
+      <p class="hero-summary">一个订阅，直接覆盖 <span>Codex / Claude Code / OpenCode / OpenClaw</span></p>
 
-      <!-- ====== Editorial Intro ====== -->
-      <section class="editorial-blocks" aria-labelledby="intro-title">
+      <!-- ====== Supported Software ====== -->
+      <section class="editorial-blocks" aria-labelledby="software-title">
         <div class="section-heading">
-          <p class="eyebrow">Why Brioi API</p>
-          <h2 id="intro-title">官方客户端。别买贵的。</h2>
+          <p class="eyebrow">Supported Software</p>
+          <h2 id="software-title">支持的软件。<span class="text-accent">直接开用。</span></h2>
         </div>
 
-        <div class="intro-grid">
-          <article class="info-card">
-            <p class="card-label">Direct</p>
-            <h3>GPT / Codex 直接用。</h3>
-            <p class="info-card-desc">官方客户端镜像接入，登录即用，无需额外配置。</p>
+        <div class="software-grid">
+          <article class="software-card" data-software="codex">
+            <div class="software-icon software-icon--codex" aria-hidden="true">CX</div>
+            <h3>Codex</h3>
+            <p class="software-card-meta">官方客户端镜像接入</p>
+            <button class="button button--outline software-trigger" type="button" data-software="codex">使用方式</button>
           </article>
-          <article class="info-card">
-            <p class="card-label">Mirror</p>
-            <h3>不是缩水版，也不是纯点数站。</h3>
-            <p class="info-card-desc">完整的官方客户端体验，不是阉割功能后的替代品。</p>
+          <article class="software-card" data-software="claude-code">
+            <div class="software-icon software-icon--claude-code" aria-hidden="true">CC</div>
+            <h3>Claude Code</h3>
+            <p class="software-card-meta">官方客户端镜像接入</p>
+            <button class="button button--outline software-trigger" type="button" data-software="claude-code">使用方式</button>
           </article>
-          <article class="info-card">
-            <p class="card-label">Checkout</p>
-            <h3>购买放在单独页面，首页只负责说明白和卖清楚。</h3>
-            <p class="info-card-desc">所有购买操作统一在独立页面完成，流程清晰。</p>
+          <article class="software-card" data-software="opencode">
+            <div class="software-icon software-icon--opencode" aria-hidden="true">OC</div>
+            <h3>OpenCode</h3>
+            <p class="software-card-meta">官方客户端镜像接入</p>
+            <button class="button button--outline software-trigger" type="button" data-software="opencode">使用方式</button>
+          </article>
+          <article class="software-card" data-software="openclaw">
+            <div class="software-icon software-icon--openclaw" aria-hidden="true">OW</div>
+            <h3>OpenClaw</h3>
+            <p class="software-card-meta">官方客户端镜像接入</p>
+            <button class="button button--outline software-trigger" type="button" data-software="openclaw">使用方式</button>
           </article>
         </div>
       </section>
+
+      <noscript>
+        <section class="software-noscript-guide" aria-labelledby="software-noscript-title">
+          <div class="section-heading">
+            <p class="eyebrow">Usage Guide</p>
+            <h2 id="software-noscript-title">使用方式。<span class="text-accent">无 JS 也能看。</span></h2>
+          </div>
+
+          <div class="software-noscript-grid">
+            <article class="software-noscript-card" data-software="codex">
+              <div class="software-noscript-head">
+                <div class="software-icon software-icon--codex" aria-hidden="true">CX</div>
+                <div>
+                  <p class="card-label">Codex</p>
+                  <h3>Codex 使用方式</h3>
+                </div>
+              </div>
+
+              <div class="software-noscript-body">
+                <section class="software-modal-section" aria-labelledby="software-noscript-codex-mode">
+                  <h4 id="software-noscript-codex-mode">适用方式</h4>
+                  <p>适合直接在 Codex 工作流中登录后开始使用。</p>
+                </section>
+
+                <section class="software-modal-section" aria-labelledby="software-noscript-codex-steps">
+                  <h4 id="software-noscript-codex-steps">使用步骤</h4>
+                  <ol>
+                    <li>打开 Codex 客户端。</li>
+                    <li>使用购买后的账号完成登录。</li>
+                    <li>进入项目后直接开始对话或编码。</li>
+                  </ol>
+                </section>
+
+                <section class="software-modal-section" aria-labelledby="software-noscript-codex-note">
+                  <h4 id="software-noscript-codex-note">补充说明</h4>
+                  <p>建议优先使用较新版本客户端，减少登录态兼容问题。</p>
+                </section>
+              </div>
+            </article>
+
+            <article class="software-noscript-card" data-software="claude-code">
+              <div class="software-noscript-head">
+                <div class="software-icon software-icon--claude-code" aria-hidden="true">CC</div>
+                <div>
+                  <p class="card-label">Claude Code</p>
+                  <h3>Claude Code 使用方式</h3>
+                </div>
+              </div>
+
+              <div class="software-noscript-body">
+                <section class="software-modal-section" aria-labelledby="software-noscript-claude-code-mode">
+                  <h4 id="software-noscript-claude-code-mode">适用方式</h4>
+                  <p>适合命令行驱动的代码工作流，登录后即可进入会话。</p>
+                </section>
+
+                <section class="software-modal-section" aria-labelledby="software-noscript-claude-code-steps">
+                  <h4 id="software-noscript-claude-code-steps">使用步骤</h4>
+                  <ol>
+                    <li>打开 Claude Code。</li>
+                    <li>使用购买后的账号完成登录。</li>
+                    <li>进入工作区后按默认命令流开始使用。</li>
+                  </ol>
+                </section>
+
+                <section class="software-modal-section" aria-labelledby="software-noscript-claude-code-note">
+                  <h4 id="software-noscript-claude-code-note">补充说明</h4>
+                  <p>建议优先使用较新版本客户端，减少登录态兼容问题。</p>
+                </section>
+              </div>
+            </article>
+
+            <article class="software-noscript-card" data-software="opencode">
+              <div class="software-noscript-head">
+                <div class="software-icon software-icon--opencode" aria-hidden="true">OC</div>
+                <div>
+                  <p class="card-label">OpenCode</p>
+                  <h3>OpenCode 使用方式</h3>
+                </div>
+              </div>
+
+              <div class="software-noscript-body">
+                <section class="software-modal-section" aria-labelledby="software-noscript-opencode-mode">
+                  <h4 id="software-noscript-opencode-mode">适用方式</h4>
+                  <p>适合开放式代码工作流，登录后按默认入口直接使用。</p>
+                </section>
+
+                <section class="software-modal-section" aria-labelledby="software-noscript-opencode-steps">
+                  <h4 id="software-noscript-opencode-steps">使用步骤</h4>
+                  <ol>
+                    <li>打开 OpenCode 客户端。</li>
+                    <li>使用购买后的账号完成登录。</li>
+                    <li>进入项目后按默认界面开始工作。</li>
+                  </ol>
+                </section>
+
+                <section class="software-modal-section" aria-labelledby="software-noscript-opencode-note">
+                  <h4 id="software-noscript-opencode-note">补充说明</h4>
+                  <p>首次使用时确认网络与账号状态正常，再进入长期会话。</p>
+                </section>
+              </div>
+            </article>
+
+            <article class="software-noscript-card" data-software="openclaw">
+              <div class="software-noscript-head">
+                <div class="software-icon software-icon--openclaw" aria-hidden="true">OW</div>
+                <div>
+                  <p class="card-label">OpenClaw</p>
+                  <h3>OpenClaw 使用方式</h3>
+                </div>
+              </div>
+
+              <div class="software-noscript-body">
+                <section class="software-modal-section" aria-labelledby="software-noscript-openclaw-mode">
+                  <h4 id="software-noscript-openclaw-mode">适用方式</h4>
+                  <p>适合 Brioi 当前支持的 OpenClaw 客户端场景，登录后即可进入。</p>
+                </section>
+
+                <section class="software-modal-section" aria-labelledby="software-noscript-openclaw-steps">
+                  <h4 id="software-noscript-openclaw-steps">使用步骤</h4>
+                  <ol>
+                    <li>打开 OpenClaw 客户端。</li>
+                    <li>使用购买后的账号完成登录。</li>
+                    <li>进入界面后直接按默认流程开始使用。</li>
+                  </ol>
+                </section>
+
+                <section class="software-modal-section" aria-labelledby="software-noscript-openclaw-note">
+                  <h4 id="software-noscript-openclaw-note">补充说明</h4>
+                  <p>如遇到登录态异常，先退出并重新进入客户端。</p>
+                </section>
+              </div>
+            </article>
+          </div>
+        </section>
+      </noscript>
+
+      <div class="software-modal-backdrop" data-software-modal hidden>
+        <div class="software-modal" role="dialog" aria-modal="true" aria-labelledby="software-modal-title" tabindex="-1">
+          <div class="software-modal-head">
+            <div class="software-modal-icon" data-modal-icon aria-hidden="true"></div>
+            <div class="software-modal-title-wrap">
+              <p class="card-label">Usage Guide</p>
+              <h3 id="software-modal-title"></h3>
+            </div>
+          </div>
+
+          <div class="software-modal-body">
+            <section class="software-modal-section" aria-labelledby="software-modal-mode-title">
+              <h4 id="software-modal-mode-title">适用方式</h4>
+              <p data-modal-mode></p>
+            </section>
+
+            <section class="software-modal-section" aria-labelledby="software-modal-steps-title">
+              <h4 id="software-modal-steps-title">使用步骤</h4>
+              <ol data-modal-steps></ol>
+            </section>
+
+            <section class="software-modal-section" aria-labelledby="software-modal-note-title">
+              <h4 id="software-modal-note-title">补充说明</h4>
+              <p data-modal-note></p>
+            </section>
+          </div>
+
+          <button class="button button--primary software-modal-close" type="button" data-close-software-modal>关闭</button>
+        </div>
+      </div>
 
       <!-- ====== Pricing ====== -->
       <section id="pricing" class="pricing" aria-labelledby="pricing-title">
@@ -152,8 +334,8 @@
 
         <div class="faq-list">
           <article class="faq-item">
-            <h3>支持哪些客户端？</h3>
-            <p>目前只支持 GPT、Codex，其他暂不支持。</p>
+            <h3>支持哪些软件？</h3>
+            <p>目前支持 Codex、Claude Code、OpenCode、OpenClaw。</p>
           </article>
           <article class="faq-item">
             <h3>这是官方客户端接入，还是 API 点数？</h3>

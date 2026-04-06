@@ -14,6 +14,53 @@ const PLAN_LABELS = {
   'max-monthly': 'Max 月卡'
 };
 
+const SOFTWARE_DETAILS = {
+  codex: {
+    icon: 'CX',
+    title: 'Codex 使用方式',
+    mode: '适合直接在 Codex 工作流中登录后开始使用。',
+    steps: [
+      '打开 Codex 客户端。',
+      '使用购买后的账号完成登录。',
+      '进入项目后直接开始对话或编码。'
+    ],
+    note: '建议优先使用较新版本客户端，减少登录态兼容问题。'
+  },
+  'claude-code': {
+    icon: 'CC',
+    title: 'Claude Code 使用方式',
+    mode: '适合命令行驱动的代码工作流，登录后即可进入会话。',
+    steps: [
+      '打开 Claude Code。',
+      '使用购买后的账号完成登录。',
+      '进入工作区后按默认命令流开始使用。'
+    ],
+    note: '建议优先使用较新版本客户端，减少登录态兼容问题。'
+  },
+  opencode: {
+    icon: 'OC',
+    title: 'OpenCode 使用方式',
+    mode: '适合开放式代码工作流，登录后按默认入口直接使用。',
+    steps: [
+      '打开 OpenCode 客户端。',
+      '使用购买后的账号完成登录。',
+      '进入项目后按默认界面开始工作。'
+    ],
+    note: '首次使用时确认网络与账号状态正常，再进入长期会话。'
+  },
+  openclaw: {
+    icon: 'OW',
+    title: 'OpenClaw 使用方式',
+    mode: '适合 Brioi 当前支持的 OpenClaw 客户端场景，登录后即可进入。',
+    steps: [
+      '打开 OpenClaw 客户端。',
+      '使用购买后的账号完成登录。',
+      '进入界面后直接按默认流程开始使用。'
+    ],
+    note: '如遇到登录态异常，先退出并重新进入客户端。'
+  }
+};
+
 /* --- Pricing Tab Switching --- */
 function initPricingTabs() {
   const tabs = [...document.querySelectorAll('.pricing-tab')];
@@ -94,6 +141,151 @@ function initScrollReveal() {
   }
 }
 
+function initSoftwareModal() {
+  const modal = document.querySelector('[data-software-modal]');
+  const triggers = [...document.querySelectorAll('.software-trigger')];
+
+  if (!modal || !triggers.length) {
+    return;
+  }
+
+  const title = modal.querySelector('#software-modal-title');
+  const icon = modal.querySelector('[data-modal-icon]');
+  const mode = modal.querySelector('[data-modal-mode]');
+  const steps = modal.querySelector('[data-modal-steps]');
+  const note = modal.querySelector('[data-modal-note]');
+  const dialog = modal.querySelector('.software-modal');
+  const closeButton = modal.querySelector('[data-close-software-modal]');
+  const mainContent = modal.parentElement;
+  const inertTargets = [...document.body.children].flatMap((element) => {
+    if (element === mainContent) {
+      return [...element.children].filter((child) => child !== modal);
+    }
+
+    return [element];
+  });
+  const previousInertState = new Map();
+  let activeTrigger = null;
+
+  if (!title || !icon || !mode || !steps || !note || !dialog || !closeButton) {
+    return;
+  }
+
+  function setBackgroundInert(isInert) {
+    inertTargets.forEach((element) => {
+      if (isInert) {
+        previousInertState.set(element, element.inert);
+        element.inert = true;
+      } else {
+        element.inert = previousInertState.get(element) ?? false;
+      }
+    });
+
+    if (!isInert) {
+      previousInertState.clear();
+    }
+  }
+
+  function getFocusableElements() {
+    return [...dialog.querySelectorAll(
+      'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )];
+  }
+
+  function closeModal() {
+    if (modal.hidden) {
+      return;
+    }
+
+    modal.hidden = true;
+    document.body.classList.remove('modal-open');
+    setBackgroundInert(false);
+
+    if (activeTrigger) {
+      activeTrigger.focus();
+      activeTrigger = null;
+    }
+  }
+
+  function openModal(key, trigger) {
+    const details = SOFTWARE_DETAILS[key];
+
+    if (!details) {
+      return;
+    }
+
+    title.textContent = details.title;
+    icon.textContent = details.icon;
+    mode.textContent = details.mode;
+    note.textContent = details.note;
+    steps.innerHTML = details.steps.map((step) => `<li>${step}</li>`).join('');
+    activeTrigger = trigger;
+    modal.hidden = false;
+    document.body.classList.add('modal-open');
+    setBackgroundInert(true);
+    dialog.scrollTop = 0;
+    dialog.focus();
+  }
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => openModal(trigger.dataset.software, trigger));
+  });
+
+  closeButton.addEventListener('click', closeModal);
+
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (modal.hidden) {
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      closeModal();
+      return;
+    }
+
+    if (event.key !== 'Tab') {
+      return;
+    }
+
+    const focusableElements = getFocusableElements();
+
+    if (!focusableElements.length) {
+      event.preventDefault();
+      dialog.focus();
+      return;
+    }
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (document.activeElement === dialog) {
+      event.preventDefault();
+
+      if (event.shiftKey) {
+        lastElement.focus();
+      } else {
+        firstElement.focus();
+      }
+
+      return;
+    }
+
+    if (event.shiftKey && document.activeElement === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+    } else if (!event.shiftKey && document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  });
+}
+
 /* --- Buy Page Plan Display --- */
 function initBuyPage() {
   const selectedPlan = document.querySelector('[data-selected-plan]');
@@ -113,6 +305,7 @@ function initBuyPage() {
 if (document.body.dataset.page === 'home') {
   initPricingTabs();
   initScrollReveal();
+  initSoftwareModal();
 }
 
 if (document.body.dataset.page === 'buy') {

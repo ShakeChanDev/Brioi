@@ -16,8 +16,12 @@ test('hero shows the approved price-first message and a single plus card', async
 
   const hero = page.locator('#hero');
 
+  await expect(page.locator('head meta[name="description"]')).toHaveAttribute(
+    'content',
+    'Brioi API — 官方客户端镜像接入，不是缩水版，也不是只卖 API 点数。一个订阅，直接覆盖 Codex、Claude Code、OpenCode、OpenClaw。'
+  );
   await expect(hero.getByRole('heading', { level: 1 })).toContainText('不想再为');
-  await expect(hero.getByText('我想直接用 GPT / Codex。')).toBeVisible();
+  await expect(hero.getByText('我想直接用 Codex、Claude Code、OpenCode、OpenClaw。')).toBeVisible();
   await expect(hero.getByText('那就别买贵的。一个订阅，直接上。')).toBeVisible();
   await expect(hero.getByText('是官方客户端镜像接入，不是缩水版，也不是只卖 API 点数。')).toBeVisible();
   await expect(hero.getByRole('heading', { name: 'Plus 月卡' })).toBeVisible();
@@ -27,25 +31,37 @@ test('hero shows the approved price-first message and a single plus card', async
   await expect(hero.getByRole('link', { name: '查看套餐' })).toHaveCount(0);
   await expect(hero.getByRole('link', { name: '去购买' })).toHaveAttribute('href', '#pricing');
   await expect(hero.getByRole('link', { name: '查看更多套餐' })).toHaveAttribute('href', '#pricing');
+  await expect(page.locator('.hero-summary')).toHaveText('一个订阅，直接覆盖 Codex / Claude Code / OpenCode / OpenClaw');
 });
 
-test('homepage includes the editorial intro blocks and approved FAQ copy', async ({ page }) => {
+test('homepage lists supported software cards and updated client FAQ copy', async ({ page }) => {
   await page.goto('/');
 
   const intro = page.locator('.editorial-blocks');
   const faq = page.locator('.faq');
   const footer = page.locator('.site-footer');
 
-  await expect(intro.getByRole('heading', { level: 2, name: '官方客户端。别买贵的。' })).toBeVisible();
-  await expect(intro.getByText('GPT / Codex 直接用。')).toBeVisible();
-  await expect(intro.getByText('不是缩水版，也不是纯点数站。')).toBeVisible();
-  await expect(intro.getByText('购买放在单独页面，首页只负责说明白和卖清楚。')).toBeVisible();
+  await expect(intro.getByRole('heading', { level: 2, name: '支持的软件。直接开用。' })).toBeVisible();
+  await expect(intro.locator('.software-card')).toHaveCount(4);
+  for (const [softwareSlug, softwareName, iconText] of [
+    ['codex', 'Codex', 'CX'],
+    ['claude-code', 'Claude Code', 'CC'],
+    ['opencode', 'OpenCode', 'OC'],
+    ['openclaw', 'OpenClaw', 'OW'],
+  ]) {
+    const softwareCard = intro.locator(`.software-card[data-software="${softwareSlug}"]`);
+
+    await expect(softwareCard.locator('.software-icon')).toHaveClass(`software-icon software-icon--${softwareSlug}`);
+    await expect(softwareCard.locator('.software-icon')).toHaveText(iconText);
+    await expect(softwareCard.getByRole('heading', { level: 3, name: softwareName })).toBeVisible();
+    await expect(softwareCard.getByRole('button', { name: '使用方式' })).toHaveAttribute('data-software', softwareSlug);
+  }
 
   await expect(faq.getByRole('heading', { level: 2, name: '你会问的，先回答。' })).toBeVisible();
-  await expect(faq.getByRole('heading', { level: 3, name: '支持哪些客户端？' })).toBeVisible();
-  await expect(faq.getByText('目前只支持 GPT、Codex，其他暂不支持。')).toBeVisible();
-  await expect(page.locator('body')).not.toContainText('Claude');
-  await expect(page.locator('body')).not.toContainText('Cursor');
+  await expect(faq.getByRole('heading', { level: 3, name: '支持哪些软件？' })).toBeVisible();
+  await expect(faq.getByText('目前支持 Codex、Claude Code、OpenCode、OpenClaw。')).toBeVisible();
+  await expect(page.locator('body')).not.toContainText('GPT / Codex 直接用。');
+  await expect(page.locator('body')).not.toContainText('不是缩水版，也不是纯点数站。');
   await expect(faq.getByRole('heading', { level: 3, name: '这是官方客户端接入，还是 API 点数？' })).toBeVisible();
   await expect(faq.getByText('这是官方客户端镜像接入与订阅通道，不是只卖 API 点数。')).toBeVisible();
   await expect(faq.getByRole('heading', { level: 3, name: '额度怎么计算？' })).toBeVisible();
@@ -58,6 +74,205 @@ test('homepage includes the editorial intro blocks and approved FAQ copy', async
   await expect(footer.getByText('给官方客户端一个更划算的入口。')).toBeVisible();
   await expect(footer.getByRole('link', { name: '立即购买' })).toBeVisible();
   await expect(footer.getByRole('link', { name: '立即购买' })).toHaveAttribute('href', './buy.html?plan=plus-monthly');
+});
+
+test('supported software cards stay on one row on desktop', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+
+  const cards = page.locator('.editorial-blocks .software-card');
+
+  await expect(cards).toHaveCount(4);
+
+  const boxes = [];
+
+  for (let index = 0; index < 4; index += 1) {
+    const box = await cards.nth(index).boundingBox();
+
+    expect(box).not.toBeNull();
+    boxes.push(box);
+  }
+
+  const roundedTopOffsets = new Set(boxes.map((box) => Math.round(box.y)));
+  const roundedLeftOffsets = new Set(boxes.map((box) => Math.round(box.x)));
+
+  expect(roundedTopOffsets.size).toBe(1);
+  expect(roundedLeftOffsets.size).toBe(4);
+});
+
+test('supported software cards use two columns on tablet', async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 900 });
+  await page.goto('/');
+
+  const cards = page.locator('.editorial-blocks .software-card');
+
+  await expect(cards).toHaveCount(4);
+
+  const boxes = [];
+
+  for (let index = 0; index < 4; index += 1) {
+    const box = await cards.nth(index).boundingBox();
+
+    expect(box).not.toBeNull();
+    boxes.push(box);
+  }
+
+  const roundedTopOffsets = new Set(boxes.map((box) => Math.round(box.y)));
+  const roundedLeftOffsets = new Set(boxes.map((box) => Math.round(box.x)));
+
+  expect(roundedTopOffsets.size).toBe(2);
+  expect(roundedLeftOffsets.size).toBe(2);
+});
+
+test('supported software cards stack into one column on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 680, height: 900 });
+  await page.goto('/');
+
+  const cards = page.locator('.editorial-blocks .software-card');
+
+  await expect(cards).toHaveCount(4);
+
+  const boxes = [];
+
+  for (let index = 0; index < 4; index += 1) {
+    const box = await cards.nth(index).boundingBox();
+
+    expect(box).not.toBeNull();
+    boxes.push(box);
+  }
+
+  const roundedTopOffsets = new Set(boxes.map((box) => Math.round(box.y)));
+  const roundedLeftOffsets = new Set(boxes.map((box) => Math.round(box.x)));
+
+  expect(roundedTopOffsets.size).toBe(4);
+  expect(roundedLeftOffsets.size).toBe(1);
+});
+
+test('software usage modal opens with the selected software details and closes again', async ({ page }) => {
+  await page.goto('/');
+
+  const trigger = page.locator('.software-card[data-software="claude-code"]').getByRole('button', { name: '使用方式' });
+
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'Claude Code 使用方式' });
+
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByText('适用方式')).toBeVisible();
+  await expect(dialog.getByText('适合命令行驱动的代码工作流，登录后即可进入会话。')).toBeVisible();
+  await expect(dialog.getByText('使用步骤')).toBeVisible();
+  await expect(dialog.getByText('补充说明')).toBeVisible();
+  await expect(dialog.getByText('建议优先使用较新版本客户端，减少登录态兼容问题。')).toBeVisible();
+  await expect(dialog.locator('ol li')).toHaveCount(3);
+
+  await dialog.getByRole('button', { name: '关闭' }).click();
+
+  await expect(dialog).toBeHidden();
+});
+
+test('software usage modal moves focus into the modal and makes background sections inert while open', async ({ page }) => {
+  await page.goto('/');
+
+  const trigger = page.locator('.software-card[data-software="claude-code"]').getByRole('button', { name: '使用方式' });
+  const pricingSection = page.locator('#pricing');
+  const header = page.locator('.site-header');
+  const footer = page.locator('.site-footer');
+
+  await trigger.focus();
+  await expect(trigger).toBeFocused();
+
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'Claude Code 使用方式' });
+
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeFocused();
+  await expect(trigger).not.toBeFocused();
+  await expect(pricingSection).toHaveJSProperty('inert', true);
+  await expect(header).toHaveJSProperty('inert', true);
+  await expect(footer).toHaveJSProperty('inert', true);
+});
+
+test('software usage modal keeps focus inside when Shift+Tab is pressed from the dialog container', async ({ page }) => {
+  await page.goto('/');
+
+  const trigger = page.locator('.software-card[data-software="claude-code"]').getByRole('button', { name: '使用方式' });
+
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'Claude Code 使用方式' });
+  const closeButton = dialog.getByRole('button', { name: '关闭' });
+
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeFocused();
+
+  await page.keyboard.press('Shift+Tab');
+
+  await expect(closeButton).toBeFocused();
+});
+
+test('software usage modal closes with Escape and restores focus to its trigger', async ({ page }) => {
+  await page.goto('/');
+
+  const trigger = page.locator('.software-card[data-software="opencode"]').getByRole('button', { name: '使用方式' });
+
+  await trigger.focus();
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'OpenCode 使用方式' });
+
+  await expect(dialog).toBeVisible();
+
+  await page.keyboard.press('Escape');
+
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
+
+test('software usage modal closes when the backdrop is clicked and restores focus to its trigger', async ({ page }) => {
+  await page.goto('/');
+
+  const trigger = page.locator('.software-card[data-software="codex"]').getByRole('button', { name: '使用方式' });
+
+  await trigger.focus();
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'Codex 使用方式' });
+  const backdrop = page.locator('[data-software-modal]');
+
+  await expect(dialog).toBeVisible();
+
+  await backdrop.click({ position: { x: 8, y: 8 } });
+
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
+
+test('software usage modal resets its scroll position when reopened', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 420 });
+  await page.goto('/');
+
+  const trigger = page.locator('.software-card[data-software="claude-code"]').getByRole('button', { name: '使用方式' });
+
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'Claude Code 使用方式' });
+
+  await expect(dialog).toBeVisible();
+
+  const firstScrollTop = await dialog.evaluate((element) => {
+    element.scrollTop = 160;
+    return element.scrollTop;
+  });
+
+  expect(firstScrollTop).toBeGreaterThan(0);
+
+  await dialog.getByRole('button', { name: '关闭' }).click();
+  await expect(dialog).toBeHidden();
+
+  await trigger.click();
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toHaveJSProperty('scrollTop', 0);
 });
 
 test('pricing defaults to monthly plans and switches to experience plans', async ({ page }) => {
@@ -127,5 +342,16 @@ test.describe('homepage without javascript', () => {
     await expect(monthlyPanel).toBeVisible();
     await expect(plusPlan.getByText('Plus 月卡')).toBeVisible();
     await expect(plusBuyLink).toHaveAttribute('href', './buy.html?plan=plus-monthly');
+  });
+
+  test('shows the fallback usage guide and hides dead software triggers', async ({ page }) => {
+    await page.goto('/');
+
+    const fallbackGuide = page.locator('.software-noscript-guide');
+    const softwareTrigger = page.locator('.software-trigger').first();
+
+    await expect(fallbackGuide).toBeVisible();
+    await expect(softwareTrigger).toBeHidden();
+    await expect(fallbackGuide.getByText('适合直接在 Codex 工作流中登录后开始使用。')).toBeVisible();
   });
 });
