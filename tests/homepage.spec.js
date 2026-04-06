@@ -58,6 +58,7 @@ test('homepage lists supported software cards and updated client FAQ copy', asyn
     const softwareCard = intro.locator(`.software-card[data-software="${softwareSlug}"]`);
     const iconImage = softwareCard.locator('.software-icon-image');
 
+    await expect(softwareCard).toHaveAttribute('data-software-icon-src', iconPath);
     await expect(iconImage).toHaveAttribute('src', iconPath);
     await expect(iconImage).toHaveAttribute('alt', '');
     await expect(softwareCard.locator('.software-icon')).not.toContainText(/CX|CC|OC|OW/);
