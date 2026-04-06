@@ -49,16 +49,19 @@ test('homepage lists supported software cards and updated client FAQ copy', asyn
 
   await expect(intro.getByRole('heading', { level: 2, name: '支持的软件。直接开用。' })).toBeVisible();
   await expect(intro.locator('.software-card')).toHaveCount(4);
-  for (const [softwareSlug, softwareName, iconText] of [
-    ['codex', 'Codex', 'CX'],
-    ['claude-code', 'Claude Code', 'CC'],
-    ['opencode', 'OpenCode', 'OC'],
-    ['openclaw', 'OpenClaw', 'OW'],
+  for (const [softwareSlug, softwareName, iconPath] of [
+    ['codex', 'Codex', './assets/software-icons/codex-mac-app.png'],
+    ['claude-code', 'Claude Code', './assets/software-icons/claude-code.png'],
+    ['opencode', 'OpenCode', './assets/software-icons/opencode.png'],
+    ['openclaw', 'OpenClaw', './assets/software-icons/openclaw.svg'],
   ]) {
     const softwareCard = intro.locator(`.software-card[data-software="${softwareSlug}"]`);
+    const iconImage = softwareCard.locator('.software-icon-image');
 
-    await expect(softwareCard.locator('.software-icon')).toHaveClass(`software-icon software-icon--${softwareSlug}`);
-    await expect(softwareCard.locator('.software-icon')).toHaveText(iconText);
+    await expect(softwareCard).toHaveAttribute('data-software-icon-src', iconPath);
+    await expect(iconImage).toHaveAttribute('src', iconPath);
+    await expect(iconImage).toHaveAttribute('alt', '');
+    await expect(softwareCard.locator('.software-icon')).not.toContainText(/CX|CC|OC|OW/);
     await expect(softwareCard.getByRole('heading', { level: 3, name: softwareName })).toBeVisible();
     await expect(softwareCard.getByRole('button', { name: '使用方式' })).toHaveAttribute('data-software', softwareSlug);
   }
@@ -154,16 +157,62 @@ test('supported software cards stack into one column on mobile', async ({ page }
   expect(roundedLeftOffsets.size).toBe(1);
 });
 
+test('software usage modal renders the selected local icon asset and never falls back to the Codex repo splash', async ({ page }) => {
+  await page.goto('/');
+
+  const card = page.locator('.software-card[data-software="codex"]');
+  const trigger = card.getByRole('button', { name: '使用方式' });
+  const expectedSrc = await card.getAttribute('data-software-icon-src');
+
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'Codex 使用方式' });
+  const modalImage = dialog.locator('.software-modal-icon-image');
+
+  await expect(dialog).toBeVisible();
+  await expect(modalImage).toHaveAttribute('src', expectedSrc);
+  await expect(modalImage).not.toHaveAttribute('src', /codex-cli-splash/);
+  await expect(dialog.locator('.software-modal-icon')).not.toContainText('CX');
+});
+
+test('supported software icon images stay contained inside shared neutral wrappers', async ({ page }) => {
+  await page.goto('/');
+
+  for (const [softwareSlug, expectedDialogName] of [
+    ['codex', 'Codex'],
+    ['openclaw', 'OpenClaw'],
+  ]) {
+    const card = page.locator(`.software-card[data-software="${softwareSlug}"]`);
+    const cardImage = card.locator('.software-icon-image');
+    const cardWrapper = card.locator('.software-icon');
+
+    await expect(cardImage).toHaveCSS('object-fit', 'contain');
+    await expect(cardWrapper).toHaveCSS('border-radius', '26px');
+
+    if (softwareSlug === 'openclaw') {
+      await card.getByRole('button', { name: '使用方式' }).click();
+
+      const modalImage = page.getByRole('dialog', { name: `${expectedDialogName} 使用方式` }).locator('.software-modal-icon-image');
+
+      await expect(modalImage).toHaveCSS('object-fit', 'contain');
+    }
+  }
+});
+
 test('software usage modal opens with the selected software details and closes again', async ({ page }) => {
   await page.goto('/');
 
-  const trigger = page.locator('.software-card[data-software="claude-code"]').getByRole('button', { name: '使用方式' });
+  const card = page.locator('.software-card[data-software="claude-code"]');
+  const trigger = card.getByRole('button', { name: '使用方式' });
+  const expectedSrc = await card.getAttribute('data-software-icon-src');
 
   await trigger.click();
 
   const dialog = page.getByRole('dialog', { name: 'Claude Code 使用方式' });
+  const modalImage = dialog.locator('.software-modal-icon-image');
 
   await expect(dialog).toBeVisible();
+  await expect(modalImage).toHaveAttribute('src', expectedSrc);
   await expect(dialog.getByText('适用方式')).toBeVisible();
   await expect(dialog.getByText('适合命令行驱动的代码工作流，登录后即可进入会话。')).toBeVisible();
   await expect(dialog.getByText('使用步骤')).toBeVisible();
@@ -350,7 +399,7 @@ test.describe('homepage without javascript', () => {
     await expect(plusBuyLink).toHaveAttribute('href', './buy.html?plan=plus-monthly');
   });
 
-  test('shows the fallback usage guide and hides dead software triggers', async ({ page }) => {
+  test('shows the fallback usage guide with local official icon images and hides dead software triggers', async ({ page }) => {
     await page.goto('/');
 
     const fallbackGuide = page.locator('.software-noscript-guide');
@@ -358,6 +407,21 @@ test.describe('homepage without javascript', () => {
 
     await expect(fallbackGuide).toBeVisible();
     await expect(softwareTrigger).toBeHidden();
+
+    for (const [softwareSlug, iconPath] of [
+      ['codex', './assets/software-icons/codex-mac-app.png'],
+      ['claude-code', './assets/software-icons/claude-code.png'],
+      ['opencode', './assets/software-icons/opencode.png'],
+      ['openclaw', './assets/software-icons/openclaw.svg'],
+    ]) {
+      const softwareCard = fallbackGuide.locator(`.software-noscript-card[data-software="${softwareSlug}"]`);
+      const iconImage = softwareCard.locator('.software-icon-image');
+
+      await expect(iconImage).toHaveAttribute('src', iconPath);
+      await expect(iconImage).toHaveAttribute('alt', '');
+      await expect(softwareCard.locator('.software-icon')).not.toContainText(/CX|CC|OC|OW/);
+    }
+
     await expect(fallbackGuide.getByText('适合直接在 Codex 工作流中登录后开始使用。')).toBeVisible();
   });
 });

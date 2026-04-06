@@ -16,7 +16,6 @@ const PLAN_LABELS = {
 
 const SOFTWARE_DETAILS = {
   codex: {
-    icon: 'CX',
     title: 'Codex 使用方式',
     mode: '适合直接在 Codex 工作流中登录后开始使用。',
     steps: [
@@ -27,7 +26,6 @@ const SOFTWARE_DETAILS = {
     note: '建议优先使用较新版本客户端，减少登录态兼容问题。'
   },
   'claude-code': {
-    icon: 'CC',
     title: 'Claude Code 使用方式',
     mode: '适合命令行驱动的代码工作流，登录后即可进入会话。',
     steps: [
@@ -38,7 +36,6 @@ const SOFTWARE_DETAILS = {
     note: '建议优先使用较新版本客户端，减少登录态兼容问题。'
   },
   opencode: {
-    icon: 'OC',
     title: 'OpenCode 使用方式',
     mode: '适合开放式代码工作流，登录后按默认入口直接使用。',
     steps: [
@@ -49,7 +46,6 @@ const SOFTWARE_DETAILS = {
     note: '首次使用时确认网络与账号状态正常，再进入长期会话。'
   },
   openclaw: {
-    icon: 'OW',
     title: 'OpenClaw 使用方式',
     mode: '适合 Brioi 当前支持的 OpenClaw 客户端场景，登录后即可进入。',
     steps: [
@@ -150,7 +146,7 @@ function initSoftwareModal() {
   }
 
   const title = modal.querySelector('#software-modal-title');
-  const icon = modal.querySelector('[data-modal-icon]');
+  const modalIconImage = modal.querySelector('[data-modal-icon-image]');
   const mode = modal.querySelector('[data-modal-mode]');
   const steps = modal.querySelector('[data-modal-steps]');
   const note = modal.querySelector('[data-modal-note]');
@@ -167,7 +163,7 @@ function initSoftwareModal() {
   const previousInertState = new Map();
   let activeTrigger = null;
 
-  if (!title || !icon || !mode || !steps || !note || !dialog || !closeButton) {
+  if (!title || !modalIconImage || !mode || !steps || !note || !dialog || !closeButton) {
     return;
   }
 
@@ -209,13 +205,16 @@ function initSoftwareModal() {
 
   function openModal(key, trigger) {
     const details = SOFTWARE_DETAILS[key];
+    const softwareCard = trigger.closest('.software-card');
+    const iconSrc = softwareCard?.dataset.softwareIconSrc ?? '';
 
-    if (!details) {
+    if (!details || !iconSrc) {
       return;
     }
 
     title.textContent = details.title;
-    icon.textContent = details.icon;
+    modalIconImage.src = iconSrc;
+    modalIconImage.alt = '';
     mode.textContent = details.mode;
     note.textContent = details.note;
     steps.innerHTML = details.steps.map((step) => `<li>${step}</li>`).join('');

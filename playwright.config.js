@@ -4,12 +4,12 @@ export default defineConfig({
   testDir: './tests',
   timeout: 30000,
   use: {
-    baseURL: 'http://127.0.0.1:22222',
+    baseURL: 'http://127.0.0.1:22221',
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'npm run start',
-    port: 22222,
+    command: 'npx http-server . -p 22221 -c-1',
+    port: 22221,
     reuseExistingServer: !process.env.CI,
   },
 });
