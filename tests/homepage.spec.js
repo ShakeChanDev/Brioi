@@ -23,6 +23,10 @@ test('hero shows the approved price-first message and a single plus card', async
   await expect(hero.getByRole('heading', { name: 'Plus 月卡' })).toBeVisible();
   await expect(hero.getByText('¥99')).toBeVisible();
   await expect(hero.locator('.hero-side-card')).toHaveCount(1);
+  await expect(hero.getByRole('link', { name: '购买 Plus 月卡' })).toHaveCount(0);
+  await expect(hero.getByRole('link', { name: '查看套餐' })).toHaveCount(0);
+  await expect(hero.getByRole('link', { name: '去购买' })).toHaveAttribute('href', '#pricing');
+  await expect(hero.getByRole('link', { name: '查看更多套餐' })).toHaveAttribute('href', '#pricing');
 });
 
 test('homepage includes the editorial intro blocks and approved FAQ copy', async ({ page }) => {

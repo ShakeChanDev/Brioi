@@ -273,14 +273,6 @@ main,
   box-shadow: 0 4px 20px var(--accent-glow);
 }
 
-/* --- Hero Actions --- */
-.hero-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 32px;
-  flex-wrap: wrap;
-}
-
 /* --- Hero Side Card --- */
 .hero-side-card {
   position: relative;
@@ -335,6 +327,17 @@ main,
   margin-bottom: 24px;
 }
 
+.hero-side-card__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hero-side-card__actions .button {
+  width: 100%;
+  padding-inline: 20px;
+}
+
 .hero-side-card .button--dark {
   background: var(--accent);
   color: var(--bg-dark);
@@ -344,6 +347,17 @@ main,
 .hero-side-card .button--dark:hover {
   background: var(--accent-light);
   box-shadow: 0 8px 30px var(--accent-glow);
+}
+
+.hero-side-card .button--outline {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.hero-side-card .button--outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.38);
 }
 
 /* --- Hero Summary --- */
@@ -807,6 +821,10 @@ main,
   .chat-bubble {
     max-width: 100%;
     font-size: 0.95rem;
+  }
+
+  .hero-side-card__actions {
+    grid-template-columns: 1fr;
   }
 
   .pricing-tabs {
