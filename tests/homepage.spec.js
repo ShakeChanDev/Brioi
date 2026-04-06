@@ -157,6 +157,24 @@ test('supported software cards stack into one column on mobile', async ({ page }
   expect(roundedLeftOffsets.size).toBe(1);
 });
 
+test('software usage modal renders the selected local icon asset and never falls back to the Codex repo splash', async ({ page }) => {
+  await page.goto('/');
+
+  const card = page.locator('.software-card[data-software="codex"]');
+  const trigger = card.getByRole('button', { name: '使用方式' });
+  const expectedSrc = await card.getAttribute('data-software-icon-src');
+
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'Codex 使用方式' });
+  const modalImage = dialog.locator('.software-modal-icon-image');
+
+  await expect(dialog).toBeVisible();
+  await expect(modalImage).toHaveAttribute('src', expectedSrc);
+  await expect(modalImage).not.toHaveAttribute('src', /codex-cli-splash/);
+  await expect(dialog.locator('.software-modal-icon')).not.toContainText('CX');
+});
+
 test('software usage modal opens with the selected software details and closes again', async ({ page }) => {
   await page.goto('/');
 
