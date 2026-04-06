@@ -49,16 +49,18 @@ test('homepage lists supported software cards and updated client FAQ copy', asyn
 
   await expect(intro.getByRole('heading', { level: 2, name: '支持的软件。直接开用。' })).toBeVisible();
   await expect(intro.locator('.software-card')).toHaveCount(4);
-  for (const [softwareSlug, softwareName, iconText] of [
-    ['codex', 'Codex', 'CX'],
-    ['claude-code', 'Claude Code', 'CC'],
-    ['opencode', 'OpenCode', 'OC'],
-    ['openclaw', 'OpenClaw', 'OW'],
+  for (const [softwareSlug, softwareName, iconPath] of [
+    ['codex', 'Codex', './assets/software-icons/codex-mac-app.png'],
+    ['claude-code', 'Claude Code', './assets/software-icons/claude-code.png'],
+    ['opencode', 'OpenCode', './assets/software-icons/opencode.png'],
+    ['openclaw', 'OpenClaw', './assets/software-icons/openclaw.svg'],
   ]) {
     const softwareCard = intro.locator(`.software-card[data-software="${softwareSlug}"]`);
+    const iconImage = softwareCard.locator('.software-icon-image');
 
-    await expect(softwareCard.locator('.software-icon')).toHaveClass(`software-icon software-icon--${softwareSlug}`);
-    await expect(softwareCard.locator('.software-icon')).toHaveText(iconText);
+    await expect(iconImage).toHaveAttribute('src', iconPath);
+    await expect(iconImage).toHaveAttribute('alt', '');
+    await expect(softwareCard.locator('.software-icon')).not.toContainText(/CX|CC|OC|OW/);
     await expect(softwareCard.getByRole('heading', { level: 3, name: softwareName })).toBeVisible();
     await expect(softwareCard.getByRole('button', { name: '使用方式' })).toHaveAttribute('data-software', softwareSlug);
   }
@@ -350,7 +352,7 @@ test.describe('homepage without javascript', () => {
     await expect(plusBuyLink).toHaveAttribute('href', './buy.html?plan=plus-monthly');
   });
 
-  test('shows the fallback usage guide and hides dead software triggers', async ({ page }) => {
+  test('shows the fallback usage guide with local official icon images and hides dead software triggers', async ({ page }) => {
     await page.goto('/');
 
     const fallbackGuide = page.locator('.software-noscript-guide');
@@ -358,6 +360,21 @@ test.describe('homepage without javascript', () => {
 
     await expect(fallbackGuide).toBeVisible();
     await expect(softwareTrigger).toBeHidden();
+
+    for (const [softwareSlug, iconPath] of [
+      ['codex', './assets/software-icons/codex-mac-app.png'],
+      ['claude-code', './assets/software-icons/claude-code.png'],
+      ['opencode', './assets/software-icons/opencode.png'],
+      ['openclaw', './assets/software-icons/openclaw.svg'],
+    ]) {
+      const softwareCard = fallbackGuide.locator(`.software-noscript-card[data-software="${softwareSlug}"]`);
+      const iconImage = softwareCard.locator('.software-icon-image');
+
+      await expect(iconImage).toHaveAttribute('src', iconPath);
+      await expect(iconImage).toHaveAttribute('alt', '');
+      await expect(softwareCard.locator('.software-icon')).not.toContainText(/CX|CC|OC|OW/);
+    }
+
     await expect(fallbackGuide.getByText('适合直接在 Codex 工作流中登录后开始使用。')).toBeVisible();
   });
 });
