@@ -1,5 +1,110 @@
 import { test, expect } from '@playwright/test';
 
+const STATIC_SITE_CASES = [
+  {
+    site: 'brioi',
+    homePath: '/sites/brioi/index.html',
+    buyPath: '/sites/brioi/buy.html?plan=pro-monthly',
+    title: /Brioi API \| 官方客户端订阅接入/,
+    buyTitle: /购买 Brioi API/,
+    ogImage: '/sites/brioi/og-home.jpg',
+    brand: 'Brioi',
+    heroLines: ['更强的 AI，', '不该只有少数人在用'],
+    subtitle: '顶级 GPT-5.4 全系列 AI 模型直连，稳定、高速、安全',
+    plans: [
+      ['week-pass', '周卡', '¥29'],
+      ['plus-monthly', 'Plus 月卡', '¥99/月'],
+      ['pro-monthly', 'Pro 月卡', '¥199/月'],
+      ['max-monthly', 'MAX 月卡', '¥499/月'],
+    ],
+    hiddenPlans: [],
+    buyHeading: '购买 Brioi API',
+  },
+  {
+    site: 'cradeo',
+    homePath: '/sites/cradeo/index.html',
+    buyPath: '/sites/cradeo/buy.html?plan=plus-monthly',
+    title: /CradEO API \| 官方客户端订阅接入/,
+    buyTitle: /购买 CradEO API/,
+    ogImage: '/sites/cradeo/og-home.jpg',
+    brand: 'CradEO',
+    heroLines: ['更强的 AI，', '不该只有少数人在用'],
+    subtitle: '顶级 GPT-5.4 全系列 AI 模型直连，稳定、高速、安全',
+    plans: [
+      ['plus-monthly', 'Plus 月卡', '¥199/月'],
+      ['pro-monthly', 'Pro 月卡', '¥299/月'],
+      ['max-monthly', 'MAX 月卡', '¥699/月'],
+    ],
+    hiddenPlans: ['week-pass'],
+    buyHeading: '购买 CradEO API',
+  },
+  {
+    site: 'drigeo',
+    homePath: '/sites/drigeo/index.html',
+    buyPath: '/sites/drigeo/buy.html?plan=max-monthly',
+    title: /Drigeo API \| 官方客户端订阅接入/,
+    buyTitle: /购买 Drigeo API/,
+    ogImage: '/sites/drigeo/og-home.jpg',
+    brand: 'Drigeo',
+    heroLines: ['让每个人，都能接入更强的 AI'],
+    subtitle: '顶级 GPT-5.4 全系列 AI 模型直连，稳定、高速、安全',
+    plans: [
+      ['plus-monthly', 'Plus 月卡', '¥299/月'],
+      ['pro-monthly', 'Pro 月卡', '¥399/月'],
+      ['max-monthly', 'MAX 月卡', '¥799/月'],
+    ],
+    hiddenPlans: ['week-pass'],
+    buyHeading: '购买 Drigeo API',
+  },
+];
+
+async function expectStaticPlan(page, planId, label, priceText) {
+  const plan = page.locator(`[data-plan-id="${planId}"]`);
+  await expect(plan).toHaveCount(1);
+  await expect(plan.locator('[data-plan-label]')).toHaveText(label);
+  await expect(plan.locator('[data-plan-price]')).toHaveText(priceText);
+}
+
+test('site home shells expose approved static branding and pricing without javascript', async ({ browser }) => {
+  for (const siteCase of STATIC_SITE_CASES) {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+
+    await page.goto(siteCase.homePath);
+
+    await expect(page).toHaveTitle(siteCase.title);
+    await expect(page.locator('head meta[property="og:image"]')).toHaveAttribute('content', siteCase.ogImage);
+    await expect(page.locator('[data-brand-name]').first()).toHaveText(siteCase.brand);
+    await expect(page.locator('[data-hero-title] .hero-line')).toHaveText(siteCase.heroLines);
+    await expect(page.locator('[data-copy="hero.subtitle"]').first()).toHaveText(siteCase.subtitle);
+
+    for (const [planId, label, priceText] of siteCase.plans) {
+      await expectStaticPlan(page, planId, label, priceText);
+    }
+
+    for (const hiddenPlan of siteCase.hiddenPlans) {
+      await expect(page.locator(`[data-plan-id="${hiddenPlan}"]`)).toHaveCount(0);
+    }
+
+    await context.close();
+  }
+});
+
+test('site buy shells expose approved static branding without javascript', async ({ browser }) => {
+  for (const siteCase of STATIC_SITE_CASES) {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+
+    await page.goto(siteCase.buyPath);
+
+    await expect(page).toHaveTitle(siteCase.buyTitle);
+    await expect(page.locator('[data-buy-heading]')).toHaveText(siteCase.buyHeading);
+    await expect(page.locator('[data-selected-plan]')).toHaveText(/^已选择：.+/);
+
+    await context.close();
+  }
+});
+
 test('homepage shell loads with updated navigation and hero CTA', async ({ page }) => {
   await page.goto('/');
 
