@@ -1,379 +1,428 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brioi API | 官方客户端订阅接入</title>
-    <meta name="description" content="Brioi API — 让每个人都能轻松用上更强的 AI 大模型。支持最新 GPT-5.4 模型。">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./styles.css">
-    <noscript>
-      <style>
-        .software-trigger {
-          display: none !important;
-        }
-      </style>
-    </noscript>
-    <script src="./main.js" defer></script>
-  </head>
-  <body data-page="home">
 
-    <!-- ====== Navigation ====== -->
-    <header class="site-header">
-      <nav class="site-nav" aria-label="主导航">
-        <a class="brand" href="./index.html">Brioi API</a>
-        <a class="nav-cta button button--primary" href="./buy.html?plan=plus-monthly">立即购买</a>
-      </nav>
-    </header>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brioi API | 官方客户端订阅接入</title>
+  <meta name="description" content="Brioi API — 更强的 AI，不该只有少数人会用。支持最新 GPT-5.4 模型与原生体验。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./main.js" defer></script>
+</head>
 
-    <main>
-      <!-- ====== Hero ====== -->
-      <section id="hero" class="hero hero--home-editorial" aria-labelledby="home-hero-title">
-        <div class="hero-copy">
-          <div class="hero-title-block hero-title-block--editorial">
-            <p class="eyebrow">Model Access For Everyone</p>
-            <h1 class="hero-title hero-title--editorial" id="home-hero-title">
-              <span class="hero-title-line" data-hero-title-line>让每个人都能轻松用上</span>
-              <span class="hero-title-line" data-hero-title-line>更强的 AI 大模型</span>
-            </h1>
-          </div>
-          <p class="hero-subtitle" data-hero-subtitle>
-            支持最新 <span class="text-accent">GPT-5.4</span> 模型
-          </p>
+<body data-page="home">
+
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <a class="brand" href="./index.html">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path pathLength="100"
+            d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 1 0 0-8c-2 0-4 1.33-6 4Z">
+          </path>
+        </svg>
+        <div class="brand-text-wrapper">
+          <span class="brand-text">Brioi</span>
+          <span class="brand-dot">·</span>
+          <span class="brand-outline">API</span>
         </div>
+      </a>
+      <div class="nav-actions">
+        <a class="nav-link" href="#pricing">定价</a>
+        <a class="nav-link" href="#">登录</a>
+        <a class="nav-cta button button--primary" href="./buy.html?plan=plus-monthly">注册</a>
+      </div>
+    </nav>
+  </header>
 
-        <aside class="hero-side-card hero-side-card--featured" aria-label="主推套餐">
-          <div class="side-card-inner">
-            <p class="card-label">Most Popular</p>
-            <h2>Plus 月卡</h2>
-            <p class="price">¥99</p>
-            <p class="card-meta">100 刀 / 天<br>30 天有效</p>
-            <div class="hero-side-card__actions">
-              <a class="button button--dark" href="#pricing">去购买</a>
-              <a class="button button--outline" href="#pricing">查看更多套餐</a>
-            </div>
-          </div>
-        </aside>
-      </section>
+  <main>
+    <!-- Hero Section -->
+    <section class="section-hero">
 
-      <!-- ====== Supported Software ====== -->
-      <section class="editorial-blocks" aria-labelledby="software-title">
-        <div class="section-heading">
-          <p class="eyebrow">Supported Software</p>
-          <h2 id="software-title">支持的软件。<span class="text-accent">直接开用。</span></h2>
-        </div>
+      <!-- Ambient Background Layer -->
+      <div class="hero-ambient" aria-hidden="true"></div>
 
-        <div class="software-grid">
-          <article class="software-card" data-software="codex" data-software-icon-src="./assets/software-icons/codex-mac-app.png">
-            <div class="software-icon software-icon--codex" aria-hidden="true">
-              <img class="software-icon-image" src="./assets/software-icons/codex-mac-app.png" alt="" decoding="async">
-            </div>
-            <h3>Codex</h3>
-            <p class="software-card-meta">官方客户端镜像接入</p>
-            <button class="button button--outline software-trigger" type="button" data-software="codex">使用方式</button>
-          </article>
-          <article class="software-card" data-software="claude-code" data-software-icon-src="./assets/software-icons/claude-code.png">
-            <div class="software-icon software-icon--claude-code" aria-hidden="true">
-              <img class="software-icon-image" src="./assets/software-icons/claude-code.png" alt="" decoding="async">
-            </div>
-            <h3>Claude Code</h3>
-            <p class="software-card-meta">官方客户端镜像接入</p>
-            <button class="button button--outline software-trigger" type="button" data-software="claude-code">使用方式</button>
-          </article>
-          <article class="software-card" data-software="opencode" data-software-icon-src="./assets/software-icons/opencode.png">
-            <div class="software-icon software-icon--opencode" aria-hidden="true">
-              <img class="software-icon-image" src="./assets/software-icons/opencode.png" alt="" decoding="async">
-            </div>
-            <h3>OpenCode</h3>
-            <p class="software-card-meta">官方客户端镜像接入</p>
-            <button class="button button--outline software-trigger" type="button" data-software="opencode">使用方式</button>
-          </article>
-          <article class="software-card" data-software="openclaw" data-software-icon-src="./assets/software-icons/openclaw.svg">
-            <div class="software-icon software-icon--openclaw" aria-hidden="true">
-              <img class="software-icon-image" src="./assets/software-icons/openclaw.svg" alt="" decoding="async">
-            </div>
-            <h3>OpenClaw</h3>
-            <p class="software-card-meta">官方客户端镜像接入</p>
-            <button class="button button--outline software-trigger" type="button" data-software="openclaw">使用方式</button>
-          </article>
-        </div>
-      </section>
-
-      <noscript>
-        <section class="software-noscript-guide" aria-labelledby="software-noscript-title">
-          <div class="section-heading">
-            <p class="eyebrow">Usage Guide</p>
-            <h2 id="software-noscript-title">使用方式。<span class="text-accent">无 JS 也能看。</span></h2>
-          </div>
-
-          <div class="software-noscript-grid">
-            <article class="software-noscript-card" data-software="codex">
-              <div class="software-noscript-head">
-                <div class="software-icon software-icon--codex" aria-hidden="true">
-                  <img class="software-icon-image" src="./assets/software-icons/codex-mac-app.png" alt="" decoding="async">
-                </div>
-                <div>
-                  <p class="card-label">Codex</p>
-                  <h3>Codex 使用方式</h3>
-                </div>
-              </div>
-
-              <div class="software-noscript-body">
-                <section class="software-modal-section" aria-labelledby="software-noscript-codex-mode">
-                  <h4 id="software-noscript-codex-mode">适用方式</h4>
-                  <p>适合直接在 Codex 工作流中登录后开始使用。</p>
-                </section>
-
-                <section class="software-modal-section" aria-labelledby="software-noscript-codex-steps">
-                  <h4 id="software-noscript-codex-steps">使用步骤</h4>
-                  <ol>
-                    <li>打开 Codex 客户端。</li>
-                    <li>使用购买后的账号完成登录。</li>
-                    <li>进入项目后直接开始对话或编码。</li>
-                  </ol>
-                </section>
-
-                <section class="software-modal-section" aria-labelledby="software-noscript-codex-note">
-                  <h4 id="software-noscript-codex-note">补充说明</h4>
-                  <p>建议优先使用较新版本客户端，减少登录态兼容问题。</p>
-                </section>
-              </div>
-            </article>
-
-            <article class="software-noscript-card" data-software="claude-code">
-              <div class="software-noscript-head">
-                <div class="software-icon software-icon--claude-code" aria-hidden="true">
-                  <img class="software-icon-image" src="./assets/software-icons/claude-code.png" alt="" decoding="async">
-                </div>
-                <div>
-                  <p class="card-label">Claude Code</p>
-                  <h3>Claude Code 使用方式</h3>
-                </div>
-              </div>
-
-              <div class="software-noscript-body">
-                <section class="software-modal-section" aria-labelledby="software-noscript-claude-code-mode">
-                  <h4 id="software-noscript-claude-code-mode">适用方式</h4>
-                  <p>适合命令行驱动的代码工作流，登录后即可进入会话。</p>
-                </section>
-
-                <section class="software-modal-section" aria-labelledby="software-noscript-claude-code-steps">
-                  <h4 id="software-noscript-claude-code-steps">使用步骤</h4>
-                  <ol>
-                    <li>打开 Claude Code。</li>
-                    <li>使用购买后的账号完成登录。</li>
-                    <li>进入工作区后按默认命令流开始使用。</li>
-                  </ol>
-                </section>
-
-                <section class="software-modal-section" aria-labelledby="software-noscript-claude-code-note">
-                  <h4 id="software-noscript-claude-code-note">补充说明</h4>
-                  <p>建议优先使用较新版本客户端，减少登录态兼容问题。</p>
-                </section>
-              </div>
-            </article>
-
-            <article class="software-noscript-card" data-software="opencode">
-              <div class="software-noscript-head">
-                <div class="software-icon software-icon--opencode" aria-hidden="true">
-                  <img class="software-icon-image" src="./assets/software-icons/opencode.png" alt="" decoding="async">
-                </div>
-                <div>
-                  <p class="card-label">OpenCode</p>
-                  <h3>OpenCode 使用方式</h3>
-                </div>
-              </div>
-
-              <div class="software-noscript-body">
-                <section class="software-modal-section" aria-labelledby="software-noscript-opencode-mode">
-                  <h4 id="software-noscript-opencode-mode">适用方式</h4>
-                  <p>适合开放式代码工作流，登录后按默认入口直接使用。</p>
-                </section>
-
-                <section class="software-modal-section" aria-labelledby="software-noscript-opencode-steps">
-                  <h4 id="software-noscript-opencode-steps">使用步骤</h4>
-                  <ol>
-                    <li>打开 OpenCode 客户端。</li>
-                    <li>使用购买后的账号完成登录。</li>
-                    <li>进入项目后按默认界面开始工作。</li>
-                  </ol>
-                </section>
-
-                <section class="software-modal-section" aria-labelledby="software-noscript-opencode-note">
-                  <h4 id="software-noscript-opencode-note">补充说明</h4>
-                  <p>首次使用时确认网络与账号状态正常，再进入长期会话。</p>
-                </section>
-              </div>
-            </article>
-
-            <article class="software-noscript-card" data-software="openclaw">
-              <div class="software-noscript-head">
-                <div class="software-icon software-icon--openclaw" aria-hidden="true">
-                  <img class="software-icon-image" src="./assets/software-icons/openclaw.svg" alt="" decoding="async">
-                </div>
-                <div>
-                  <p class="card-label">OpenClaw</p>
-                  <h3>OpenClaw 使用方式</h3>
-                </div>
-              </div>
-
-              <div class="software-noscript-body">
-                <section class="software-modal-section" aria-labelledby="software-noscript-openclaw-mode">
-                  <h4 id="software-noscript-openclaw-mode">适用方式</h4>
-                  <p>适合 Brioi 当前支持的 OpenClaw 客户端场景，登录后即可进入。</p>
-                </section>
-
-                <section class="software-modal-section" aria-labelledby="software-noscript-openclaw-steps">
-                  <h4 id="software-noscript-openclaw-steps">使用步骤</h4>
-                  <ol>
-                    <li>打开 OpenClaw 客户端。</li>
-                    <li>使用购买后的账号完成登录。</li>
-                    <li>进入界面后直接按默认流程开始使用。</li>
-                  </ol>
-                </section>
-
-                <section class="software-modal-section" aria-labelledby="software-noscript-openclaw-note">
-                  <h4 id="software-noscript-openclaw-note">补充说明</h4>
-                  <p>如遇到登录态异常，先退出并重新进入客户端。</p>
-                </section>
-              </div>
-            </article>
-          </div>
-        </section>
-      </noscript>
-
-      <div class="software-modal-backdrop" data-software-modal hidden>
-        <div class="software-modal" role="dialog" aria-modal="true" aria-labelledby="software-modal-title" tabindex="-1">
-          <div class="software-modal-head">
-            <div class="software-modal-icon" aria-hidden="true">
-              <img class="software-modal-icon-image" data-modal-icon-image src="./assets/software-icons/codex-mac-app.png" alt="" decoding="async">
-            </div>
-            <div class="software-modal-title-wrap">
-              <p class="card-label">Usage Guide</p>
-              <h3 id="software-modal-title"></h3>
-            </div>
-          </div>
-
-          <div class="software-modal-body">
-            <section class="software-modal-section" aria-labelledby="software-modal-mode-title">
-              <h4 id="software-modal-mode-title">适用方式</h4>
-              <p data-modal-mode></p>
-            </section>
-
-            <section class="software-modal-section" aria-labelledby="software-modal-steps-title">
-              <h4 id="software-modal-steps-title">使用步骤</h4>
-              <ol data-modal-steps></ol>
-            </section>
-
-            <section class="software-modal-section" aria-labelledby="software-modal-note-title">
-              <h4 id="software-modal-note-title">补充说明</h4>
-              <p data-modal-note></p>
-            </section>
-          </div>
-
-          <button class="button button--primary software-modal-close" type="button" data-close-software-modal>关闭</button>
+      <div class="container hero-content">
+        <h1 class="hero-title">
+          <span class="hero-line">更强的 AI，</span><span class="hero-line hero-line--accent">不该只有少数人在用</span>
+        </h1>
+        <p class="hero-subtitle">
+          顶级 GPT-5.4 全系列 AI 模型直连，稳定、高速、安全
+        </p>
+        <div class="hero-actions">
+          <a class="button button--primary button--large" href="#pricing">开始使用</a>
         </div>
       </div>
+      <div class="container hero-mock-wrap">
 
-      <!-- ====== Pricing ====== -->
-      <section id="pricing" class="pricing" aria-labelledby="pricing-title">
-        <div class="section-heading">
-          <p class="eyebrow">Pricing</p>
-          <h2 id="pricing-title">选一个方案。<span class="text-accent">直接开用。</span></h2>
+        <div id="software" class="hero-software-strip">
+          <p class="strip-label">Supported Client Extensions</p>
+          <div class="software-flex-grid">
+            <div class="software-badge"><img src="./assets/software-icons/codex-color.svg"
+                alt="Codex"><span>Codex</span></div>
+            <div class="software-badge"><img src="./assets/software-icons/claude.webp" alt="Claude Code"><span>Claude
+                Code</span></div>
+            <div class="software-badge"><img src="./assets/software-icons/opencode.webp"
+                alt="OpenCode"><span>OpenCode</span></div>
+            <div class="software-badge"><img src="./assets/software-icons/openclaw-color.svg"
+                alt="OpenClaw"><span>OpenClaw</span></div>
+            <div class="software-badge"><img src="./assets/software-icons/githubcopilot.svg"
+                alt="Copilot"><span>Copilot</span></div>
+            <div class="software-badge"><img src="./assets/software-icons/vscode.png" alt="VS Code"><span>VS Code</span>
+            </div>
+            <div class="software-badge software-badge--more">
+              <span class="more-dots">•••</span>
+              <div class="more-tooltip">所有兼容标准 OpenAI 请求格式的环境均可无缝接入</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section-features">
+      <div class="container">
+
+        <div class="integrated-bento">
+
+          <!-- Left Side: Usage Visual (Large) -->
+          <div class="bento-card-large usage-integrated">
+            <div class="usage-integrated-text">
+              <h2 class="usage-eyebrow">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                </svg>
+                UNCOMPROMISED POWER
+              </h2>
+              <h3 class="usage-title">拒绝降智，<br><span class="text-accent">只提供最强的 AI 能力</span></h3>
+              <p class="usage-desc">直连顶级模型链路，让你拿到官方 AI 原生水准的真实能力，在复杂任务下依然稳定输出</p>
+            </div>
+
+            <div class="usage-visual">
+              <div class="mock-card telemetry-card">
+                <div class="mock-header">
+                  <div class="mock-status"><span class="status-dot"></span> 原生通道遥测</div>
+                  <div class="mock-id">CHANNEL: MAX_DIRECT</div>
+                </div>
+                <div class="mock-body">
+                  <div class="telemetry-pipeline">
+                    <div class="pipeline-node">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                        <line x1="8" y1="21" x2="16" y2="21" />
+                        <line x1="12" y1="17" x2="12" y2="21" />
+                      </svg>
+                    </div>
+                    <div class="pipeline-flow">
+                      <div class="flow-line"></div>
+                      <div class="flow-particle"></div>
+                    </div>
+                    <div class="pipeline-node pipeline-node-accent">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div class="telemetry-stats">
+                    <div class="telemetry-item">
+                      <div class="t-label">推理算力上限</div>
+                      <div class="t-bar-wrap">
+                        <div class="t-bar" style="width: 100%; background: #10B981;"></div>
+                      </div>
+                      <div class="t-value text-accent font-bold">MAX</div>
+                    </div>
+                    <div class="telemetry-item">
+                      <div class="t-label">上下文保真度</div>
+                      <div class="t-bar-wrap">
+                        <div class="t-bar" style="width: 100%; background: #0EA5E9;"></div>
+                      </div>
+                      <div class="t-value font-bold" style="color: #0EA5E9;">100%</div>
+                    </div>
+                    <div class="telemetry-item">
+                      <div class="t-label">模型链路监测</div>
+                      <div class="t-bar-wrap">
+                        <div class="t-bar" style="width: 100%; background: #8B5CF6;"></div>
+                      </div>
+                      <div class="t-value font-bold" style="color: #8B5CF6;">100%</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Floating dark card -->
+                <div class="mock-overlay-card">
+                  <div class="overlay-label">峰值并发处理状态</div>
+                  <div class="overlay-amount text-emerald">极速畅通</div>
+                  <div class="overlay-details">
+                    <span class="detail-item">Latency: &lt;24ms</span>
+                    <span class="detail-item" style="color: rgba(255,255,255,0.3);">|</span>
+                    <span class="detail-item">Dropped: 0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side: 3 Other Features -->
+          <div class="bento-stacked">
+
+            <!-- Card 1 -->
+            <div class="bento-card-compact">
+              <div class="compact-header">
+                <div class="feature-icon-wrap feature-icon-wrap--small">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                </div>
+                <h4 class="feature-title">金融级安全保障</h4>
+              </div>
+              <p class="feature-desc">所有数据传输均经过加密保护。绝不存储原始对话，隐私永远是最高优先级。</p>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bento-card-compact">
+              <div class="compact-header">
+                <div class="feature-icon-wrap feature-icon-wrap--small">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="20" height="8" x="2" y="4" rx="2" ry="2" />
+                    <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+                    <line x1="6" y1="8" x2="6.01" y2="8" />
+                    <line x1="6" y1="18" x2="6.01" y2="18" />
+                  </svg>
+                </div>
+                <h4 class="feature-title">企业级高并发</h4>
+              </div>
+              <p class="feature-desc">基于分布式架构的高可用网关，轻松接住千万级并发请求，为业务护航。</p>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bento-card-compact">
+              <div class="compact-header">
+                <div class="feature-icon-wrap feature-icon-wrap--small">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                    <rect x="9" y="9" width="6" height="6"></rect>
+                    <line x1="9" y1="1" x2="9" y2="4"></line>
+                    <line x1="15" y1="1" x2="15" y2="4"></line>
+                    <line x1="9" y1="20" x2="9" y2="23"></line>
+                    <line x1="15" y1="20" x2="15" y2="23"></line>
+                    <line x1="20" y1="9" x2="23" y2="9"></line>
+                    <line x1="20" y1="14" x2="23" y2="14"></line>
+                    <line x1="1" y1="9" x2="4" y2="9"></line>
+                    <line x1="1" y1="14" x2="4" y2="14"></line>
+                  </svg>
+                </div>
+                <h4 class="feature-title">7x24h 专属售后</h4>
+              </div>
+              <p class="feature-desc">Pro 及以上订阅用户尊享技术专家团队全天候支持，随时响应任何集成问题。</p>
+            </div>
+
+          </div>
+
         </div>
 
-        <div class="pricing-tabs" role="tablist" aria-label="订阅方案分类">
-          <button class="pricing-tab" id="tab-experience" role="tab" aria-controls="panel-experience" aria-selected="false" data-target="experience">体验套餐</button>
-          <button class="pricing-tab is-active" id="tab-monthly" role="tab" aria-controls="panel-monthly" aria-selected="true" data-target="monthly">月卡套餐</button>
+      </div>
+    </section>
+
+
+
+    <!-- Pricing -->
+    <section id="pricing" class="section-pricing">
+      <div class="container section-heading-centered">
+        <h2>购买套餐，<span class="text-accent">立即开用</span></h2>
+      </div>
+
+      <div class="container">
+        <div class="pricing-tabs" role="tablist">
+          <button class="pricing-tab active" data-target="pricing-periodic" role="tab"
+            aria-selected="true">周期套餐</button>
+          <button class="pricing-tab" data-target="pricing-more" role="tab" aria-selected="false">更多套餐</button>
         </div>
 
-        <div class="pricing-panel" id="panel-experience" role="tabpanel" aria-labelledby="tab-experience" hidden>
-          <article class="plan-card">
-            <p class="card-label">Entry</p>
-            <h3>日卡</h3>
-            <p class="price-inline">免费</p>
-            <p class="plan-meta">20 刀 免费使用</p>
-            <a class="button button--outline" href="./buy.html?plan=day-pass">立即购买</a>
-          </article>
-          <article class="plan-card plan-card--featured">
-            <p class="card-label">Fast Start</p>
-            <h3>周卡</h3>
-            <p class="price-inline">¥29.9</p>
-            <p class="plan-meta">100 刀 / 天</p>
-            <a class="button button--dark" href="./buy.html?plan=week-pass">立即购买</a>
-          </article>
+        <div class="pricing-content active" id="pricing-periodic" role="tabpanel">
+          <div class="pricing-bento-layout">
+
+            <div class="price-bento-card">
+              <p class="price-label">STARTER</p>
+              <h3 class="price-name">周卡</h3>
+              <div class="price-amount-wrap">
+                <span class="price-currency">¥</span><span class="price-amount">29</span>
+              </div>
+              <p class="price-desc">适合首次体验、短期需求与临时项目。</p>
+              <ul class="price-features">
+                <li>日限额 $30</li>
+                <li>7 天有效</li>
+                <li>每位用户限购一次</li>
+              </ul>
+              <a class="button button--secondary button--block" href="#" data-modal="contact">立即开通</a>
+            </div>
+
+            <div class="price-bento-card">
+              <p class="price-label">ESSENTIAL</p>
+              <h3 class="price-name">Plus 月卡</h3>
+              <div class="price-amount-wrap">
+                <span class="price-currency">¥</span><span class="price-amount">99</span><span
+                  class="price-period">/月</span>
+              </div>
+              <p class="price-desc">适合轻度到中度使用，兼顾价格与日常需求。</p>
+              <ul class="price-features">
+                <li>日额度 $30 + 赠送 $30</li>
+                <li>主流模型全面支持</li>
+                <li>高速优质线路通道</li>
+              </ul>
+              <a class="button button--secondary button--block" href="#" data-modal="contact">立即开通</a>
+            </div>
+
+            <div class="price-bento-card price-bento-card--featured">
+              <div class="price-badge">推荐选择</div>
+              <p class="price-label text-emerald">PROFESSIONAL</p>
+              <h3 class="price-name">Pro 月卡</h3>
+              <div class="price-amount-wrap">
+                <span class="price-currency">¥</span><span class="price-amount">199</span><span
+                  class="price-period">/月</span>
+              </div>
+              <p class="price-desc">适合绝大多数用户的长期日常使用。</p>
+              <ul class="price-features">
+                <li>日额度 $100 + 赠送 $100</li>
+                <li>全节点专线切换</li>
+                <li>更适合高频稳定使用</li>
+              </ul>
+              <a class="button button--primary button--block" href="#" data-modal="contact">立即开通</a>
+            </div>
+
+            <div class="price-bento-card">
+              <p class="price-label">ENTERPRISE</p>
+              <h3 class="price-name">MAX 月卡</h3>
+              <div class="price-amount-wrap">
+                <span class="price-currency">¥</span><span class="price-amount">499</span><span
+                  class="price-period">/月</span>
+              </div>
+              <p class="price-desc">适合重度使用、专业场景与更高强度任务。</p>
+              <ul class="price-features">
+                <li>日额度 $300 + 赠送 $300</li>
+                <li>企业级高优通道</li>
+                <li>面向更高负载与持续输出</li>
+              </ul>
+              <a class="button button--secondary button--block" href="#" data-modal="contact">立即开通</a>
+            </div>
+
+          </div>
         </div>
 
-        <div class="pricing-panel pricing-panel--default" id="panel-monthly" role="tabpanel" aria-labelledby="tab-monthly">
-          <article class="plan-card plan-card--featured">
-            <span class="plan-badge">推荐</span>
-            <p class="card-label">Recommended</p>
-            <h3>Plus 月卡</h3>
-            <p class="price-inline">¥99</p>
-            <p class="plan-meta">100 刀 / 天<br>30 天</p>
-            <a class="button button--dark" href="./buy.html?plan=plus-monthly">立即购买</a>
-          </article>
-          <article class="plan-card">
-            <p class="card-label">Monthly</p>
-            <h3>Pro 月卡</h3>
-            <p class="price-inline">¥199</p>
-            <p class="plan-meta">200 刀 / 天<br>30 天</p>
-            <a class="button button--outline" href="./buy.html?plan=pro-monthly">立即购买</a>
-          </article>
-          <article class="plan-card">
-            <p class="card-label">Monthly</p>
-            <h3>Max 月卡</h3>
-            <p class="price-inline">¥499</p>
-            <p class="plan-meta">600 刀 / 天<br>30 天</p>
-            <a class="button button--outline" href="./buy.html?plan=max-monthly">立即购买</a>
-          </article>
-        </div>
-      </section>
+        <div class="pricing-content" id="pricing-more" role="tabpanel">
+          <div class="pricing-bento-layout"
+            style="grid-template-columns: repeat(2, 1fr); max-width: 800px; margin: 0 auto 40px auto;">
 
-      <!-- ====== FAQ ====== -->
-      <section class="faq" aria-labelledby="faq-title">
-        <div class="section-heading">
-          <p class="eyebrow">FAQ</p>
-          <h2 id="faq-title">你会问的，<span class="text-accent">先回答。</span></h2>
+            <div class="price-bento-card">
+              <p class="price-label">PAY-AS-YOU-GO</p>
+              <h3 class="price-name">按量付费</h3>
+              <div class="price-amount-wrap">
+                <span class="price-currency">¥</span><span class="price-amount">10</span><span
+                  class="price-period">起充</span>
+              </div>
+              <p class="price-desc">充值 ¥10 即可获得 $10 专属额度，灵活无负担。</p>
+              <ul class="price-features">
+                <li>按照实际请求量精准备扣费</li>
+                <li>额度永久有效不过期</li>
+              </ul>
+              <a class="button button--secondary button--block" href="#" data-modal="contact">立即开通</a>
+            </div>
+
+            <div class="price-bento-card">
+              <p class="price-label text-emerald">ENTERPRISE</p>
+              <h3 class="price-name">企业定制</h3>
+              <div class="price-amount-wrap">
+                <span class="price-name" style="margin-bottom: 0;">私有化与定制</span>
+              </div>
+              <p class="price-desc">针对团队或企业客户，提供专属节点搭建与深度业务整合方案，解决极客团队定制需求。</p>
+              <ul class="price-features">
+                <li>专属独立极速节点部署</li>
+                <li>API 与技术专家 1v1 支持</li>
+              </ul>
+              <a class="button button--primary button--block" href="#" data-modal="contact">立即开通</a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section-faq">
+      <div class="container container--sm">
+        <div class="section-heading-centered" style="margin-bottom: 60px;">
+          <h2>常见问题，<span class="text-accent">随时解答</span></h2>
         </div>
 
         <div class="faq-list">
-          <article class="faq-item">
-            <h3>支持哪些软件？</h3>
-            <p>目前支持 Codex、Claude Code、OpenCode、OpenClaw。</p>
-          </article>
-          <article class="faq-item">
-            <h3>这是官方客户端接入，还是 API 点数？</h3>
-            <p>这是官方客户端镜像接入与订阅通道，不是只卖 API 点数。</p>
-          </article>
-          <article class="faq-item">
-            <h3>额度怎么计算？</h3>
-            <p>周卡和月卡均按每日额度展示，月卡有效期为 30 天。</p>
-          </article>
-          <article class="faq-item">
-            <h3>购买后去哪里？</h3>
-            <p>所有首页 CTA 统一进入购买页。</p>
-          </article>
-          <article class="faq-item">
-            <h3>哪个套餐最适合大多数人？</h3>
-            <p>默认推荐 Plus 月卡 ¥99，适合大多数长期使用场景。</p>
-          </article>
+          <details class="faq-accordion" name="faq">
+            <summary class="faq-summary">我的数据安全如何保证？<span class="faq-icon"></span></summary>
+            <div class="faq-answer">我们采用标准的加密传输协议保护您的数据。对话内容在处理后即时清除，不做持久化存储。系统仅记录 Token 消耗量用于计费。</div>
+          </details>
+          <details class="faq-accordion" name="faq">
+            <summary class="faq-summary">订阅和按量付费可以同时使用吗？<span class="faq-icon"></span></summary>
+            <div class="faq-answer">可以。如果您同时拥有订阅和按量余额，系统会优先消耗订阅提供的每日/每周额度。当订阅额度用尽后，会自动无缝切换到按量余额。</div>
+          </details>
+          <details class="faq-accordion" name="faq">
+            <summary class="faq-summary">企业定制化服务包含哪些内容？<span class="faq-icon"></span></summary>
+            <div class="faq-answer">企业定制服务包括更高的并发上限、定制化的物理专线、私有化部署咨询以及深度技术集成支持。请联系我们的销售团队获取详细方案。</div>
+          </details>
+          <details class="faq-accordion" name="faq">
+            <summary class="faq-summary">怎么联系人工客服？<span class="faq-icon"></span></summary>
+            <div class="faq-answer">您可以直接添加客服微信联系我们，微信号：Ghosts2077</div>
+          </details>
         </div>
-      </section>
-    </main>
-
-    <!-- ====== Footer ====== -->
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <div class="footer-brand">
-          <p class="brand">Brioi API</p>
-          <p class="footer-copy">给官方客户端一个更划算的入口。</p>
-        </div>
-        <a class="button button--primary" href="./buy.html?plan=plus-monthly">立即购买</a>
       </div>
-    </footer>
+    </section>
+  </main>
 
-  </body>
+  <footer class="site-footer" style="padding: 60px 0; display: flex; justify-content: center; opacity: 0.5;">
+    <a class="brand" href="./index.html">
+      <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+        <path pathLength="100"
+          d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 1 0 0-8c-2 0-4 1.33-6 4Z">
+        </path>
+      </svg>
+      <span class="brand-text" style="font-size: 1.25rem;">Brioi</span>
+    </a>
+  </footer>
+
+  <!-- Contact Modal -->
+  <div id="contact-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-dialog">
+      <button class="modal-close js-modal-close" aria-label="关闭">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="modal-content">
+        <h3 class="modal-title">微信扫码添加</h3>
+        <p class="modal-desc" style="font-size: 1.2rem; font-weight: 600; color: var(--text);">额外领取 <span
+            class="text-accent" style="font-size: 1.5rem; font-weight: 800; padding: 0 4px;">$10</span></p>
+        <div class="modal-qr-wrap" style="margin-bottom: 16px;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Brioi_Contact" alt="客服二维码"
+            class="modal-qr">
+        </div>
+        <p class="modal-footer-text" style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
+          扫描上方二维码，添加客服微信开通套餐</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+
 </html>
