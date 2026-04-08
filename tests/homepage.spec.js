@@ -105,6 +105,30 @@ test('site buy shells expose approved static branding without javascript', async
   }
 });
 
+test('site runtime applies the configured accent token to each branded homepage', async ({ page }) => {
+  for (const [path, accent] of [
+    ['/sites/brioi/index.html', '#00E676'],
+    ['/sites/cradeo/index.html', '#22C55E'],
+    ['/sites/drigeo/index.html', '#10B981'],
+  ]) {
+    await page.goto(path);
+
+    const runtimeAccent = await page.evaluate(() => {
+      return getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+    });
+
+    expect(runtimeAccent).toBe(accent);
+  }
+});
+
+test('buy page falls back to the first enabled plan when the requested plan is disabled', async ({ page }) => {
+  await page.goto('/sites/cradeo/buy.html?plan=week-pass');
+  await expect(page.locator('[data-selected-plan]')).toHaveText('已选择：Plus 月卡');
+
+  await page.goto('/sites/drigeo/buy.html?plan=week-pass');
+  await expect(page.locator('[data-selected-plan]')).toHaveText('已选择：Plus 月卡');
+});
+
 test('homepage shell loads with updated navigation and hero CTA', async ({ page }) => {
   await page.goto('/');
 

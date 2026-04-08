@@ -4,35 +4,6 @@
 
 document.documentElement.classList.add('js');
 
-/* --- Plan label mapping --- */
-const PLAN_LABELS = {
-  'day-pass': '日卡',
-  'week-pass': '周卡',
-  'plus-monthly': 'Plus 月卡',
-  'pro-monthly': 'Pro 月卡',
-  'max-monthly': 'Max 月卡'
-};
-
-/* --- Buy Page Plan Display --- */
-function initBuyPage() {
-  const selectedPlan = document.querySelector('[data-selected-plan]');
-
-  if (!selectedPlan) {
-    return;
-  }
-
-  const params = new URLSearchParams(window.location.search);
-  const planKey = params.get('plan');
-  const label = PLAN_LABELS[planKey] ?? 'Plus 月卡';
-
-  selectedPlan.textContent = `已选择：${label}`;
-}
-
-/* --- Init --- */
-if (document.body.dataset.page === 'buy') {
-  initBuyPage();
-}
-
 /* --- Pricing Tabs --- */
 function initPricingTabs() {
   const tabs = document.querySelectorAll('.pricing-tab');
