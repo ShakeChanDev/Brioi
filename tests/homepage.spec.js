@@ -4,15 +4,101 @@ test('homepage shell loads with updated navigation and hero CTA', async ({ page 
   await page.goto('/');
 
   const nav = page.locator('.site-nav');
+  const navItems = nav.locator('.nav-actions > a');
 
   await expect(page).toHaveTitle(/Brioi API/);
   await expect(nav).toBeVisible();
   await expect(nav.locator('.brand')).toHaveAttribute('href', './index.html');
+  await expect(navItems).toHaveCount(4);
+  await expect(navItems.nth(0)).toHaveText('文档');
+  await expect(navItems.nth(1)).toHaveText('定价');
+  await expect(nav.getByRole('link', { name: '文档' })).toHaveAttribute('href', './docs.html');
   await expect(nav.getByRole('link', { name: '定价' })).toHaveAttribute('href', '#pricing');
   await expect(nav.getByRole('link', { name: '登录' })).toHaveAttribute('href', '#');
   await expect(nav.getByRole('link', { name: '注册' })).toHaveAttribute('href', './buy.html?plan=plus-monthly');
   await expect(page.getByRole('main')).toBeVisible();
   await expect(page.locator('.section-hero').getByRole('link', { name: '开始使用' })).toHaveAttribute('href', '#pricing');
+});
+
+test('homepage brand text is configured to use the Bungee font family', async ({ page }) => {
+  await page.goto('/');
+
+  const brandFontFamily = await page.locator('.site-header .brand-text').evaluate((element) => {
+    return window.getComputedStyle(element).fontFamily;
+  });
+  const isBungeeLoaded = await page.evaluate(async () => {
+    await document.fonts.ready;
+    return document.fonts.check('48px "Bungee"');
+  });
+
+  expect(brandFontFamily).toContain('Bungee');
+  expect(isBungeeLoaded).toBe(true);
+});
+
+test('docs page matches the real sub2api api-key modal structure', async ({ page }) => {
+  await page.goto('/docs.html');
+
+  await expect(page).toHaveTitle(/Brioi 文档/);
+  await expect(page.getByRole('navigation', { name: '主导航' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Brioi API 密钥使用说明' })).toBeVisible();
+  await expect(page.getByText('文档内容按 sub2api 前端的“使用 API 密钥”弹窗真实模板整理。')).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: '快速开始' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Codex CLI 配置说明' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Codex CLI（WebSocket）配置说明' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'OpenClaw 配置说明' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Claude Code 配置说明' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'OpenCode 配置说明' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: '常见问题' })).toBeVisible();
+  await expect(page.getByRole('link', { name: '创建密钥' })).toHaveAttribute('href', '#key-setup');
+  await expect(page.getByRole('link', { name: 'Codex CLI 配置说明' })).toHaveAttribute('href', '#codex-setup');
+  await expect(page.getByRole('link', { name: 'Codex CLI（WebSocket）配置说明' })).toHaveAttribute('href', '#codex-ws-setup');
+  await expect(page.getByRole('link', { name: 'OpenClaw 配置说明' })).toHaveAttribute('href', '#openclaw-setup');
+  await expect(page.getByRole('link', { name: 'Claude Code 配置说明' })).toHaveAttribute('href', '#claude-code-setup');
+  await expect(page.getByRole('link', { name: 'OpenCode 配置说明' })).toHaveAttribute('href', '#opencode-setup');
+  await expect(page.getByRole('link', { name: '常见问题' })).toHaveAttribute('href', '#faq');
+  await expect(page.getByText('控制台进入 API Keys 页面')).toBeVisible();
+  await expect(page.getByText('创建后的完整密钥通常只展示一次')).toBeVisible();
+  await expect(page.getByText('Codex 与 Claude Code 模板直接使用弹窗里给出的根 Base URL', { exact: true })).toBeVisible();
+  await expect(page.getByText('OpenCode 模板会在根地址基础上补成 /v1', { exact: true })).toBeVisible();
+  await expect(page.getByText('ANTHROPIC_BASE_URL').first()).toBeVisible();
+  await expect(page.getByText('OPENAI_API_KEY').first()).toBeVisible();
+  await expect(page.getByText('supports_websockets').first()).toBeVisible();
+  await expect(page.getByText('responses_websockets_v2').first()).toBeVisible();
+  await expect(page.getByText('openai-responses').first()).toBeVisible();
+  await expect(page.getByText('Node.js 22').first()).toBeVisible();
+  await expect(page.getByText('baseURL').first()).toBeVisible();
+  await expect(page.getByText('apiKey').first()).toBeVisible();
+  await expect(page.getByText('sk-在此处替换成你的 API 密钥').first()).toBeVisible();
+  await expect(page.getByText('https://brioi.com').first()).toBeVisible();
+  await expect(page.getByText('https://brioi.com/v1').first()).toBeVisible();
+  await expect(page.getByText('api.cubence.com')).toHaveCount(0);
+  await expect(page.getByText('codex-for.me')).toHaveCount(0);
+  await expect(page.getByText('sk-brioi-your-key')).toHaveCount(0);
+  await expect(page.getByText('补充章节：当前上游弹窗未内置 OpenClaw 专用模板')).toBeVisible();
+});
+
+test('docs page uses a documentation layout with toc and reference table', async ({ page }) => {
+  await page.goto('/docs.html');
+
+  await expect(page.locator('.docs-layout')).toBeVisible();
+  await expect(page.locator('.docs-sidebar')).toBeVisible();
+  await expect(page.locator('.docs-article')).toBeVisible();
+  await expect(page.getByRole('navigation', { name: '文档目录' })).toBeVisible();
+  await expect(page.getByRole('link', { name: '创建密钥' })).toHaveAttribute('href', '#key-setup');
+  await expect(page.getByRole('link', { name: 'Codex CLI 配置说明' })).toHaveAttribute('href', '#codex-setup');
+  await expect(page.getByRole('link', { name: 'Codex CLI（WebSocket）配置说明' })).toHaveAttribute('href', '#codex-ws-setup');
+  await expect(page.getByRole('link', { name: 'OpenClaw 配置说明' })).toHaveAttribute('href', '#openclaw-setup');
+  await expect(page.getByRole('link', { name: 'Claude Code 配置说明' })).toHaveAttribute('href', '#claude-code-setup');
+  await expect(page.getByRole('link', { name: 'OpenCode 配置说明' })).toHaveAttribute('href', '#opencode-setup');
+  const referenceTable = page.locator('.docs-reference-table');
+  await expect(referenceTable).toBeVisible();
+  await expect(referenceTable.getByRole('cell', { name: 'Codex CLI', exact: true })).toBeVisible();
+  await expect(referenceTable.getByRole('cell', { name: 'Codex CLI (WebSocket)', exact: true })).toBeVisible();
+  await expect(referenceTable.getByRole('cell', { name: 'OpenClaw', exact: true })).toBeVisible();
+  await expect(referenceTable.getByRole('cell', { name: 'Claude Code', exact: true })).toBeVisible();
+  await expect(referenceTable.getByRole('cell', { name: 'OpenCode', exact: true })).toBeVisible();
+  await expect(referenceTable.getByText('https://brioi.com', { exact: true })).toHaveCount(3);
+  await expect(referenceTable.getByText('https://brioi.com/v1', { exact: true })).toHaveCount(2);
 });
 
 test('homepage hero exposes the current positioning, metadata, and supported client badges', async ({ page }) => {

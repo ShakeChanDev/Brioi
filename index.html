@@ -11,6 +11,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;800;900&display=swap"
     rel="stylesheet">
+  <link rel="preload" href="./assets/fonts/Bungee-Regular.ttf" as="font" type="font/ttf">
   <link rel="stylesheet" href="./styles.css">
   <script src="./main.js" defer></script>
 </head>
@@ -33,6 +34,7 @@
         </div>
       </a>
       <div class="nav-actions">
+        <a class="nav-link" href="./docs.html">文档</a>
         <a class="nav-link" href="#pricing">定价</a>
         <a class="nav-link" href="#">登录</a>
         <a class="nav-cta button button--primary" href="./buy.html?plan=plus-monthly">注册</a>
@@ -327,22 +329,22 @@
               <p class="price-label">PAY-AS-YOU-GO</p>
               <h3 class="price-name">按量付费</h3>
               <div class="price-amount-wrap">
-                <span class="price-currency">¥</span><span class="price-amount">10</span><span
+                <span class="price-currency">¥</span><span class="price-amount">30</span><span
                   class="price-period">起充</span>
               </div>
-              <p class="price-desc">充值 ¥10 即可获得 $10 专属额度，灵活无负担。</p>
+              <p class="price-desc">充值 ¥10 即可获得 $10 （价值约 ¥70）专属额度，灵活无负担。</p>
               <ul class="price-features">
                 <li>按照实际请求量精准备扣费</li>
                 <li>额度永久有效不过期</li>
               </ul>
-              <a class="button button--secondary button--block" href="#" data-modal="contact">立即开通</a>
+              <a class="button button--secondary button--block" href="#" data-modal="contact">立即充值</a>
             </div>
 
             <div class="price-bento-card">
               <p class="price-label text-emerald">ENTERPRISE</p>
               <h3 class="price-name">企业定制</h3>
               <div class="price-amount-wrap">
-                <span class="price-name" style="margin-bottom: 0;">私有化与定制</span>
+                <span class="price-name" style="margin-bottom: 0; font-weight: 700;">私有化与定制</span>
               </div>
               <p class="price-desc">针对团队或企业客户，提供专属节点搭建与深度业务整合方案，解决极客团队定制需求。</p>
               <ul class="price-features">

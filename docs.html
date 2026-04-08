@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brioi 文档 | API 密钥使用说明</title>
+  <meta name="description" content="Brioi API 密钥使用说明：基于 sub2api 真实弹窗模板，涵盖 Codex CLI、Codex CLI WebSocket、Claude Code、OpenCode 与常见问题。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="preload" href="./assets/fonts/Bungee-Regular.ttf" as="font" type="font/ttf">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./main.js" defer></script>
+</head>
+
+<body data-page="docs">
+
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <a class="brand" href="./index.html">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path pathLength="100"
+            d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 1 0 0-8c-2 0-4 1.33-6 4Z">
+          </path>
+        </svg>
+        <div class="brand-text-wrapper">
+          <span class="brand-text">Brioi</span>
+          <span class="brand-dot">·</span>
+          <span class="brand-outline">API</span>
+        </div>
+      </a>
+      <div class="nav-actions">
+        <a class="nav-link nav-link--active" href="./docs.html" aria-current="page">文档</a>
+        <a class="nav-link" href="./index.html#pricing">定价</a>
+        <a class="nav-link" href="#">登录</a>
+        <a class="nav-cta button button--primary" href="./buy.html?plan=plus-monthly">注册</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="docs-page">
+    <div class="container docs-layout">
+      <aside class="docs-sidebar">
+        <div class="docs-sidebar-card">
+          <p class="docs-sidebar-label">Brioi Docs</p>
+          <p class="docs-sidebar-title">密钥与客户端配置</p>
+          <nav class="docs-toc" aria-label="文档目录">
+            <a class="docs-toc-link" href="#key-setup">创建密钥</a>
+            <a class="docs-toc-link" href="#codex-setup">Codex CLI 配置说明</a>
+            <a class="docs-toc-link" href="#codex-ws-setup">Codex CLI（WebSocket）配置说明</a>
+            <a class="docs-toc-link" href="#openclaw-setup">OpenClaw 配置说明</a>
+            <a class="docs-toc-link" href="#opencode-setup">OpenCode 配置说明</a>
+            <a class="docs-toc-link" href="#claude-code-setup">Claude Code 配置说明</a>
+            <a class="docs-toc-link" href="#faq">常见问题</a>
+          </nav>
+        </div>
+      </aside>
+
+      <article class="docs-article">
+        <header class="docs-header">
+          <p class="docs-kicker">Use API Key</p>
+          <h1>Brioi API 密钥使用说明</h1>
+          <p class="docs-lead">文档内容按 sub2api 前端的“使用 API 密钥”弹窗真实模板整理。</p>
+          <p class="docs-intro">
+            这页只负责接入，不讲购买流程。请优先以 Brioi 后台弹窗里显示的内容为准。本文为了和你当前项目实例保持一致，示例统一使用截图里出现的 <code>https://brioi.com</code>，并保留上游源码里对 OpenCode 自动补 <code>/v1</code> 的行为。
+          </p>
+        </header>
+
+        <section class="docs-section docs-section--article" id="key-setup">
+          <div class="docs-section-head">
+            <p class="docs-section-label">Quick Start</p>
+            <h2>快速开始</h2>
+          </div>
+
+          <div class="docs-steps-grid">
+            <article class="docs-step-card">
+              <span class="docs-step-index">01</span>
+              <h3>创建 API Key</h3>
+              <p>进入 Brioi 控制台后打开 API Keys 页面，创建新的密钥。建议按客户端拆分使用，后续轮换和排查都会更清楚。</p>
+              <ul class="docs-bullet-list">
+                <li>控制台进入 API Keys 页面</li>
+                <li>创建后的完整密钥通常只展示一次</li>
+                <li>建议按客户端拆分独立密钥</li>
+              </ul>
+            </article>
+
+            <article class="docs-step-card">
+              <span class="docs-step-index">02</span>
+              <h3>打开“使用 API 密钥”弹窗</h3>
+              <p>上游源码里的真实弹窗当前提供四种模板：<code>Codex CLI</code>、<code>Codex CLI (WebSocket)</code>、<code>Claude Code</code>、<code>OpenCode</code>。OpenClaw 不是弹窗内置项，本页单独补充了一节适配说明。</p>
+              <ul class="docs-bullet-list">
+                <li>Codex 使用 <code>config.toml + auth.json</code></li>
+                <li>Claude Code 同时给出终端变量和 <code>settings.json</code></li>
+                <li>OpenCode 给出 <code>opencode.json</code> 模板</li>
+              </ul>
+            </article>
+
+            <article class="docs-step-card">
+              <span class="docs-step-index">03</span>
+              <h3>照抄，不要自行猜路径</h3>
+              <p>Codex 与 Claude Code 模板直接使用弹窗里给出的根 Base URL。OpenCode 模板会在根地址基础上补成 <code>/v1</code>。修改后重开终端或客户端再验证。</p>
+              <ul class="docs-bullet-list">
+                <li>Codex 与 Claude Code 模板直接使用弹窗里给出的根 Base URL</li>
+                <li>OpenCode 模板会在根地址基础上补成 <code>/v1</code></li>
+                <li>如果弹窗没有某个客户端标签，说明当前分组并未启用对应能力</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="docs-section docs-section--article" id="credentials-map">
+          <div class="docs-section-head">
+            <p class="docs-section-label">Reference</p>
+            <h2>配置速查表</h2>
+          </div>
+          <p class="docs-paragraph">
+            下面这张表对应的是上游 <code>UseKeyModal.vue</code> 当前真实输出结构，而不是第三方整理版。大多数接入失败不是 Key 本身有问题，而是文件路径、Base URL 或开关漏了一行。
+          </p>
+
+          <div class="docs-reference-wrap">
+            <table class="docs-reference-table">
+              <thead>
+                <tr>
+                  <th>客户端</th>
+                  <th>配置文件</th>
+                  <th>关键字段</th>
+                  <th>示例 Base URL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Codex CLI</td>
+                  <td><code>~/.codex/config.toml</code><br><code>~/.codex/auth.json</code></td>
+                  <td><code>base_url</code><br><code>OPENAI_API_KEY</code></td>
+                  <td><code>https://brioi.com</code></td>
+                </tr>
+                <tr>
+                  <td>Codex CLI (WebSocket)</td>
+                  <td><code>~/.codex/config.toml</code><br><code>~/.codex/auth.json</code></td>
+                  <td><code>supports_websockets = true</code><br><code>responses_websockets_v2 = true</code></td>
+                  <td><code>https://brioi.com</code></td>
+                </tr>
+                <tr>
+                  <td>Claude Code</td>
+                  <td><code>Terminal</code><br><code>~/.claude/settings.json</code></td>
+                  <td><code>ANTHROPIC_BASE_URL</code><br><code>ANTHROPIC_AUTH_TOKEN</code></td>
+                  <td><code>https://brioi.com</code></td>
+                </tr>
+                <tr>
+                  <td>OpenCode</td>
+                  <td><code>~/.config/opencode/opencode.json</code></td>
+                  <td><code>baseURL</code><br><code>apiKey</code></td>
+                  <td><code>https://brioi.com/v1</code></td>
+                </tr>
+                <tr>
+                  <td>OpenClaw</td>
+                  <td><code>~/.openclaw/openclaw.json</code></td>
+                  <td><code>baseUrl</code><br><code>apiKey</code><br><code>auth = api-key</code><br><code>api = openai-responses</code></td>
+                  <td><code>https://brioi.com/v1</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="docs-section docs-section--article" id="codex-setup">
+          <div class="docs-section-head">
+            <p class="docs-section-label">Codex CLI</p>
+            <h2>Codex CLI 配置说明</h2>
+          </div>
+          <p class="docs-paragraph">这部分直接对应上游弹窗的 `Codex CLI` 标签。请确保以下内容位于 <code>config.toml</code> 文件的开头部分，且目录存在。</p>
+          <pre class="docs-code-block"><code>npm install -g @openai/codex</code></pre>
+          <pre class="docs-code-block"><code># ~/.codex/config.toml
+model_provider = "OpenAI"
+model = "gpt-5.4"
+review_model = "gpt-5.4"
+model_reasoning_effort = "xhigh"
+disable_response_storage = true
+network_access = "enabled"
+windows_wsl_setup_acknowledged = true
+model_context_window = 1000000
+model_auto_compact_token_limit = 900000
+
+[model_providers.OpenAI]
+name = "OpenAI"
+base_url = "https://brioi.com"
+wire_api = "responses"
+requires_openai_auth = true</code></pre>
+          <pre class="docs-code-block"><code># ~/.codex/auth.json
+{
+  "OPENAI_API_KEY": "sk-在此处替换成你的 API 密钥"
+}</code></pre>
+          <p class="docs-code-note">macOS / Linux 目录是 <code>~/.codex</code>；Windows 目录是 <code>%userprofile%\.codex</code>。改完后直接运行 <code>codex</code> 验证配置。</p>
+        </section>
+
+        <section class="docs-section docs-section--article" id="codex-ws-setup">
+          <div class="docs-section-head">
+            <p class="docs-section-label">Codex CLI WebSocket</p>
+            <h2>Codex CLI（WebSocket）配置说明</h2>
+          </div>
+          <p class="docs-paragraph">这部分对应上游弹窗的 `Codex CLI (WebSocket)` 标签。相比普通 Codex 模板，只额外多两处 WebSocket 开关。</p>
+          <pre class="docs-code-block"><code># ~/.codex/config.toml
+model_provider = "OpenAI"
+model = "gpt-5.4"
+review_model = "gpt-5.4"
+model_reasoning_effort = "xhigh"
+disable_response_storage = true
+network_access = "enabled"
+windows_wsl_setup_acknowledged = true
+model_context_window = 1000000
+model_auto_compact_token_limit = 900000
+
+[model_providers.OpenAI]
+name = "OpenAI"
+base_url = "https://brioi.com"
+wire_api = "responses"
+supports_websockets = true
+requires_openai_auth = true
+
+[features]
+responses_websockets_v2 = true</code></pre>
+          <pre class="docs-code-block"><code># ~/.codex/auth.json
+{
+  "OPENAI_API_KEY": "sk-在此处替换成你的 API 密钥"
+}</code></pre>
+          <p class="docs-code-note">只有在你明确需要 WebSocket 模式时才用这套配置；普通场景优先使用上一节的标准 Codex CLI 模板。</p>
+        </section>
+
+        <section class="docs-section docs-section--article" id="openclaw-setup">
+          <div class="docs-section-head">
+            <p class="docs-section-label">OpenClaw</p>
+            <h2>OpenClaw 配置说明</h2>
+          </div>
+          <p class="docs-paragraph">补充章节：当前上游弹窗未内置 OpenClaw 专用模板。这一节基于你指定的 OpenClaw 参考文档整理，并按 Brioi 当前接入地址适配。</p>
+          <p class="docs-paragraph">OpenClaw 对运行环境和配置格式更敏感，推荐先确认 <code>Node.js 22</code> 或更高版本，再准备 <code>~/.openclaw/openclaw.json</code>。</p>
+          <pre class="docs-code-block"><code># 安装与检查
+curl -fsSL https://openclaw.ai/install.sh | bash
+openclaw --version
+openclaw doctor</code></pre>
+          <pre class="docs-code-block"><code># ~/.openclaw/openclaw.json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "brioi": {
+        "baseUrl": "https://brioi.com/v1",
+        "apiKey": "sk-在此处替换成你的 API 密钥",
+        "auth": "api-key",
+        "api": "openai-responses",
+        "models": [
+          {
+            "id": "gpt-5.4",
+            "name": "GPT-5.4",
+            "api": "openai-responses",
+            "reasoning": true,
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "brioi/gpt-5.4"
+      }
+    }
+  }
+}</code></pre>
+          <pre class="docs-code-block"><code># 可选：如果你不想用默认路径
+export OPENCLAW_CONFIG_PATH="$HOME/.openclaw/openclaw.json"
+openclaw doctor</code></pre>
+          <p class="docs-code-note">OpenClaw 这套配置里最容易出错的是四个字段：<code>baseUrl</code>、<code>apiKey</code>、<code>auth</code>、<code>api</code>。其中 <code>auth</code> 必须是 <code>api-key</code>，<code>api</code> 必须是 <code>openai-responses</code>。</p>
+        </section>
+
+        <section class="docs-section docs-section--article" id="opencode-setup">
+          <div class="docs-section-head">
+            <p class="docs-section-label">OpenCode</p>
+            <h2>OpenCode 配置说明</h2>
+          </div>
+          <p class="docs-paragraph">这部分对应上游弹窗的 `OpenCode` 标签。源码里会自动把根地址补成 <code>/v1</code>，所以这里和 Codex / Claude Code 不同。</p>
+          <pre class="docs-code-block"><code># 配置文件路径
+~/.config/opencode/opencode.json</code></pre>
+          <pre class="docs-code-block"><code>{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "openai": {
+      "options": {
+        "baseURL": "https://brioi.com/v1",
+        "apiKey": "sk-在此处替换成你的 API 密钥"
+      },
+      "models": {
+        "gpt-5.4": {
+          "name": "GPT-5.4"
+        }
+      }
+    }
+  },
+  "agent": {
+    "build": {
+      "options": {
+        "store": false
+      }
+    },
+    "plan": {
+      "options": {
+        "store": false
+      }
+    }
+  }
+}</code></pre>
+          <p class="docs-code-note">上游弹窗生成的是更完整的模型列表，这里只保留最关键字段。若你在后台能直接看到完整 <code>opencode.json</code>，优先复制后台原文。</p>
+        </section>
+
+        <section class="docs-section docs-section--article" id="claude-code-setup">
+          <div class="docs-section-head">
+            <p class="docs-section-label">Claude Code</p>
+            <h2>Claude Code 配置说明</h2>
+          </div>
+          <p class="docs-paragraph">这部分对应上游弹窗的 `Claude Code` 标签。源码会同时给出当前终端环境变量和 <code>~/.claude/settings.json</code> 配置文件两套写法。</p>
+          <pre class="docs-code-block"><code>npm install -g @anthropic-ai/claude-code</code></pre>
+          <pre class="docs-code-block"><code># macOS / Linux 当前终端临时生效
+export ANTHROPIC_BASE_URL="https://brioi.com"
+export ANTHROPIC_AUTH_TOKEN="sk-在此处替换成你的 API 密钥"
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1</code></pre>
+          <pre class="docs-code-block"><code># PowerShell
+$env:ANTHROPIC_BASE_URL="https://brioi.com"
+$env:ANTHROPIC_AUTH_TOKEN="sk-在此处替换成你的 API 密钥"
+$env:CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1</code></pre>
+          <pre class="docs-code-block"><code># ~/.claude/settings.json
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "sk-在此处替换成你的 API 密钥",
+    "ANTHROPIC_BASE_URL": "https://brioi.com",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0"
+  }
+}</code></pre>
+          <p class="docs-code-note">如果你的密钥弹窗里没有 `Claude Code` 标签，通常不是文档问题，而是当前分组没有开启对应能力。保存配置后重新打开终端，再运行 <code>claude</code> 验证。</p>
+        </section>
+
+        <section class="docs-section docs-section--article" id="faq">
+          <div class="docs-section-head">
+            <p class="docs-section-label">Troubleshooting</p>
+            <h2>常见问题</h2>
+          </div>
+
+          <div class="docs-check-grid">
+            <article class="docs-check-card">
+              <h3>API 密钥丢了怎么办？</h3>
+              <p>通常无法再次查看完整旧密钥，直接在控制台新建一把即可。创建后记得同步替换所有客户端里的旧 Key。</p>
+            </article>
+            <article class="docs-check-card">
+              <h3>为什么 Codex 和 Claude Code 用的是根域名，OpenCode 却是 <code>/v1</code>？</h3>
+              <p>这是上游 <code>UseKeyModal.vue</code> 的真实逻辑：Codex / Claude Code 直接吃传入的 <code>baseUrl</code>，OpenCode 会先把根地址标准化成 <code>/v1</code>。</p>
+            </article>
+            <article class="docs-check-card">
+              <h3>Codex 配置后还是不生效？</h3>
+              <p>优先检查 <code>config.toml</code> 是否放在 <code>~/.codex</code> 或 <code>%userprofile%\.codex</code> 下，并确保关键内容位于文件开头。</p>
+            </article>
+            <article class="docs-check-card">
+              <h3>为什么我的弹窗里没有 Claude Code 标签？</h3>
+              <p>上游前端只有在当前分组允许对应能力时才会显示该标签。如果没有看到，说明不是文档写漏了，而是当前密钥分组本身不支持。</p>
+            </article>
+            <article class="docs-check-card">
+              <h3>什么时候该用 Codex CLI（WebSocket）？</h3>
+              <p>只有你明确需要 WebSocket 模式时才切到这一项。普通情况直接用标准 Codex CLI 模板，少两个开关，兼容性也更高。</p>
+            </article>
+            <article class="docs-check-card">
+              <h3>OpenCode 配置不生效怎么办？</h3>
+              <p>先确认全局配置路径是 <code>~/.config/opencode/opencode.json</code>，再检查是否存在项目级 <code>opencode.json</code> 覆盖了全局配置。</p>
+            </article>
+            <article class="docs-check-card">
+              <h3>为什么这里不再单列 OpenClaw？</h3>
+              <p>因为当前上游“使用 API 密钥”弹窗并没有提供 OpenClaw 专用模板。这版文档优先对齐真实源码和后台弹窗，避免继续写成和实际产品不一致的样子。</p>
+            </article>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+</body>
+
+</html>
