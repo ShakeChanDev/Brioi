@@ -47,8 +47,8 @@ test('homepage hero exposes the current positioning, metadata, and supported cli
   await expect(badgeImages).toHaveCount(6);
   const expectedBadgeSources = [
     './assets/software-icons/codex-color.svg',
-    './assets/software-icons/claude.webp',
-    './assets/software-icons/opencode.webp',
+    './assets/software-icons/claudecode-color.svg',
+    './assets/software-icons/opencode.svg',
     './assets/software-icons/openclaw-color.svg',
     './assets/software-icons/githubcopilot.svg',
     './assets/software-icons/vscode.png'
