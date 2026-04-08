@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test';
 
+const BRIOI_HOME_PATH = '/sites/brioi/index.html';
+const BRIOI_BUY_PATH = '/sites/brioi/buy.html?plan=pro-monthly';
+const DOCS_PATH = '/docs.html';
+
 const STATIC_SITE_CASES = [
   {
     site: 'brioi',
@@ -130,7 +134,7 @@ test('buy page falls back to the first enabled plan when the requested plan is d
 });
 
 test('homepage shell loads with updated navigation and hero CTA', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
   const nav = page.locator('.site-nav');
   const navItems = nav.locator('.nav-actions > a');
@@ -141,7 +145,7 @@ test('homepage shell loads with updated navigation and hero CTA', async ({ page 
   await expect(navItems).toHaveCount(4);
   await expect(navItems.nth(0)).toHaveText('文档');
   await expect(navItems.nth(1)).toHaveText('定价');
-  await expect(nav.getByRole('link', { name: '文档' })).toHaveAttribute('href', './docs.html');
+  await expect(nav.getByRole('link', { name: '文档' })).toHaveAttribute('href', '/docs.html');
   await expect(nav.getByRole('link', { name: '定价' })).toHaveAttribute('href', '#pricing');
   await expect(nav.getByRole('link', { name: '登录' })).toHaveAttribute('href', '#');
   await expect(nav.getByRole('link', { name: '注册' })).toHaveAttribute('href', './buy.html?plan=plus-monthly');
@@ -150,7 +154,7 @@ test('homepage shell loads with updated navigation and hero CTA', async ({ page 
 });
 
 test('homepage brand text is configured to use the Bungee font family', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
   const brandFontFamily = await page.locator('.site-header .brand-text').evaluate((element) => {
     return window.getComputedStyle(element).fontFamily;
@@ -165,10 +169,16 @@ test('homepage brand text is configured to use the Bungee font family', async ({
 });
 
 test('docs page matches the real sub2api api-key modal structure', async ({ page }) => {
-  await page.goto('/docs.html');
+  await page.goto(DOCS_PATH);
 
   await expect(page).toHaveTitle(/Brioi 文档/);
-  await expect(page.getByRole('navigation', { name: '主导航' })).toBeVisible();
+  const nav = page.getByRole('navigation', { name: '主导航' });
+
+  await expect(nav).toBeVisible();
+  await expect(nav.locator('.brand')).toHaveAttribute('href', '/sites/brioi/index.html');
+  await expect(nav.getByRole('link', { name: '文档' })).toHaveAttribute('href', '/docs.html');
+  await expect(nav.getByRole('link', { name: '定价' })).toHaveAttribute('href', '/sites/brioi/index.html#pricing');
+  await expect(nav.getByRole('link', { name: '注册' })).toHaveAttribute('href', '/sites/brioi/buy.html?plan=plus-monthly');
   await expect(page.getByRole('heading', { level: 1, name: 'Brioi API 密钥使用说明' })).toBeVisible();
   await expect(page.getByText('文档内容按 sub2api 前端的“使用 API 密钥”弹窗真实模板整理。')).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: '快速开始' })).toBeVisible();
@@ -207,7 +217,7 @@ test('docs page matches the real sub2api api-key modal structure', async ({ page
 });
 
 test('docs page uses a documentation layout with toc and reference table', async ({ page }) => {
-  await page.goto('/docs.html');
+  await page.goto(DOCS_PATH);
 
   await expect(page.locator('.docs-layout')).toBeVisible();
   await expect(page.locator('.docs-sidebar')).toBeVisible();
@@ -231,7 +241,7 @@ test('docs page uses a documentation layout with toc and reference table', async
 });
 
 test('homepage hero exposes the current positioning, metadata, and supported client badges', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
   const hero = page.locator('.section-hero');
   const heroLines = hero.locator('.hero-line');
@@ -261,12 +271,12 @@ test('homepage hero exposes the current positioning, metadata, and supported cli
   ]);
   await expect(badgeImages).toHaveCount(6);
   const expectedBadgeSources = [
-    './assets/software-icons/codex-color.svg',
-    './assets/software-icons/claudecode-color.svg',
-    './assets/software-icons/opencode.svg',
-    './assets/software-icons/openclaw-color.svg',
-    './assets/software-icons/githubcopilot.svg',
-    './assets/software-icons/vscode.png'
+    '/assets/software-icons/codex-color.svg',
+    '/assets/software-icons/claudecode-color.svg',
+    '/assets/software-icons/opencode.svg',
+    '/assets/software-icons/openclaw-color.svg',
+    '/assets/software-icons/githubcopilot.svg',
+    '/assets/software-icons/vscode.png'
   ];
 
   for (const [index, source] of expectedBadgeSources.entries()) {
@@ -275,7 +285,7 @@ test('homepage hero exposes the current positioning, metadata, and supported cli
 });
 
 test('supported client more badge reveals the compatibility tooltip on hover', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
   const moreBadge = page.locator('.software-badge--more');
   const tooltip = moreBadge.locator('.more-tooltip');
@@ -289,7 +299,7 @@ test('supported client more badge reveals the compatibility tooltip on hover', a
 });
 
 test('pricing defaults to periodic plans and switches to the more plans panel', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
   const periodicTab = page.getByRole('tab', { name: '周期套餐' });
   const moreTab = page.getByRole('tab', { name: '更多套餐' });
@@ -316,11 +326,14 @@ test('pricing defaults to periodic plans and switches to the more plans panel', 
 });
 
 test('pricing contact modal opens from the CTA and closes from both close button and backdrop', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
-  const trigger = page.locator('#pricing-periodic').getByRole('link', { name: '立即开通' }).first();
+  const moreTab = page.getByRole('tab', { name: '更多套餐' });
+  const trigger = page.locator('#pricing-more').locator('[data-modal="contact"]').first();
   const modal = page.locator('#contact-modal');
 
+  await moreTab.click();
+  await expect(page.locator('#pricing-more')).toBeVisible();
   await trigger.click();
 
   await expect(modal).toHaveAttribute('aria-hidden', 'false');
@@ -346,7 +359,7 @@ test('pricing contact modal opens from the CTA and closes from both close button
 });
 
 test('faq accordion keeps only the latest answer expanded', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
   const firstItem = page.locator('.faq-accordion').nth(0);
   const secondItem = page.locator('.faq-accordion').nth(1);
@@ -363,7 +376,7 @@ test('faq accordion keeps only the latest answer expanded', async ({ page }) => 
 });
 
 test('buy page shows the selected plan from the query string', async ({ page }) => {
-  await page.goto('/buy.html?plan=pro-monthly');
+  await page.goto(BRIOI_BUY_PATH);
 
   await expect(page.getByRole('heading', { level: 1, name: '购买 Brioi API' })).toBeVisible();
   await expect(page.getByText('已选择：Pro 月卡')).toBeVisible();
@@ -371,7 +384,7 @@ test('buy page shows the selected plan from the query string', async ({ page }) 
 
 test('mobile homepage stays within the viewport without horizontal overflow', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
   const brandBox = await page.locator('.site-header .brand').boundingBox();
   const navActionsBox = await page.locator('.nav-actions').boundingBox();
@@ -392,7 +405,7 @@ test.describe('homepage without javascript', () => {
   test.use({ javaScriptEnabled: false });
 
   test('shows the hero and the default periodic pricing panel', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(BRIOI_HOME_PATH);
 
     await expect(page.locator('.section-hero')).toBeVisible();
     await expect(page.locator('#pricing-periodic')).toBeVisible();

@@ -11,33 +11,30 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;800;900&display=swap"
     rel="stylesheet">
-  <link rel="preload" href="./assets/fonts/Bungee-Regular.ttf" as="font" type="font/ttf">
-  <link rel="stylesheet" href="./styles.css">
-  <script src="./main.js" defer></script>
+  <link rel="preload" href="/assets/fonts/Bungee-Regular.ttf" as="font" type="font/ttf">
+  <link rel="stylesheet" href="/styles/styles.css">
+  <script src="/scripts/main.js" defer></script>
 </head>
 
 <body data-page="docs">
 
   <header class="site-header">
     <nav class="site-nav" aria-label="主导航">
-      <a class="brand" href="./index.html">
-        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path pathLength="100"
-            d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 1 0 0-8c-2 0-4 1.33-6 4Z">
-          </path>
+      <a class="brand" href="/sites/brioi/index.html">
+        <svg class="brand-icon" data-brand-logo viewBox="0 0 24 24" aria-hidden="true">
+          <use href="/assets/brands/shared-logo.svg#brand-mark"></use>
         </svg>
         <div class="brand-text-wrapper">
-          <span class="brand-text">Brioi</span>
+          <span class="brand-text" data-brand-name>Brioi</span>
           <span class="brand-dot">·</span>
           <span class="brand-outline">API</span>
         </div>
       </a>
       <div class="nav-actions">
-        <a class="nav-link nav-link--active" href="./docs.html" aria-current="page">文档</a>
-        <a class="nav-link" href="./index.html#pricing">定价</a>
+        <a class="nav-link nav-link--active" href="/docs.html" aria-current="page">文档</a>
+        <a class="nav-link" href="/sites/brioi/index.html#pricing">定价</a>
         <a class="nav-link" href="#">登录</a>
-        <a class="nav-cta button button--primary" href="./buy.html?plan=plus-monthly">注册</a>
+        <a class="nav-cta button button--primary" href="/sites/brioi/buy.html?plan=plus-monthly">注册</a>
       </div>
     </nav>
   </header>
