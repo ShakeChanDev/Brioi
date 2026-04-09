@@ -1036,14 +1036,27 @@ ul {
 }
 
 .pricing-bento-layout {
+  --pricing-card-width: 282px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--pricing-card-width)), var(--pricing-card-width)));
+  justify-content: center;
   gap: 24px;
   align-items: stretch;
   margin-bottom: 40px;
 }
+.pricing-bento-layout--compact {
+  --pricing-card-width: 388px;
+  max-width: 800px;
+  margin-inline: auto;
+}
 @media (max-width: 900px) {
-  .pricing-bento-layout { grid-template-columns: 1fr; }
+  .pricing-bento-layout {
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+  }
+  .pricing-bento-layout--compact {
+    max-width: none;
+  }
 }
 
 .price-bento-card {

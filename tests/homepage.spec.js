@@ -82,6 +82,27 @@ async function expectFontAvailable(page, fontFamily, sampleText) {
   expect(isLoaded).toBe(true);
 }
 
+async function measureCardGroupCenterDelta(page, layoutSelector) {
+  return page.locator(layoutSelector).evaluate((layout) => {
+    const cards = Array.from(layout.querySelectorAll('.price-bento-card')).filter((card) => {
+      const rect = card.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    });
+
+    if (!cards.length) {
+      throw new Error(`No visible pricing cards found for ${layoutSelector}`);
+    }
+
+    const layoutRect = layout.getBoundingClientRect();
+    const cardRects = cards.map((card) => card.getBoundingClientRect());
+    const groupLeft = Math.min(...cardRects.map((rect) => rect.left));
+    const groupRight = Math.max(...cardRects.map((rect) => rect.right));
+    const layoutCenter = layoutRect.left + layoutRect.width / 2;
+    const groupCenter = (groupLeft + groupRight) / 2;
+
+    return Math.abs(layoutCenter - groupCenter);
+  });
+}
 test('site home shells expose approved static branding and pricing without javascript', async ({ browser }) => {
   for (const siteCase of STATIC_SITE_CASES) {
     const context = await browser.newContext({ javaScriptEnabled: false });
@@ -340,6 +361,19 @@ test('pricing defaults to periodic plans and switches to the more plans panel', 
   await expect(morePanel).toBeVisible();
   await expect(morePanel.getByText('按量付费')).toBeVisible();
   await expect(morePanel.getByText('企业定制')).toBeVisible();
+});
+
+test('pricing card groups stay centered even when a site has fewer plans', async ({ page }) => {
+  await page.goto('/sites/drigeo/index.html');
+
+  const drigeoPeriodicDelta = await measureCardGroupCenterDelta(page, '#pricing-periodic .pricing-bento-layout');
+  expect(drigeoPeriodicDelta).toBeLessThan(12);
+
+  await page.goto(BRIOI_HOME_PATH);
+  await page.getByRole('tab', { name: '更多套餐' }).click();
+
+  const morePlansDelta = await measureCardGroupCenterDelta(page, '#pricing-more .pricing-bento-layout');
+  expect(morePlansDelta).toBeLessThan(12);
 });
 
 test('pricing contact modal opens from the CTA and closes from both close button and backdrop', async ({ page }) => {
