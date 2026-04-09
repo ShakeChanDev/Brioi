@@ -115,8 +115,7 @@ function applyPricing(siteConfig) {
     const planId = card.dataset.planId;
     const plan = siteConfig.pricing.plans[planId];
 
-    if (!plan || !plan.enabled) {
-      card.remove();
+    if (!plan) {
       return;
     }
 
@@ -136,10 +135,10 @@ function initBuyPage(siteConfig) {
 
   const params = new URLSearchParams(window.location.search);
   const requestedPlan = params.get('plan');
-  const enabledPlans = siteConfig.pricing.order.filter((planId) => {
-    return siteConfig.pricing.plans[planId]?.enabled;
+  const buyPlanOrder = siteConfig.pricing.buyOrder.filter((planId) => {
+    return Boolean(siteConfig.pricing.plans[planId]);
   });
-  const finalPlanId = enabledPlans.includes(requestedPlan) ? requestedPlan : enabledPlans[0];
+  const finalPlanId = buyPlanOrder.includes(requestedPlan) ? requestedPlan : buyPlanOrder[0];
   const planLabel = siteConfig.pricing.plans[finalPlanId].label;
 
   selectedPlanNode.textContent = `已选择：${planLabel}`;

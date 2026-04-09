@@ -159,7 +159,7 @@ test('site runtime applies the configured accent token to each branded homepage'
   }
 });
 
-test('buy page falls back to the first enabled plan when the requested plan is disabled', async ({ page }) => {
+test('buy page falls back to the first configured buy plan when the requested plan is unavailable', async ({ page }) => {
   await page.goto('/sites/cradeo/buy.html?plan=week-pass');
   await expect(page.locator('[data-selected-plan]')).toHaveText('已选择：Plus 月卡');
 
@@ -349,9 +349,26 @@ test('brioi homepage exposes the migrated support and pricing copy', async ({ pa
   await page.getByRole('tab', { name: '更多套餐' }).click();
 
   const morePanel = page.locator('#pricing-more');
-  await expect(morePanel.locator('.price-amount').first()).toHaveText('5');
-  await expect(morePanel.getByText('充 100 送 100')).toBeVisible();
+  await expect(morePanel.getByText('周卡')).toBeVisible();
+  await expect(morePanel.locator('[data-plan-id="week-pass"] .price-amount')).toHaveText('29');
+  await expect(morePanel.getByText('按量付费')).toBeVisible();
+  await expect(morePanel.getByText('充 100 送 100')).toHaveCount(0);
   await expect(morePanel.locator('.price-bento-card').last().getByRole('link', { name: '立即开通' })).toHaveClass(/button--secondary/);
+});
+
+test('bonus recharge card is removed from every branded more-package panel', async ({ page }) => {
+  for (const path of [
+    '/sites/brioi/index.html',
+    '/sites/cradeo/index.html',
+    '/sites/drigeo/index.html',
+  ]) {
+    await page.goto(path);
+    await page.getByRole('tab', { name: '更多套餐' }).click();
+
+    const morePanel = page.locator('#pricing-more');
+    await expect(morePanel.getByText('充 100 送 100')).toHaveCount(0);
+    await expect(morePanel.getByText('BONUS RECHARGE')).toHaveCount(0);
+  }
 });
 
 test('supported client more badge reveals the compatibility tooltip on hover', async ({ page }) => {
@@ -380,7 +397,7 @@ test('pricing defaults to periodic plans and switches to the more plans panel', 
   await expect(moreTab).toHaveAttribute('aria-selected', 'false');
   await expect(periodicPanel).toBeVisible();
   await expect(morePanel).toBeHidden();
-  await expect(periodicPanel.getByText('周卡')).toBeVisible();
+  await expect(periodicPanel.getByText('周卡')).toHaveCount(0);
   await expect(periodicPanel.getByText('Plus 月卡')).toBeVisible();
   await expect(periodicPanel.getByText('Pro 月卡')).toBeVisible();
   await expect(periodicPanel.getByText('MAX 月卡')).toBeVisible();
@@ -391,8 +408,9 @@ test('pricing defaults to periodic plans and switches to the more plans panel', 
   await expect(moreTab).toHaveAttribute('aria-selected', 'true');
   await expect(periodicPanel).toBeHidden();
   await expect(morePanel).toBeVisible();
+  await expect(morePanel.getByText('周卡')).toBeVisible();
   await expect(morePanel.getByText('按量付费')).toBeVisible();
-  await expect(morePanel.getByText('充 100 送 100')).toBeVisible();
+  await expect(morePanel.getByText('充 100 送 100')).toHaveCount(0);
   await expect(morePanel.getByText('企业定制')).toBeVisible();
 });
 
