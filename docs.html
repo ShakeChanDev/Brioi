@@ -73,94 +73,22 @@
             <h2>快速开始</h2>
           </div>
 
-          <div class="docs-steps-grid">
-            <article class="docs-step-card">
-              <span class="docs-step-index">01</span>
-              <h3>创建 API Key</h3>
-              <p>进入 Brioi 控制台后打开 API Keys 页面，创建新的密钥。建议按客户端拆分使用，后续轮换和排查都会更清楚。</p>
-              <ul class="docs-bullet-list">
-                <li>控制台进入 API Keys 页面</li>
-                <li>创建后的完整密钥通常只展示一次</li>
-                <li>建议按客户端拆分独立密钥</li>
-              </ul>
-            </article>
-
-            <article class="docs-step-card">
-              <span class="docs-step-index">02</span>
-              <h3>打开“使用 API 密钥”弹窗</h3>
-              <p>上游源码里的真实弹窗当前提供四种模板：<code>Codex CLI</code>、<code>Codex CLI (WebSocket)</code>、<code>Claude Code</code>、<code>OpenCode</code>。OpenClaw 不是弹窗内置项，本页单独补充了一节适配说明。</p>
-              <ul class="docs-bullet-list">
-                <li>Codex 使用 <code>config.toml + auth.json</code></li>
-                <li>Claude Code 同时给出终端变量和 <code>settings.json</code></li>
-                <li>OpenCode 给出 <code>opencode.json</code> 模板</li>
-              </ul>
-            </article>
-
-            <article class="docs-step-card">
-              <span class="docs-step-index">03</span>
-              <h3>照抄，不要自行猜路径</h3>
-              <p>Codex 与 Claude Code 模板直接使用弹窗里给出的根 Base URL。OpenCode 模板会在根地址基础上补成 <code>/v1</code>。修改后重开终端或客户端再验证。</p>
-              <ul class="docs-bullet-list">
-                <li>Codex 与 Claude Code 模板直接使用弹窗里给出的根 Base URL</li>
-                <li>OpenCode 模板会在根地址基础上补成 <code>/v1</code></li>
-                <li>如果弹窗没有某个客户端标签，说明当前分组并未启用对应能力</li>
-              </ul>
-            </article>
-          </div>
-        </section>
-
-        <section class="docs-section docs-section--article" id="credentials-map">
-          <div class="docs-section-head">
-            <p class="docs-section-label">Reference</p>
-            <h2>配置速查表</h2>
-          </div>
-          <p class="docs-paragraph">
-            下面这张表对应的是上游 <code>UseKeyModal.vue</code> 当前真实输出结构，而不是第三方整理版。大多数接入失败不是 Key 本身有问题，而是文件路径、Base URL 或开关漏了一行。
-          </p>
-
-          <div class="docs-reference-wrap">
-            <table class="docs-reference-table">
-              <thead>
-                <tr>
-                  <th>客户端</th>
-                  <th>配置文件</th>
-                  <th>关键字段</th>
-                  <th>示例 Base URL</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Codex CLI</td>
-                  <td><code>~/.codex/config.toml</code><br><code>~/.codex/auth.json</code></td>
-                  <td><code>base_url</code><br><code>OPENAI_API_KEY</code></td>
-                  <td><code>https://brioi.com</code></td>
-                </tr>
-                <tr>
-                  <td>Codex CLI (WebSocket)</td>
-                  <td><code>~/.codex/config.toml</code><br><code>~/.codex/auth.json</code></td>
-                  <td><code>supports_websockets = true</code><br><code>responses_websockets_v2 = true</code></td>
-                  <td><code>https://brioi.com</code></td>
-                </tr>
-                <tr>
-                  <td>Claude Code</td>
-                  <td><code>Terminal</code><br><code>~/.claude/settings.json</code></td>
-                  <td><code>ANTHROPIC_BASE_URL</code><br><code>ANTHROPIC_AUTH_TOKEN</code></td>
-                  <td><code>https://brioi.com</code></td>
-                </tr>
-                <tr>
-                  <td>OpenCode</td>
-                  <td><code>~/.config/opencode/opencode.json</code></td>
-                  <td><code>baseURL</code><br><code>apiKey</code></td>
-                  <td><code>https://brioi.com/v1</code></td>
-                </tr>
-                <tr>
-                  <td>OpenClaw</td>
-                  <td><code>~/.openclaw/openclaw.json</code></td>
-                  <td><code>baseUrl</code><br><code>apiKey</code><br><code>auth = api-key</code><br><code>api = openai-responses</code></td>
-                  <td><code>https://brioi.com/v1</code></td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="docs-quickstart">
+            <p class="docs-paragraph">如果你只想尽快接入，按下面三步做即可。先创建一把新 Key，再打开后台“使用 API 密钥”弹窗，最后把对应客户端模板直接填到本地配置里。</p>
+            <ol class="docs-step-list">
+              <li class="docs-step-item">
+                <h3>创建密钥</h3>
+                <p>控制台进入 API Keys 页面。创建后的完整密钥通常只展示一次，建议按客户端分别创建，便于后续轮换。</p>
+              </li>
+              <li class="docs-step-item">
+                <h3>选择对应模板</h3>
+                <p>弹窗内置 <code>Codex CLI</code>、<code>Codex CLI (WebSocket)</code>、<code>Claude Code</code>、<code>OpenCode</code>。OpenClaw 不在弹窗内，本页单独补充。</p>
+              </li>
+              <li class="docs-step-item">
+                <h3>原样填入配置</h3>
+                <p>Codex 与 Claude Code 模板直接使用弹窗里给出的根 Base URL。OpenCode 模板会在根地址基础上补成 <code>/v1</code>。保存后重开终端或客户端再验证。</p>
+              </li>
+            </ol>
           </div>
         </section>
 

@@ -235,8 +235,8 @@ test('docs page matches the real sub2api api-key modal structure', async ({ page
   await expect(page.getByRole('link', { name: '常见问题' })).toHaveAttribute('href', '#faq');
   await expect(page.getByText('控制台进入 API Keys 页面')).toBeVisible();
   await expect(page.getByText('创建后的完整密钥通常只展示一次')).toBeVisible();
-  await expect(page.getByText('Codex 与 Claude Code 模板直接使用弹窗里给出的根 Base URL', { exact: true })).toBeVisible();
-  await expect(page.getByText('OpenCode 模板会在根地址基础上补成 /v1', { exact: true })).toBeVisible();
+  await expect(page.getByText('Codex 与 Claude Code 模板直接使用弹窗里给出的根 Base URL')).toBeVisible();
+  await expect(page.getByText('OpenCode 模板会在根地址基础上补成 /v1')).toBeVisible();
   await expect(page.getByText('ANTHROPIC_BASE_URL').first()).toBeVisible();
   await expect(page.getByText('OPENAI_API_KEY').first()).toBeVisible();
   await expect(page.getByText('supports_websockets').first()).toBeVisible();
@@ -251,10 +251,11 @@ test('docs page matches the real sub2api api-key modal structure', async ({ page
   await expect(page.getByText('api.cubence.com')).toHaveCount(0);
   await expect(page.getByText('codex-for.me')).toHaveCount(0);
   await expect(page.getByText('sk-brioi-your-key')).toHaveCount(0);
+  await expect(page.getByText('配置速查表')).toHaveCount(0);
   await expect(page.getByText('补充章节：当前上游弹窗未内置 OpenClaw 专用模板')).toBeVisible();
 });
 
-test('docs page uses a documentation layout with toc and reference table', async ({ page }) => {
+test('docs page uses a documentation layout with a compact quick start section', async ({ page }) => {
   await page.goto(DOCS_PATH);
 
   await expect(page.locator('.docs-layout')).toBeVisible();
@@ -267,15 +268,10 @@ test('docs page uses a documentation layout with toc and reference table', async
   await expect(page.getByRole('link', { name: 'OpenClaw 配置说明' })).toHaveAttribute('href', '#openclaw-setup');
   await expect(page.getByRole('link', { name: 'Claude Code 配置说明' })).toHaveAttribute('href', '#claude-code-setup');
   await expect(page.getByRole('link', { name: 'OpenCode 配置说明' })).toHaveAttribute('href', '#opencode-setup');
-  const referenceTable = page.locator('.docs-reference-table');
-  await expect(referenceTable).toBeVisible();
-  await expect(referenceTable.getByRole('cell', { name: 'Codex CLI', exact: true })).toBeVisible();
-  await expect(referenceTable.getByRole('cell', { name: 'Codex CLI (WebSocket)', exact: true })).toBeVisible();
-  await expect(referenceTable.getByRole('cell', { name: 'OpenClaw', exact: true })).toBeVisible();
-  await expect(referenceTable.getByRole('cell', { name: 'Claude Code', exact: true })).toBeVisible();
-  await expect(referenceTable.getByRole('cell', { name: 'OpenCode', exact: true })).toBeVisible();
-  await expect(referenceTable.getByText('https://brioi.com', { exact: true })).toHaveCount(3);
-  await expect(referenceTable.getByText('https://brioi.com/v1', { exact: true })).toHaveCount(2);
+  await expect(page.locator('.docs-quickstart')).toBeVisible();
+  await expect(page.locator('.docs-step-list')).toBeVisible();
+  await expect(page.locator('.docs-step-item')).toHaveCount(3);
+  await expect(page.locator('.docs-reference-table')).toHaveCount(0);
 });
 
 test('homepage hero exposes the current positioning, metadata, and supported client badges', async ({ page }) => {
@@ -320,6 +316,24 @@ test('homepage hero exposes the current positioning, metadata, and supported cli
   for (const [index, source] of expectedBadgeSources.entries()) {
     await expect(badgeImages.nth(index)).toHaveAttribute('src', source);
   }
+});
+
+test('brioi homepage exposes the migrated support and pricing copy', async ({ page }) => {
+  await page.goto(BRIOI_HOME_PATH);
+
+  await expect(page.getByRole('heading', { level: 4, name: '专属售后随时待命' })).toBeVisible();
+
+  const periodicPanel = page.locator('#pricing-periodic');
+  await expect(periodicPanel.getByText('支持 1 线程并发')).toBeVisible();
+  await expect(periodicPanel.getByText('支持 3 线程并发')).toBeVisible();
+  await expect(periodicPanel.getByText('支持 10 线程并发')).toBeVisible();
+
+  await page.getByRole('tab', { name: '更多套餐' }).click();
+
+  const morePanel = page.locator('#pricing-more');
+  await expect(morePanel.locator('.price-amount').first()).toHaveText('5');
+  await expect(morePanel.getByText('充 100 送 100')).toBeVisible();
+  await expect(morePanel.locator('.price-bento-card').last().getByRole('link', { name: '立即开通' })).toHaveClass(/button--secondary/);
 });
 
 test('supported client more badge reveals the compatibility tooltip on hover', async ({ page }) => {
