@@ -360,6 +360,7 @@ test('pricing defaults to periodic plans and switches to the more plans panel', 
   await expect(periodicPanel).toBeHidden();
   await expect(morePanel).toBeVisible();
   await expect(morePanel.getByText('按量付费')).toBeVisible();
+  await expect(morePanel.getByText('充 100 送 100')).toBeVisible();
   await expect(morePanel.getByText('企业定制')).toBeVisible();
 });
 
