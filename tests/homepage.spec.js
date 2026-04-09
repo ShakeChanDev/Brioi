@@ -73,6 +73,15 @@ async function readFontFamily(locator) {
   return locator.evaluate((element) => window.getComputedStyle(element).fontFamily);
 }
 
+async function expectFontAvailable(page, fontFamily, sampleText) {
+  const isLoaded = await page.evaluate(async ({ fontFamily: family, sampleText: text }) => {
+    await document.fonts.ready;
+    return document.fonts.check(`48px "${family}"`, text);
+  }, { fontFamily, sampleText });
+
+  expect(isLoaded).toBe(true);
+}
+
 test('site home shells expose approved static branding and pricing without javascript', async ({ browser }) => {
   for (const siteCase of STATIC_SITE_CASES) {
     const context = await browser.newContext({ javaScriptEnabled: false });
@@ -160,16 +169,19 @@ test('homepage shell loads with updated navigation and hero CTA', async ({ page 
 test('brand font follows site configuration across every visible brand label', async ({ page }) => {
   await page.goto(BRIOI_HOME_PATH);
 
+  await expectFontAvailable(page, 'Bungee', 'Brioi');
   expect(await readFontFamily(page.locator('.site-header [data-brand-name]').first())).toContain('Bungee');
 
   await page.goto('/sites/cradeo/index.html');
 
+  await expectFontAvailable(page, 'Black Han Sans', 'CradEO');
   expect(await readFontFamily(page.locator('.site-header [data-brand-name]').first())).toContain('Black Han Sans');
   expect(await readFontFamily(page.locator('.site-footer [data-brand-name]').first())).toContain('Black Han Sans');
 
   await page.goto('/sites/cradeo/buy.html?plan=plus-monthly');
 
   await expect(page.locator('[data-buy-heading] [data-brand-name]')).toHaveText('CradEO');
+  await expectFontAvailable(page, 'Black Han Sans', 'CradEO');
   expect(await readFontFamily(page.locator('[data-buy-heading] [data-brand-name]'))).toContain('Black Han Sans');
 });
 
