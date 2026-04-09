@@ -10,6 +10,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Black Han Sans';
+  src: url('/assets/fonts/BlackHanSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* --- Design Tokens --- */
 :root {
   /* Colors */
@@ -37,6 +45,7 @@
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   --font-display: 'Outfit', sans-serif;
+  --brand-font-family: 'Bungee', "Avenir Next", Avenir, "Corbel", sans-serif;
 
   /* Shapes */
   --radius-sm: 8px;
@@ -190,6 +199,7 @@ ul {
 }
 
 .brand-text {
+  font-family: var(--brand-font-family);
   font-weight: 800;
   background: linear-gradient(135deg, var(--accent) 0%, #00C853 100%);
   -webkit-background-clip: text;
@@ -198,7 +208,13 @@ ul {
 }
 
 .site-header .brand-text {
-  font-family: 'Bungee', "Avenir Next", Avenir, "Corbel", sans-serif;
+  font-family: var(--brand-font-family);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.buy-heading-brand {
+  font-family: var(--brand-font-family);
   font-weight: 400;
   letter-spacing: 0.04em;
 }

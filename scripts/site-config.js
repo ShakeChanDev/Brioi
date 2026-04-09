@@ -3,6 +3,7 @@ export const BASE_SITE = {
     name: 'Brioi',
     logo: '/assets/brands/shared-logo.svg#brand-mark',
     buyHeading: '购买 Brioi API',
+    fontFamily: "'Bungee', \"Avenir Next\", Avenir, \"Corbel\", sans-serif",
   },
   hero: {
     titleLines: [
@@ -35,6 +36,7 @@ export const SITE_OVERRIDES = {
     brand: {
       name: 'CradEO',
       buyHeading: '购买 CradEO API',
+      fontFamily: "'Black Han Sans', 'Bungee', \"Avenir Next\", Avenir, \"Corbel\", sans-serif",
     },
     theme: {
       accent: '#22C55E',

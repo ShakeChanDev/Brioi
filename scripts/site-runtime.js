@@ -10,12 +10,16 @@ function applyTheme(siteConfig) {
 }
 
 function applyBrand(siteConfig) {
+  document.documentElement.style.setProperty('--brand-font-family', siteConfig.brand.fontFamily);
+
   document.querySelectorAll('[data-brand-name]').forEach((node) => {
     node.textContent = siteConfig.brand.name;
   });
 
   document.querySelectorAll('[data-buy-heading]').forEach((node) => {
-    node.textContent = siteConfig.brand.buyHeading;
+    if (!node.querySelector('[data-brand-name]')) {
+      node.textContent = siteConfig.brand.buyHeading;
+    }
   });
 
   document.querySelectorAll('[data-brand-logo]').forEach((node) => {

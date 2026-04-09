@@ -69,6 +69,10 @@ async function expectStaticPlan(page, planId, label, priceText) {
   await expect(plan.locator('[data-plan-price]')).toHaveText(priceText);
 }
 
+async function readFontFamily(locator) {
+  return locator.evaluate((element) => window.getComputedStyle(element).fontFamily);
+}
+
 test('site home shells expose approved static branding and pricing without javascript', async ({ browser }) => {
   for (const siteCase of STATIC_SITE_CASES) {
     const context = await browser.newContext({ javaScriptEnabled: false });
@@ -153,19 +157,20 @@ test('homepage shell loads with updated navigation and hero CTA', async ({ page 
   await expect(page.locator('.section-hero').getByRole('link', { name: '开始使用' })).toHaveAttribute('href', '#pricing');
 });
 
-test('homepage brand text is configured to use the Bungee font family', async ({ page }) => {
+test('brand font follows site configuration across every visible brand label', async ({ page }) => {
   await page.goto(BRIOI_HOME_PATH);
 
-  const brandFontFamily = await page.locator('.site-header .brand-text').evaluate((element) => {
-    return window.getComputedStyle(element).fontFamily;
-  });
-  const isBungeeLoaded = await page.evaluate(async () => {
-    await document.fonts.ready;
-    return document.fonts.check('48px "Bungee"');
-  });
+  expect(await readFontFamily(page.locator('.site-header [data-brand-name]').first())).toContain('Bungee');
 
-  expect(brandFontFamily).toContain('Bungee');
-  expect(isBungeeLoaded).toBe(true);
+  await page.goto('/sites/cradeo/index.html');
+
+  expect(await readFontFamily(page.locator('.site-header [data-brand-name]').first())).toContain('Black Han Sans');
+  expect(await readFontFamily(page.locator('.site-footer [data-brand-name]').first())).toContain('Black Han Sans');
+
+  await page.goto('/sites/cradeo/buy.html?plan=plus-monthly');
+
+  await expect(page.locator('[data-buy-heading] [data-brand-name]')).toHaveText('CradEO');
+  expect(await readFontFamily(page.locator('[data-buy-heading] [data-brand-name]'))).toContain('Black Han Sans');
 });
 
 test('docs page matches the real sub2api api-key modal structure', async ({ page }) => {
