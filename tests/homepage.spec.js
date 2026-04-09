@@ -1,7 +1,174 @@
 import { test, expect } from '@playwright/test';
 
+const BRIOI_HOME_PATH = '/sites/brioi/index.html';
+const BRIOI_BUY_PATH = '/sites/brioi/buy.html?plan=pro-monthly';
+const DOCS_PATH = '/docs.html';
+
+const STATIC_SITE_CASES = [
+  {
+    site: 'brioi',
+    homePath: '/sites/brioi/index.html',
+    buyPath: '/sites/brioi/buy.html?plan=pro-monthly',
+    title: /Brioi API \| 官方客户端订阅接入/,
+    buyTitle: /购买 Brioi API/,
+    ogImage: '/sites/brioi/og-home.jpg',
+    brand: 'Brioi',
+    heroLines: ['更强的 AI，', '不该只有少数人在用'],
+    subtitle: '顶级 GPT-5.4 全系列 AI 模型直连，稳定、高速、安全',
+    plans: [
+      ['week-pass', '周卡', '¥29'],
+      ['plus-monthly', 'Plus 月卡', '¥99/月'],
+      ['pro-monthly', 'Pro 月卡', '¥199/月'],
+      ['max-monthly', 'MAX 月卡', '¥499/月'],
+    ],
+    hiddenPlans: [],
+    buyHeading: '购买 Brioi API',
+  },
+  {
+    site: 'cradeo',
+    homePath: '/sites/cradeo/index.html',
+    buyPath: '/sites/cradeo/buy.html?plan=plus-monthly',
+    title: /CradEO API \| 官方客户端订阅接入/,
+    buyTitle: /购买 CradEO API/,
+    ogImage: '/sites/cradeo/og-home.jpg',
+    brand: 'CradEO',
+    heroLines: ['更强的 AI，', '不该只有少数人在用'],
+    subtitle: '顶级 GPT-5.4 全系列 AI 模型直连，稳定、高速、安全',
+    plans: [
+      ['plus-monthly', 'Plus 月卡', '¥199/月'],
+      ['pro-monthly', 'Pro 月卡', '¥299/月'],
+      ['max-monthly', 'MAX 月卡', '¥699/月'],
+    ],
+    hiddenPlans: ['week-pass'],
+    buyHeading: '购买 CradEO API',
+  },
+  {
+    site: 'drigeo',
+    homePath: '/sites/drigeo/index.html',
+    buyPath: '/sites/drigeo/buy.html?plan=max-monthly',
+    title: /Drigeo API \| 官方客户端订阅接入/,
+    buyTitle: /购买 Drigeo API/,
+    ogImage: '/sites/drigeo/og-home.jpg',
+    brand: 'Drigeo',
+    heroLines: ['让每个人，都能接入更强的 AI'],
+    subtitle: '顶级 GPT-5.4 全系列 AI 模型直连，稳定、高速、安全',
+    plans: [
+      ['plus-monthly', 'Plus 月卡', '¥299/月'],
+      ['pro-monthly', 'Pro 月卡', '¥399/月'],
+      ['max-monthly', 'MAX 月卡', '¥799/月'],
+    ],
+    hiddenPlans: ['week-pass'],
+    buyHeading: '购买 Drigeo API',
+  },
+];
+
+async function expectStaticPlan(page, planId, label, priceText) {
+  const plan = page.locator(`[data-plan-id="${planId}"]`);
+  await expect(plan).toHaveCount(1);
+  await expect(plan.locator('[data-plan-label]')).toHaveText(label);
+  await expect(plan.locator('[data-plan-price]')).toHaveText(priceText);
+}
+
+async function readFontFamily(locator) {
+  return locator.evaluate((element) => window.getComputedStyle(element).fontFamily);
+}
+
+async function expectFontAvailable(page, fontFamily, sampleText) {
+  const isLoaded = await page.evaluate(async ({ fontFamily: family, sampleText: text }) => {
+    await document.fonts.ready;
+    return document.fonts.check(`48px "${family}"`, text);
+  }, { fontFamily, sampleText });
+
+  expect(isLoaded).toBe(true);
+}
+
+async function measureCardGroupCenterDelta(page, layoutSelector) {
+  return page.locator(layoutSelector).evaluate((layout) => {
+    const cards = Array.from(layout.querySelectorAll('.price-bento-card')).filter((card) => {
+      const rect = card.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    });
+
+    if (!cards.length) {
+      throw new Error(`No visible pricing cards found for ${layoutSelector}`);
+    }
+
+    const layoutRect = layout.getBoundingClientRect();
+    const cardRects = cards.map((card) => card.getBoundingClientRect());
+    const groupLeft = Math.min(...cardRects.map((rect) => rect.left));
+    const groupRight = Math.max(...cardRects.map((rect) => rect.right));
+    const layoutCenter = layoutRect.left + layoutRect.width / 2;
+    const groupCenter = (groupLeft + groupRight) / 2;
+
+    return Math.abs(layoutCenter - groupCenter);
+  });
+}
+test('site home shells expose approved static branding and pricing without javascript', async ({ browser }) => {
+  for (const siteCase of STATIC_SITE_CASES) {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+
+    await page.goto(siteCase.homePath);
+
+    await expect(page).toHaveTitle(siteCase.title);
+    await expect(page.locator('head meta[property="og:image"]')).toHaveAttribute('content', siteCase.ogImage);
+    await expect(page.locator('[data-brand-name]').first()).toHaveText(siteCase.brand);
+    await expect(page.locator('[data-hero-title] .hero-line')).toHaveText(siteCase.heroLines);
+    await expect(page.locator('[data-copy="hero.subtitle"]').first()).toHaveText(siteCase.subtitle);
+
+    for (const [planId, label, priceText] of siteCase.plans) {
+      await expectStaticPlan(page, planId, label, priceText);
+    }
+
+    for (const hiddenPlan of siteCase.hiddenPlans) {
+      await expect(page.locator(`[data-plan-id="${hiddenPlan}"]`)).toHaveCount(0);
+    }
+
+    await context.close();
+  }
+});
+
+test('site buy shells expose approved static branding without javascript', async ({ browser }) => {
+  for (const siteCase of STATIC_SITE_CASES) {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+
+    await page.goto(siteCase.buyPath);
+
+    await expect(page).toHaveTitle(siteCase.buyTitle);
+    await expect(page.locator('[data-buy-heading]')).toHaveText(siteCase.buyHeading);
+    await expect(page.locator('[data-selected-plan]')).toHaveText(/^已选择：.+/);
+
+    await context.close();
+  }
+});
+
+test('site runtime applies the configured accent token to each branded homepage', async ({ page }) => {
+  for (const [path, accent] of [
+    ['/sites/brioi/index.html', '#00E676'],
+    ['/sites/cradeo/index.html', '#22C55E'],
+    ['/sites/drigeo/index.html', '#10B981'],
+  ]) {
+    await page.goto(path);
+
+    const runtimeAccent = await page.evaluate(() => {
+      return getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+    });
+
+    expect(runtimeAccent).toBe(accent);
+  }
+});
+
+test('buy page falls back to the first enabled plan when the requested plan is disabled', async ({ page }) => {
+  await page.goto('/sites/cradeo/buy.html?plan=week-pass');
+  await expect(page.locator('[data-selected-plan]')).toHaveText('已选择：Plus 月卡');
+
+  await page.goto('/sites/drigeo/buy.html?plan=week-pass');
+  await expect(page.locator('[data-selected-plan]')).toHaveText('已选择：Plus 月卡');
+});
+
 test('homepage shell loads with updated navigation and hero CTA', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
   const nav = page.locator('.site-nav');
   const navItems = nav.locator('.nav-actions > a');
@@ -12,7 +179,7 @@ test('homepage shell loads with updated navigation and hero CTA', async ({ page 
   await expect(navItems).toHaveCount(4);
   await expect(navItems.nth(0)).toHaveText('文档');
   await expect(navItems.nth(1)).toHaveText('定价');
-  await expect(nav.getByRole('link', { name: '文档' })).toHaveAttribute('href', './docs.html');
+  await expect(nav.getByRole('link', { name: '文档' })).toHaveAttribute('href', '/docs.html');
   await expect(nav.getByRole('link', { name: '定价' })).toHaveAttribute('href', '#pricing');
   await expect(nav.getByRole('link', { name: '登录' })).toHaveAttribute('href', '#');
   await expect(nav.getByRole('link', { name: '注册' })).toHaveAttribute('href', './buy.html?plan=plus-monthly');
@@ -20,26 +187,36 @@ test('homepage shell loads with updated navigation and hero CTA', async ({ page 
   await expect(page.locator('.section-hero').getByRole('link', { name: '开始使用' })).toHaveAttribute('href', '#pricing');
 });
 
-test('homepage brand text is configured to use the Bungee font family', async ({ page }) => {
-  await page.goto('/');
+test('brand font follows site configuration across every visible brand label', async ({ page }) => {
+  await page.goto(BRIOI_HOME_PATH);
 
-  const brandFontFamily = await page.locator('.site-header .brand-text').evaluate((element) => {
-    return window.getComputedStyle(element).fontFamily;
-  });
-  const isBungeeLoaded = await page.evaluate(async () => {
-    await document.fonts.ready;
-    return document.fonts.check('48px "Bungee"');
-  });
+  await expectFontAvailable(page, 'Bungee', 'Brioi');
+  expect(await readFontFamily(page.locator('.site-header [data-brand-name]').first())).toContain('Bungee');
 
-  expect(brandFontFamily).toContain('Bungee');
-  expect(isBungeeLoaded).toBe(true);
+  await page.goto('/sites/cradeo/index.html');
+
+  await expectFontAvailable(page, 'Black Han Sans', 'CradEO');
+  expect(await readFontFamily(page.locator('.site-header [data-brand-name]').first())).toContain('Black Han Sans');
+  expect(await readFontFamily(page.locator('.site-footer [data-brand-name]').first())).toContain('Black Han Sans');
+
+  await page.goto('/sites/cradeo/buy.html?plan=plus-monthly');
+
+  await expect(page.locator('[data-buy-heading] [data-brand-name]')).toHaveText('CradEO');
+  await expectFontAvailable(page, 'Black Han Sans', 'CradEO');
+  expect(await readFontFamily(page.locator('[data-buy-heading] [data-brand-name]'))).toContain('Black Han Sans');
 });
 
 test('docs page matches the real sub2api api-key modal structure', async ({ page }) => {
-  await page.goto('/docs.html');
+  await page.goto(DOCS_PATH);
 
   await expect(page).toHaveTitle(/Brioi 文档/);
-  await expect(page.getByRole('navigation', { name: '主导航' })).toBeVisible();
+  const nav = page.getByRole('navigation', { name: '主导航' });
+
+  await expect(nav).toBeVisible();
+  await expect(nav.locator('.brand')).toHaveAttribute('href', '/sites/brioi/index.html');
+  await expect(nav.getByRole('link', { name: '文档' })).toHaveAttribute('href', '/docs.html');
+  await expect(nav.getByRole('link', { name: '定价' })).toHaveAttribute('href', '/sites/brioi/index.html#pricing');
+  await expect(nav.getByRole('link', { name: '注册' })).toHaveAttribute('href', '/sites/brioi/buy.html?plan=plus-monthly');
   await expect(page.getByRole('heading', { level: 1, name: 'Brioi API 密钥使用说明' })).toBeVisible();
   await expect(page.getByText('文档内容按 sub2api 前端的“使用 API 密钥”弹窗真实模板整理。')).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: '快速开始' })).toBeVisible();
@@ -78,7 +255,7 @@ test('docs page matches the real sub2api api-key modal structure', async ({ page
 });
 
 test('docs page uses a documentation layout with toc and reference table', async ({ page }) => {
-  await page.goto('/docs.html');
+  await page.goto(DOCS_PATH);
 
   await expect(page.locator('.docs-layout')).toBeVisible();
   await expect(page.locator('.docs-sidebar')).toBeVisible();
@@ -102,7 +279,7 @@ test('docs page uses a documentation layout with toc and reference table', async
 });
 
 test('homepage hero exposes the current positioning, metadata, and supported client badges', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
   const hero = page.locator('.section-hero');
   const heroLines = hero.locator('.hero-line');
@@ -132,12 +309,12 @@ test('homepage hero exposes the current positioning, metadata, and supported cli
   ]);
   await expect(badgeImages).toHaveCount(6);
   const expectedBadgeSources = [
-    './assets/software-icons/codex-color.svg',
-    './assets/software-icons/claudecode-color.svg',
-    './assets/software-icons/opencode.svg',
-    './assets/software-icons/openclaw-color.svg',
-    './assets/software-icons/githubcopilot.svg',
-    './assets/software-icons/vscode.png'
+    '/assets/software-icons/codex-color.svg',
+    '/assets/software-icons/claudecode-color.svg',
+    '/assets/software-icons/opencode.svg',
+    '/assets/software-icons/openclaw-color.svg',
+    '/assets/software-icons/githubcopilot.svg',
+    '/assets/software-icons/vscode.png'
   ];
 
   for (const [index, source] of expectedBadgeSources.entries()) {
@@ -146,7 +323,7 @@ test('homepage hero exposes the current positioning, metadata, and supported cli
 });
 
 test('supported client more badge reveals the compatibility tooltip on hover', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
   const moreBadge = page.locator('.software-badge--more');
   const tooltip = moreBadge.locator('.more-tooltip');
@@ -160,7 +337,7 @@ test('supported client more badge reveals the compatibility tooltip on hover', a
 });
 
 test('pricing defaults to periodic plans and switches to the more plans panel', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
   const periodicTab = page.getByRole('tab', { name: '周期套餐' });
   const moreTab = page.getByRole('tab', { name: '更多套餐' });
@@ -186,12 +363,28 @@ test('pricing defaults to periodic plans and switches to the more plans panel', 
   await expect(morePanel.getByText('企业定制')).toBeVisible();
 });
 
-test('pricing contact modal opens from the CTA and closes from both close button and backdrop', async ({ page }) => {
-  await page.goto('/');
+test('pricing card groups stay centered even when a site has fewer plans', async ({ page }) => {
+  await page.goto('/sites/drigeo/index.html');
 
-  const trigger = page.locator('#pricing-periodic').getByRole('link', { name: '立即开通' }).first();
+  const drigeoPeriodicDelta = await measureCardGroupCenterDelta(page, '#pricing-periodic .pricing-bento-layout');
+  expect(drigeoPeriodicDelta).toBeLessThan(12);
+
+  await page.goto(BRIOI_HOME_PATH);
+  await page.getByRole('tab', { name: '更多套餐' }).click();
+
+  const morePlansDelta = await measureCardGroupCenterDelta(page, '#pricing-more .pricing-bento-layout');
+  expect(morePlansDelta).toBeLessThan(12);
+});
+
+test('pricing contact modal opens from the CTA and closes from both close button and backdrop', async ({ page }) => {
+  await page.goto(BRIOI_HOME_PATH);
+
+  const moreTab = page.getByRole('tab', { name: '更多套餐' });
+  const trigger = page.locator('#pricing-more').locator('[data-modal="contact"]').first();
   const modal = page.locator('#contact-modal');
 
+  await moreTab.click();
+  await expect(page.locator('#pricing-more')).toBeVisible();
   await trigger.click();
 
   await expect(modal).toHaveAttribute('aria-hidden', 'false');
@@ -217,7 +410,7 @@ test('pricing contact modal opens from the CTA and closes from both close button
 });
 
 test('faq accordion keeps only the latest answer expanded', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
   const firstItem = page.locator('.faq-accordion').nth(0);
   const secondItem = page.locator('.faq-accordion').nth(1);
@@ -234,7 +427,7 @@ test('faq accordion keeps only the latest answer expanded', async ({ page }) => 
 });
 
 test('buy page shows the selected plan from the query string', async ({ page }) => {
-  await page.goto('/buy.html?plan=pro-monthly');
+  await page.goto(BRIOI_BUY_PATH);
 
   await expect(page.getByRole('heading', { level: 1, name: '购买 Brioi API' })).toBeVisible();
   await expect(page.getByText('已选择：Pro 月卡')).toBeVisible();
@@ -242,7 +435,7 @@ test('buy page shows the selected plan from the query string', async ({ page }) 
 
 test('mobile homepage stays within the viewport without horizontal overflow', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/');
+  await page.goto(BRIOI_HOME_PATH);
 
   const brandBox = await page.locator('.site-header .brand').boundingBox();
   const navActionsBox = await page.locator('.nav-actions').boundingBox();
@@ -263,7 +456,7 @@ test.describe('homepage without javascript', () => {
   test.use({ javaScriptEnabled: false });
 
   test('shows the hero and the default periodic pricing panel', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(BRIOI_HOME_PATH);
 
     await expect(page.locator('.section-hero')).toBeVisible();
     await expect(page.locator('#pricing-periodic')).toBeVisible();
