@@ -1,5 +1,67 @@
 import { getSiteConfig } from '/scripts/site-config.js';
 
+function parsePriceText(priceText) {
+  const matchedPrice = priceText.match(/^(?<currency>[^\d]*)(?<amount>\d+(?:\.\d+)?)(?<period>.*)$/u);
+
+  if (!matchedPrice?.groups) {
+    return {
+      currency: '',
+      amount: priceText,
+      period: '',
+    };
+  }
+
+  return {
+    currency: matchedPrice.groups.currency ?? '',
+    amount: matchedPrice.groups.amount ?? priceText,
+    period: matchedPrice.groups.period ?? '',
+  };
+}
+
+function createPricePart(className, textContent) {
+  const node = document.createElement('span');
+  node.className = className;
+  node.textContent = textContent;
+  return node;
+}
+
+function applyStructuredPrice(priceNode, priceText) {
+  const { currency, amount, period } = parsePriceText(priceText);
+  const currencyNode = priceNode.querySelector('.price-currency');
+  const amountNode = priceNode.querySelector('.price-amount');
+  const periodNode = priceNode.querySelector('.price-period');
+
+  if (currencyNode && amountNode) {
+    currencyNode.textContent = currency;
+    amountNode.textContent = amount;
+
+    if (periodNode) {
+      periodNode.textContent = period;
+      return;
+    }
+
+    if (period) {
+      priceNode.append(createPricePart('price-period', period));
+    }
+
+    return;
+  }
+
+  const priceParts = [];
+
+  if (currency) {
+    priceParts.push(createPricePart('price-currency', currency));
+  }
+
+  priceParts.push(createPricePart('price-amount', amount));
+
+  if (period) {
+    priceParts.push(createPricePart('price-period', period));
+  }
+
+  priceNode.replaceChildren(...priceParts);
+}
+
 function applyTheme(siteConfig) {
   const root = document.documentElement;
   root.style.setProperty('--accent', siteConfig.theme.accent);
@@ -63,7 +125,7 @@ function applyPricing(siteConfig) {
     const buyLink = card.querySelector('[data-plan-buy]');
 
     if (labelNode) labelNode.textContent = plan.label;
-    if (priceNode) priceNode.textContent = plan.priceText;
+    if (priceNode) applyStructuredPrice(priceNode, plan.priceText);
     if (buyLink) buyLink.setAttribute('href', `./buy.html?plan=${planId}`);
   });
 }

@@ -206,6 +206,24 @@ test('brand font follows site configuration across every visible brand label', a
   expect(await readFontFamily(page.locator('[data-buy-heading] [data-brand-name]'))).toContain('Black Han Sans');
 });
 
+test('site runtime preserves structured price markup when applying configured pricing', async ({ page }) => {
+  await page.goto('/sites/brioi/index.html');
+
+  const brioiPrice = page.locator('[data-plan-id="plus-monthly"] [data-plan-price]');
+  await expect(brioiPrice.locator('.price-currency')).toHaveText('¥');
+  await expect(brioiPrice.locator('.price-amount')).toHaveText('99');
+  await expect(brioiPrice.locator('.price-period')).toHaveText('/月');
+  expect(await readFontFamily(brioiPrice.locator('.price-amount'))).toContain('Outfit');
+
+  await page.goto('/sites/cradeo/index.html');
+
+  const cradeoPrice = page.locator('[data-plan-id="plus-monthly"] [data-plan-price]');
+  await expect(cradeoPrice.locator('.price-currency')).toHaveText('¥');
+  await expect(cradeoPrice.locator('.price-amount')).toHaveText('199');
+  await expect(cradeoPrice.locator('.price-period')).toHaveText('/月');
+  expect(await readFontFamily(cradeoPrice.locator('.price-amount'))).toContain('Outfit');
+});
+
 test('docs page matches the real sub2api api-key modal structure', async ({ page }) => {
   await page.goto(DOCS_PATH);
 
@@ -391,16 +409,15 @@ test('pricing card groups stay centered even when a site has fewer plans', async
   expect(morePlansDelta).toBeLessThan(12);
 });
 
-test('pricing contact modal opens from the CTA and closes from both close button and backdrop', async ({ page }) => {
+test('pricing contact modal opens from both periodic and more-package CTAs and closes from both close button and backdrop', async ({ page }) => {
   await page.goto(BRIOI_HOME_PATH);
 
+  const periodicTrigger = page.locator('#pricing-periodic').locator('a', { hasText: '立即开通' }).first();
   const moreTab = page.getByRole('tab', { name: '更多套餐' });
-  const trigger = page.locator('#pricing-more').locator('[data-modal="contact"]').first();
+  const moreTrigger = page.locator('#pricing-more').locator('[data-modal="contact"]').first();
   const modal = page.locator('#contact-modal');
 
-  await moreTab.click();
-  await expect(page.locator('#pricing-more')).toBeVisible();
-  await trigger.click();
+  await periodicTrigger.click();
 
   await expect(modal).toHaveAttribute('aria-hidden', 'false');
   await expect(modal).toHaveClass(/active/);
@@ -415,7 +432,24 @@ test('pricing contact modal opens from the CTA and closes from both close button
   await expect(modal).not.toHaveClass(/active/);
   await expect.poll(async () => page.evaluate(() => document.body.style.overflow)).toBe('');
 
-  await trigger.click();
+  await moreTab.click();
+  await expect(page.locator('#pricing-more')).toBeVisible();
+  await moreTrigger.click();
+
+  await expect(modal).toHaveAttribute('aria-hidden', 'false');
+  await expect(modal).toHaveClass(/active/);
+  await expect(page.locator('.modal-dialog')).toBeVisible();
+  await expect(page.locator('.modal-title')).toHaveText('微信扫码添加');
+  await expect(page.locator('.modal-qr')).toHaveAttribute('src', /Brioi_Contact/);
+  await expect.poll(async () => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+
+  await page.locator('.js-modal-close').click();
+
+  await expect(modal).toHaveAttribute('aria-hidden', 'true');
+  await expect(modal).not.toHaveClass(/active/);
+  await expect.poll(async () => page.evaluate(() => document.body.style.overflow)).toBe('');
+
+  await moreTrigger.click();
   await expect(modal).toHaveAttribute('aria-hidden', 'false');
 
   await modal.click({ position: { x: 8, y: 8 } });
