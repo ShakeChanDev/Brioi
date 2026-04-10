@@ -7,7 +7,6 @@ document.documentElement.classList.add('js');
 /* --- Plan label mapping --- */
 const PLAN_LABELS = {
   'day-pass': '日卡',
-  'week-pass': '周卡',
   'plus-monthly': 'Plus 月卡',
   'pro-monthly': 'Pro 月卡',
   'max-monthly': 'Max 月卡'

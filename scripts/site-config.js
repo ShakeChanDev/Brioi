@@ -20,12 +20,11 @@ export const BASE_SITE = {
     shadowGlow: '0 12px 32px rgba(0, 230, 118, 0.25)',
   },
   pricing: {
-    buyOrder: ['week-pass', 'plus-monthly', 'pro-monthly', 'max-monthly'],
+    buyOrder: ['plus-monthly', 'pro-monthly', 'max-monthly'],
     plans: {
-      'week-pass': { label: '周卡', priceText: '¥29' },
-      'plus-monthly': { label: 'Plus 月卡', priceText: '¥99/月' },
-      'pro-monthly': { label: 'Pro 月卡', priceText: '¥199/月' },
-      'max-monthly': { label: 'MAX 月卡', priceText: '¥499/月' },
+      'plus-monthly': { label: 'Plus 月卡', priceText: '¥299/月' },
+      'pro-monthly': { label: 'Pro 月卡', priceText: '¥399/月' },
+      'max-monthly': { label: 'Max 月卡', priceText: '¥799/月' },
     },
   },
 };
@@ -48,9 +47,9 @@ export const SITE_OVERRIDES = {
     pricing: {
       buyOrder: ['plus-monthly', 'pro-monthly', 'max-monthly'],
       plans: {
-        'plus-monthly': { priceText: '¥199/月' },
-        'pro-monthly': { priceText: '¥299/月' },
-        'max-monthly': { priceText: '¥699/月' },
+        'plus-monthly': { priceText: '¥399/月' },
+        'pro-monthly': { priceText: '¥499/月' },
+        'max-monthly': { priceText: '¥999/月' },
       },
     },
   },
@@ -72,11 +71,12 @@ export const SITE_OVERRIDES = {
       shadowGlow: '0 12px 32px rgba(16, 185, 129, 0.22)',
     },
     pricing: {
-      buyOrder: ['plus-monthly', 'pro-monthly', 'max-monthly'],
+      buyOrder: ['plus-monthly', 'pro-monthly', 'max-monthly', 'day-pass'],
       plans: {
-        'plus-monthly': { priceText: '¥299/月' },
-        'pro-monthly': { priceText: '¥399/月' },
-        'max-monthly': { priceText: '¥799/月' },
+        'plus-monthly': { priceText: '¥199/月' },
+        'pro-monthly': { priceText: '¥299/月' },
+        'max-monthly': { priceText: '¥599/月' },
+        'day-pass': { label: '日卡', priceText: '¥9' },
       },
     },
   },

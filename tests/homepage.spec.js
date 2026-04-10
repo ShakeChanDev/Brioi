@@ -16,12 +16,11 @@ const STATIC_SITE_CASES = [
     heroLines: ['更强的 AI，', '不该只有少数人在用'],
     subtitle: '顶级 GPT-5.4 全系列 AI 模型直连，稳定、高速、安全',
     plans: [
-      ['week-pass', '周卡', '¥29'],
-      ['plus-monthly', 'Plus 月卡', '¥99/月'],
-      ['pro-monthly', 'Pro 月卡', '¥199/月'],
-      ['max-monthly', 'MAX 月卡', '¥499/月'],
+      ['plus-monthly', 'Plus 月卡', '¥299/月'],
+      ['pro-monthly', 'Pro 月卡', '¥399/月'],
+      ['max-monthly', 'Max 月卡', '¥799/月'],
     ],
-    hiddenPlans: [],
+    hiddenPlans: ['week-pass', 'day-pass'],
     buyHeading: '购买 Brioi API',
   },
   {
@@ -35,11 +34,11 @@ const STATIC_SITE_CASES = [
     heroLines: ['更强的 AI，', '不该只有少数人在用'],
     subtitle: '顶级 GPT-5.4 全系列 AI 模型直连，稳定、高速、安全',
     plans: [
-      ['plus-monthly', 'Plus 月卡', '¥199/月'],
-      ['pro-monthly', 'Pro 月卡', '¥299/月'],
-      ['max-monthly', 'MAX 月卡', '¥699/月'],
+      ['plus-monthly', 'Plus 月卡', '¥399/月'],
+      ['pro-monthly', 'Pro 月卡', '¥499/月'],
+      ['max-monthly', 'Max 月卡', '¥999/月'],
     ],
-    hiddenPlans: ['week-pass'],
+    hiddenPlans: ['week-pass', 'day-pass'],
     buyHeading: '购买 CradEO API',
   },
   {
@@ -53,9 +52,10 @@ const STATIC_SITE_CASES = [
     heroLines: ['让每个人，都能接入更强的 AI'],
     subtitle: '顶级 GPT-5.4 全系列 AI 模型直连，稳定、高速、安全',
     plans: [
-      ['plus-monthly', 'Plus 月卡', '¥299/月'],
-      ['pro-monthly', 'Pro 月卡', '¥399/月'],
-      ['max-monthly', 'MAX 月卡', '¥799/月'],
+      ['plus-monthly', 'Plus 月卡', '¥199/月'],
+      ['pro-monthly', 'Pro 月卡', '¥299/月'],
+      ['max-monthly', 'Max 月卡', '¥599/月'],
+      ['day-pass', '日卡', '¥9'],
     ],
     hiddenPlans: ['week-pass'],
     buyHeading: '购买 Drigeo API',
@@ -160,6 +160,9 @@ test('site runtime applies the configured accent token to each branded homepage'
 });
 
 test('buy page falls back to the first configured buy plan when the requested plan is unavailable', async ({ page }) => {
+  await page.goto('/sites/brioi/buy.html?plan=week-pass');
+  await expect(page.locator('[data-selected-plan]')).toHaveText('已选择：Plus 月卡');
+
   await page.goto('/sites/cradeo/buy.html?plan=week-pass');
   await expect(page.locator('[data-selected-plan]')).toHaveText('已选择：Plus 月卡');
 
@@ -211,7 +214,7 @@ test('site runtime preserves structured price markup when applying configured pr
 
   const brioiPrice = page.locator('[data-plan-id="plus-monthly"] [data-plan-price]');
   await expect(brioiPrice.locator('.price-currency')).toHaveText('¥');
-  await expect(brioiPrice.locator('.price-amount')).toHaveText('99');
+  await expect(brioiPrice.locator('.price-amount')).toHaveText('299');
   await expect(brioiPrice.locator('.price-period')).toHaveText('/月');
   expect(await readFontFamily(brioiPrice.locator('.price-amount'))).toContain('Outfit');
 
@@ -219,7 +222,7 @@ test('site runtime preserves structured price markup when applying configured pr
 
   const cradeoPrice = page.locator('[data-plan-id="plus-monthly"] [data-plan-price]');
   await expect(cradeoPrice.locator('.price-currency')).toHaveText('¥');
-  await expect(cradeoPrice.locator('.price-amount')).toHaveText('199');
+  await expect(cradeoPrice.locator('.price-amount')).toHaveText('399');
   await expect(cradeoPrice.locator('.price-period')).toHaveText('/月');
   expect(await readFontFamily(cradeoPrice.locator('.price-amount'))).toContain('Outfit');
 });
@@ -310,7 +313,7 @@ test('homepage hero exposes the current positioning, metadata, and supported cli
   ]);
   await expect(hero.locator('.hero-line--accent')).toHaveText('不该只有少数人在用');
   await expect(hero.locator('.hero-subtitle')).toHaveText('顶级 GPT-5.4 全系列 AI 模型直连，稳定、高速、安全');
-  await expect(hero.getByText('Supported Client Extensions')).toBeVisible();
+  await expect(hero.getByText('一个 API，直接接入主流 AI 工具')).toBeVisible();
   await expect(hero.locator('.software-badge')).toHaveCount(7);
   await expect(badgeLabels).toHaveText([
     'Codex',
@@ -336,22 +339,36 @@ test('homepage hero exposes the current positioning, metadata, and supported cli
   }
 });
 
+test('all homepage shells use the unified supported-tools strip headline', async ({ page }) => {
+  for (const path of [
+    '/index.html',
+    '/sites/brioi/index.html',
+    '/sites/cradeo/index.html',
+    '/sites/drigeo/index.html',
+  ]) {
+    await page.goto(path);
+    await expect(page.locator('.strip-label')).toHaveText('一个 API，直接接入主流 AI 工具');
+  }
+});
+
 test('brioi homepage exposes the migrated support and pricing copy', async ({ page }) => {
   await page.goto(BRIOI_HOME_PATH);
 
   await expect(page.getByRole('heading', { level: 4, name: '专属售后随时待命' })).toBeVisible();
 
   const periodicPanel = page.locator('#pricing-periodic');
+  await expect(periodicPanel.getByText('按量付费')).toBeVisible();
+  await expect(periodicPanel.getByText('10元起充')).toBeVisible();
   await expect(periodicPanel.getByText('支持 1 线程并发')).toBeVisible();
   await expect(periodicPanel.getByText('支持 3 线程并发')).toBeVisible();
   await expect(periodicPanel.getByText('支持 10 线程并发')).toBeVisible();
+  await expect(periodicPanel.getByText('周卡')).toHaveCount(0);
 
   await page.getByRole('tab', { name: '更多套餐' }).click();
 
   const morePanel = page.locator('#pricing-more');
-  await expect(morePanel.getByText('周卡')).toBeVisible();
-  await expect(morePanel.locator('[data-plan-id="week-pass"] .price-amount')).toHaveText('29');
-  await expect(morePanel.getByText('按量付费')).toBeVisible();
+  await expect(morePanel.getByText('周卡')).toHaveCount(0);
+  await expect(morePanel.getByText('按量付费')).toHaveCount(0);
   await expect(morePanel.getByText('充 100 送 100')).toHaveCount(0);
   await expect(morePanel.locator('.price-bento-card').last().getByRole('link', { name: '立即开通' })).toHaveClass(/button--secondary/);
 });
@@ -385,10 +402,10 @@ test('supported client more badge reveals the compatibility tooltip on hover', a
   await expect(tooltip).toHaveText('所有兼容标准 OpenAI 请求格式的环境均可无缝接入');
 });
 
-test('pricing defaults to periodic plans and switches to the more plans panel', async ({ page }) => {
+test('pricing defaults to common plans and switches to the more plans panel', async ({ page }) => {
   await page.goto(BRIOI_HOME_PATH);
 
-  const periodicTab = page.getByRole('tab', { name: '周期套餐' });
+  const periodicTab = page.getByRole('tab', { name: '常用套餐' });
   const moreTab = page.getByRole('tab', { name: '更多套餐' });
   const periodicPanel = page.locator('#pricing-periodic');
   const morePanel = page.locator('#pricing-more');
@@ -397,10 +414,11 @@ test('pricing defaults to periodic plans and switches to the more plans panel', 
   await expect(moreTab).toHaveAttribute('aria-selected', 'false');
   await expect(periodicPanel).toBeVisible();
   await expect(morePanel).toBeHidden();
+  await expect(periodicPanel.getByText('按量付费')).toBeVisible();
   await expect(periodicPanel.getByText('周卡')).toHaveCount(0);
   await expect(periodicPanel.getByText('Plus 月卡')).toBeVisible();
   await expect(periodicPanel.getByText('Pro 月卡')).toBeVisible();
-  await expect(periodicPanel.getByText('MAX 月卡')).toBeVisible();
+  await expect(periodicPanel.getByText('Max 月卡')).toBeVisible();
 
   await moreTab.click();
 
@@ -408,10 +426,25 @@ test('pricing defaults to periodic plans and switches to the more plans panel', 
   await expect(moreTab).toHaveAttribute('aria-selected', 'true');
   await expect(periodicPanel).toBeHidden();
   await expect(morePanel).toBeVisible();
-  await expect(morePanel.getByText('周卡')).toBeVisible();
-  await expect(morePanel.getByText('按量付费')).toBeVisible();
+  await expect(morePanel.getByText('周卡')).toHaveCount(0);
+  await expect(morePanel.getByText('按量付费')).toHaveCount(0);
   await expect(morePanel.getByText('充 100 送 100')).toHaveCount(0);
   await expect(morePanel.getByText('企业定制')).toBeVisible();
+});
+
+test('drigeo exposes day-pass only in the more plans panel', async ({ page }) => {
+  await page.goto('/sites/drigeo/index.html');
+
+  const periodicPanel = page.locator('#pricing-periodic');
+  const morePanel = page.locator('#pricing-more');
+
+  await expect(periodicPanel.getByText('日卡')).toHaveCount(0);
+
+  await page.getByRole('tab', { name: '更多套餐' }).click();
+
+  await expect(morePanel).toBeVisible();
+  await expect(morePanel.getByText('日卡')).toBeVisible();
+  await expect(morePanel.locator('[data-plan-id="day-pass"] .price-amount')).toHaveText('9');
 });
 
 test('pricing card groups stay centered even when a site has fewer plans', async ({ page }) => {
@@ -419,6 +452,12 @@ test('pricing card groups stay centered even when a site has fewer plans', async
 
   const drigeoPeriodicDelta = await measureCardGroupCenterDelta(page, '#pricing-periodic .pricing-bento-layout');
   expect(drigeoPeriodicDelta).toBeLessThan(12);
+
+  await page.goto('/sites/cradeo/index.html');
+  await page.getByRole('tab', { name: '更多套餐' }).click();
+
+  const cradeoMoreDelta = await measureCardGroupCenterDelta(page, '#pricing-more .pricing-bento-layout');
+  expect(cradeoMoreDelta).toBeLessThan(12);
 
   await page.goto(BRIOI_HOME_PATH);
   await page.getByRole('tab', { name: '更多套餐' }).click();
@@ -434,14 +473,23 @@ test('pricing contact modal opens from both periodic and more-package CTAs and c
   const moreTab = page.getByRole('tab', { name: '更多套餐' });
   const moreTrigger = page.locator('#pricing-more').locator('[data-modal="contact"]').first();
   const modal = page.locator('#contact-modal');
+  const modalDialog = page.locator('.modal-dialog');
+  const qrImage = page.locator('.modal-qr');
 
   await periodicTrigger.click();
 
   await expect(modal).toHaveAttribute('aria-hidden', 'false');
   await expect(modal).toHaveClass(/active/);
-  await expect(page.locator('.modal-dialog')).toBeVisible();
-  await expect(page.locator('.modal-title')).toHaveText('微信扫码添加');
-  await expect(page.locator('.modal-qr')).toHaveAttribute('src', /Brioi_Contact/);
+  await expect(modalDialog).toBeVisible();
+  await expect(page.locator('.modal-title')).toHaveText('微信扫码购买');
+  await expect(modal.locator('.modal-desc')).toHaveCount(0);
+  await expect(qrImage).toHaveAttribute('src', /\/assets\/contact\/support-qr\.jpg$/);
+  await expect.poll(async () => {
+    return modalDialog.evaluate((node) => node.clientWidth);
+  }).toBeGreaterThanOrEqual(520);
+  await expect.poll(async () => {
+    return qrImage.evaluate((node) => node.clientWidth);
+  }).toBeGreaterThanOrEqual(300);
   await expect.poll(async () => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
 
   await page.locator('.js-modal-close').click();
@@ -456,9 +504,10 @@ test('pricing contact modal opens from both periodic and more-package CTAs and c
 
   await expect(modal).toHaveAttribute('aria-hidden', 'false');
   await expect(modal).toHaveClass(/active/);
-  await expect(page.locator('.modal-dialog')).toBeVisible();
-  await expect(page.locator('.modal-title')).toHaveText('微信扫码添加');
-  await expect(page.locator('.modal-qr')).toHaveAttribute('src', /Brioi_Contact/);
+  await expect(modalDialog).toBeVisible();
+  await expect(page.locator('.modal-title')).toHaveText('微信扫码购买');
+  await expect(modal.locator('.modal-desc')).toHaveCount(0);
+  await expect(qrImage).toHaveAttribute('src', /\/assets\/contact\/support-qr\.jpg$/);
   await expect.poll(async () => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
 
   await page.locator('.js-modal-close').click();
